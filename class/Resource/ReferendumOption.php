@@ -8,7 +8,18 @@ namespace election\Resource;
  */
 class ReferendumOption extends \Resource
 {
-
+    /**
+     * @var \Variable\String
+     */
+    protected $label;
+    
+    /**
+     * @var \Variable\StringF
+     */
+    protected $color;
+    
+    protected $table = 'elect_ref_option';
+    
     public function __construct()
     {
         parent::__construct();

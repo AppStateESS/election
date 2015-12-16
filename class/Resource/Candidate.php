@@ -22,6 +22,7 @@ class Candidate extends \Resource
      * @var \Variable\File
      */
     protected $picture;
+    protected $table = 'elect_candidate';
 
     public function __construct()
     {

@@ -13,6 +13,18 @@ class Ticket extends \Resource
      */
     protected $title;
     
+    /**
+     * @var \Variable\String
+     */
+    protected $platform;
+    
+    /**
+     * @var \Variable\String
+     */
+    protected $site_address;
+    
+    protected $table = 'elect_ticket';
+    
     public function __construct()
     {
         parent::__construct();

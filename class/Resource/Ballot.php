@@ -13,6 +13,8 @@ class Ballot extends \Measure
      * @var \Variable\Integer  
      */
     protected $seat_number;
+    
+    protected $table = 'elect_ballot';
 
     public function __construct()
     {

@@ -13,6 +13,8 @@ class Voter extends \Resource
      * @var \Variable\Hash
      */
     protected $hash;
+    
+    protected $table = 'elect_voter';
 
     public function __construct()
     {

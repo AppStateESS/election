@@ -8,10 +8,18 @@ namespace election\Resource;
  */
 class Referendum extends \Measure
 {
+    /**
+     *
+     * @var \Variable\String
+     */
+    protected $description;
     
+    protected $table = 'elect_referendum';
+
     public function __construct()
     {
         parent::__construct();
         $this->description = new \Variable\String(null, 'description');
     }
+
 }
