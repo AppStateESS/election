@@ -19,7 +19,18 @@ class Ballot extends Measure
     public function __construct()
     {
         parent::__construct();
-        $this->seat_number = new \Variable\Integer(null, 'seat_number');
+        // default is one seat: a ticket ballot
+        $this->seat_number = new \Variable\Integer(1, 'seat_number');
+    }
+    
+    public function setSeatNumber($var)
+    {
+        $this->seat_number->set($var);
+    }
+    
+    public function getSeatNumber()
+    {
+        return $this->seat_number->get();
     }
 
 }
