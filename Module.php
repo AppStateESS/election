@@ -19,14 +19,11 @@ class Module extends \Module implements \SettingDefaults
 
     public function beforeRun(\Request $request, \Controller $controller)
     {
-        /*
         $define_file = PHPWS_SOURCE_DIR . 'mod/election/conf/defines.php';
         if (!is_file($define_file)) {
             exit('Election requires a copy of conf/defines.php to be created.');
         }
         require_once $define_file;
-         * 
-         */
     }
 
     public function getController(\Request $request)
@@ -51,11 +48,7 @@ class Module extends \Module implements \SettingDefaults
 
     public function runTime(\Request $request)
     {
-        if (\PHPWS_Core::atHome()) {
-            $user = new \election\Controller\User($this);
-            $content = $user->checkin();
-            \Layout::add($content);
-        }
+        
         if (\Current_User::allow('election')) {
             \election\Controller\Admin::loadAdminBar();
         }
