@@ -31,6 +31,7 @@ abstract class Measure extends \Resource
         parent::__construct();
         $this->title = new \Variable\String(null, 'title');
         $this->title->setLimit(100);
+        $this->title->allowEmpty(false);
         $this->start_date = new \Variable\DateTime(null, 'start_date');
         $this->end_date = new \Variable\DateTime(null, 'end_date');
     }
@@ -40,14 +41,35 @@ abstract class Measure extends \Resource
         $this->title->set($var);
     }
 
-    public function setStartTime($var)
+    public function setStartDate($var, $formatted=true)
     {
+        if ($formatted) {
+            $var = strtotime($var);
+        }
         $this->start_date->set($var);
     }
 
-    public function setEndTime($var)
+    public function setEndDate($var, $formatted=true)
     {
+        if ($formatted) {
+            $var = strtotime($var);
+        }
         $this->end_date->set($var);
+    }
+    
+    public function getTitle()
+    {
+        return $this->title->get();
+    }
+    
+    public function getStartDate()
+    {
+        return $this->start_date->get();
+    }
+
+    public function getEndDate()
+    {
+        return $this->end_date->get();
     }
 
 }
