@@ -26,9 +26,8 @@ class Admin extends \Http\Controller
         $command = $request->shiftCommand();
 
         if (empty($command)) {
-            $command = 'Dashboard';
+            $command = 'Single';
         }
-
         $className = 'election\Controller\Admin\\' . $command;
         if (!class_exists($className)) {
             throw new \Exception('Unknown command');
@@ -47,7 +46,7 @@ class Admin extends \Http\Controller
         $template =  new \Template($vars);
         $template->setModuleTemplate('election', 'Admin/navbar.html');
         $content = $template->get();
-        \Layout::plug($content, 'ELECT_NAV_LINKS');
+        \Layout::plug($content, 'NAV_LINKS');
     }
 
 }
