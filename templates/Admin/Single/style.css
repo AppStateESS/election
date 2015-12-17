@@ -1,0 +1,21 @@
+#single-modal.in {
+    position: absolute; 
+    left: 0;
+    top: 0; 
+    overflow: visible;
+}
+
+.modal{ 
+    overflow: hidden; 
+}
+#single-modal .modal-dialog {
+    margin : 0;
+}
+
+.modal-box {
+    position : relative;
+}
+
+.fa-calendar {
+    cursor : pointer;
+}
