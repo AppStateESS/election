@@ -3,6 +3,7 @@ var SingleBallot = React.createClass({
 
     getInitialState: function() {
         return {
+            ballotList : []
         };
     },
 
@@ -24,7 +25,13 @@ var SingleBallot = React.createClass({
     },
 
     load : function() {
-
+        $.getJSON('election/Admin/Single', {
+        	command : 'list'
+        }).done(function(data){
+            this.setState({
+                ballotList : data
+            });
+        }.bind(this));
     },
 
     render: function() {
@@ -33,8 +40,67 @@ var SingleBallot = React.createClass({
         return (
             <div>
                 <button className="btn btn-success" onClick={this.showModal}><i className="fa fa-plus"></i> Create ballot</button>
+                <hr />
                 <div className="modal-box"><Modal title="Create Ballot" modalId="single-modal" body={modalForm}/></div>
-                <p>Other stuff that should remain</p>
+                <div className='election-list'>
+                    <BalloutList listing={this.state.ballotList}/>
+                </div>
+            </div>
+        );
+    }
+
+});
+
+var BalloutList = React.createClass({
+    getInitialState: function() {
+        return {
+        };
+    },
+
+    getDefaultProps: function() {
+        return {
+            listing : []
+        };
+    },
+
+    render: function() {
+        var ballotList = this.props.listing.map(function(value){
+            return <BallotListRow key={value.id} {...value}/>
+        });
+
+        return (
+            <div>
+                {ballotList}
+            </div>
+        );
+    }
+
+});
+
+var BallotListRow = React.createClass({
+    getDefaultProps: function() {
+        return {
+            end_date_formatted : '',
+            start_date_formatted : '',
+            title : '',
+            id : 0,
+        };
+    },
+
+    render: function() {
+        return (
+            <div className="panel panel-default">
+                <div className="panel-heading">
+                    <div className="change-buttons">
+                        <button className="btn btn-primary"><i className="fa fa-edit"></i></button>
+                        <button className="btn btn-danger"><i className="fa fa-times"></i></button>
+                    </div>
+                    <h3>{this.props.title}</h3>
+                </div>
+                <div className="panel-body">
+                    <h4>Voting period: <span className="text-info date-stamp">{this.props.start_date_formatted}</span> to <span className="text-info date-stamp">{this.props.end_date_formatted}</span></h4>
+                    <button className="btn btn-default"><i className="fa fa-ticket"></i> Add Ticket</button>
+                </div>
             </div>
         );
     }
@@ -137,7 +203,6 @@ var SingleBallotForm = React.createClass({
     },
 
     save : function() {
-
         var error = this.checkForErrors();
 
         if (error === false) {
