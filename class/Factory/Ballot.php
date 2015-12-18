@@ -28,6 +28,28 @@ class Ballot extends Base
         self::saveResource($ballot);
     }
 
+    /**
+     * 
+     * @return array
+     */
+    public static function getList()
+    {
+        $db = \Database::getDB();
+        $tbl = $db->addTable('elect_ballot');
+        $tbl->addOrderBy('end_date');
+        $tbl->addFieldConditional('active', 1);
+        $result = $db->select();
+        if (empty($result)) {
+            return $result;
+        }
+        foreach ($result as $key=>$val) {
+            $val['start_date_formatted'] = strftime(ELECTION_DATETIME_FORMAT, $val['start_date']);
+            $val['end_date_formatted'] = strftime(ELECTION_DATETIME_FORMAT, $val['end_date']);
+            $result[$key] = $val;
+        }
+        return $result;
+    }
+
     
     public static function build($id = 0)
     {
