@@ -25,6 +25,12 @@ abstract class Measure extends \Resource
      * @var \Variable\DateTime
      */
     protected $end_date;
+    
+    /**
+     *
+     * @var \Variable\Bool
+     */
+    protected $active;
 
     public function __construct()
     {
@@ -34,6 +40,7 @@ abstract class Measure extends \Resource
         $this->title->allowEmpty(false);
         $this->start_date = new \Variable\DateTime(null, 'start_date');
         $this->end_date = new \Variable\DateTime(null, 'end_date');
+        $this->active = new \Variable\Bool(true, 'active');
     }
 
     public function setTitle($var)
@@ -70,6 +77,16 @@ abstract class Measure extends \Resource
     public function getEndDate()
     {
         return $this->end_date->get();
+    }
+    
+    public function setActive($var)
+    {
+        $this->active->set($var);
+    }
+    
+    public function getActive()
+    {
+        return $this->active->get();
     }
 
 }
