@@ -61,4 +61,21 @@ EOF;
         return $response;
     }
 
+    protected function getJsonView($data, \Request $request)
+    {
+        if (!$request->isVar('command')) {
+            throw new \Exception('Unknown Single ballot command');
+        }
+        $json = array('success' => true);
+
+        $command = $request->getVar('command');
+        switch ($command) {
+            case 'list':
+                $json = Factory::getList();
+                break;
+        }
+        $view = new \View\JsonView($json);
+        return $view;
+    }
+
 }
