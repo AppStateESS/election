@@ -19,3 +19,19 @@
 .fa-calendar {
     cursor : pointer;
 }
+
+.panel-heading h3 {
+    margin : 8px 0px 2px 0px;
+}
+
+.change-buttons {
+    float: right;
+}
+
+.change-buttons button:first-child {
+    margin-right : .5em;
+}
+
+.date-stamp {
+    font-weight : bold;
+}
