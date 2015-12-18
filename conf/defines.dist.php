@@ -6,3 +6,5 @@
  */
 
 define('ELECTION_REACT_DEV', false);
+
+define('ELECTION_DATETIME_FORMAT', '%l:%M%P %b %e, %Y');
