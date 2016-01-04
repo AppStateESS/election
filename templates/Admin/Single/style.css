@@ -21,7 +21,7 @@
 }
 
 .panel-heading h3 {
-    margin : 8px 0px 2px 0px;
+    margin : 0px 0px 4px 0px;
 }
 
 .change-buttons {
@@ -34,4 +34,16 @@
 
 .date-stamp {
     font-weight : bold;
+}
+
+.pad-right {
+    margin-right : 1em;
+}
+
+.pad-top {
+    margin-top : 1em;
+}
+
+#ballot-title {
+    font-size : 24px;
 }
