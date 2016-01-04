@@ -51,7 +51,7 @@ EOF;
                 break;
 
             case 'delete':
-                Factory::delete(Factory::pullPostInteger('clinicianId'));
+                Factory::delete(Factory::pullPostInteger('ballotId'));
                 break;
 
             default:

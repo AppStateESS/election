@@ -27,6 +27,13 @@ class Ballot extends Base
         
         self::saveResource($ballot);
     }
+    
+    public static function delete()
+    {
+        $ballot = self::build(self::pullPostInteger('ballotId'));
+        $ballot->setActive(false);
+        self::saveResource($ballot);
+    }
 
     /**
      * 

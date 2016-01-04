@@ -62,7 +62,7 @@ var BalloutList = React.createClass({
             if (value.id === this.state.ballotEditId) {
                 return <SingleBallotForm key={value.id} {...value} hideForm={this.editBallot.bind(null, 0)} reload={this.props.reload}/>;
             } else {
-                return <BallotListRow key={value.id} {...value} handleEdit={this.editBallot.bind(null, value.id)}/>
+                return <BallotListRow key={value.id} {...value} handleEdit={this.editBallot.bind(null, value.id)} reload={this.props.reload}/>
             }
         }.bind(this));
 
@@ -91,7 +91,15 @@ var BallotListRow = React.createClass({
     },
 
     handleDelete : function(event) {
-
+        if (confirm('Are you sure you want to delete this ballot?')) {
+            $.post('election/Admin/Single', {
+                command : 'delete',
+                ballotId : this.props.id,
+            }, null, 'json')
+            	.done(function(data){
+                    this.props.reload();
+            	}.bind(this));
+        }
     },
 
     render: function() {
@@ -287,7 +295,7 @@ var SingleBallotForm = React.createClass({
                             <div className="form-group">
                                 <label htmlFor="start-date" className="control-label pad-right">Start voting:</label>
                                 <div className="input-group">
-                                    <input ref="startDate" type="text" className="form-control datepicker" id="start-date"  onFocus={this.resetBorder} onChange={this.changeStartDate}/>
+                                    <input ref="startDate" type="text" className="form-control datepicker" id="start-date" onFocus={this.resetBorder} onChange={this.changeStartDate}/>
                                     <div className="input-group-addon">
                                         <i className="fa fa-calendar" onClick={this.showStartCalendar}></i>
                                     </div>
