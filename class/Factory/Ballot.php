@@ -16,8 +16,8 @@ class Ballot extends Base
         $ballot = self::build(self::pullPostInteger('ballotId'));
         
         $ballot->setTitle(self::pullPostString('title'));
-        $ballot->setStartDate(self::pullPostString('startDate'));
-        $ballot->setEndDate(self::pullPostString('endDate'));
+        $ballot->setStartDate(self::pullPostInteger('startDate'), false);
+        $ballot->setEndDate(self::pullPostInteger('endDate'), false);
         
         $seats = self::pullPostInteger('seatNumber');
         if ($seats) {
@@ -43,8 +43,8 @@ class Ballot extends Base
             return $result;
         }
         foreach ($result as $key=>$val) {
-            $val['start_date_formatted'] = strftime(ELECTION_DATETIME_FORMAT, $val['start_date']);
-            $val['end_date_formatted'] = strftime(ELECTION_DATETIME_FORMAT, $val['end_date']);
+            $val['start_date_formatted'] = date(ELECTION_DATETIME_FORMAT, $val['start_date']);
+            $val['end_date_formatted'] = date(ELECTION_DATETIME_FORMAT, $val['end_date']);
             $result[$key] = $val;
         }
         return $result;
