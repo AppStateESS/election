@@ -16,7 +16,7 @@ class Single extends \election\Controller\Base
         javascript('datetimepicker');
         if (ELECTION_REACT_DEV) {
             $script[] = \election\Factory\React::development('Admin/Single/', 'Mixin.jsx');
-            $script[] = \election\Factory\React::development('Admin/Single/', 'Main.jsx');
+            $script[] = \election\Factory\React::development('Admin/Single/', 'SingleBallot.jsx');
         } else {
             $script[] = \election\Factory\React::production('Admin/Single/', 'script.min.js');
         }
@@ -27,8 +27,10 @@ class Single extends \election\Controller\Base
 
         $tabs = parent::getTabs('single');
 
+        $date_format = '<script type="text/javascript">var dateFormat = "'. ELECTION_DATETIME_FORMAT .'";</script>';
         $content = <<<EOF
 $tabs
+$date_format
 <div id="single-ballot"></div>
 $react
 EOF;
