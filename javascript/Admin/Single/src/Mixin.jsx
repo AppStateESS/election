@@ -27,3 +27,39 @@ var Modal = React.createClass({
         );
     }
 });
+
+var Panel = React.createClass({
+    getDefaultProps: function() {
+        return {
+            type : 'default',
+            heading : null,
+            body : null,
+            footer : null
+        };
+    },
+
+    render: function() {
+        var heading = null;
+        if (this.props.heading !== null) {
+            heading = <div className="panel-heading">{this.props.heading}</div>;
+        }
+        var body = null;
+        if (this.props.body !== null) {
+            body = <div className="panel-body">{this.props.body}</div>;
+        }
+        var footer = null;
+        if (this.props.footer !== null) {
+            footer = <div className="panel-footer">{this.props.footer}</div>;
+        }
+
+        var panelType = 'panel panel-' + this.props.type;
+        return (
+            <div className={panelType}>
+                {heading}
+                {body}
+                {footer}
+            </div>
+        );
+    }
+
+});
