@@ -28,15 +28,15 @@ class Ballot extends Base
         self::saveResource($ballot);
     }
     
-    public static function delete()
+    public static function delete($ballot_id)
     {
-        $ballot = self::build(self::pullPostInteger('ballotId'));
+        $ballot = self::build($ballot_id, new Resource);
         $ballot->setActive(false);
         self::saveResource($ballot);
+        Ticket::deleteByBallot($ballot_id);
     }
 
     /**
-     * 
      * @return array
      */
     public static function getList()
@@ -49,25 +49,11 @@ class Ballot extends Base
         if (empty($result)) {
             return $result;
         }
-        foreach ($result as $key=>$val) {
+        foreach ($result as $key=>&$val) {
             $val['start_date_formatted'] = date(ELECTION_DATETIME_FORMAT, $val['start_date']);
             $val['end_date_formatted'] = date(ELECTION_DATETIME_FORMAT, $val['end_date']);
-            $result[$key] = $val;
         }
         return $result;
-    }
-
-    
-    public static function build($id = 0)
-    {
-        $ballot = new Resource;
-        if ($id) {
-            $ballot->setId($id);
-            if (!parent::loadByID($ballot)) {
-                throw new \Exception('Ballot id not found:' . $id);
-            }
-        }
-        return $ballot;
     }
 
 }
