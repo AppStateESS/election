@@ -14,6 +14,11 @@ class Base extends \ResourceFactory
         return trim(strip_tags(filter_input(INPUT_POST, $varname, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
     }
 
+    public static function pullGetString($varname)
+    {
+        return trim(strip_tags(filter_input(INPUT_GET, $varname, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
+    }
+
     public static function pullPostCheck($varname)
     {
         return filter_input(INPUT_POST, $varname, FILTER_VALIDATE_BOOLEAN);
@@ -27,6 +32,17 @@ class Base extends \ResourceFactory
     public static function pullGetInteger($varname)
     {
         return filter_input(INPUT_GET, $varname, FILTER_SANITIZE_NUMBER_INT);
+    }
+
+    public static function build($id = 0, $resource)
+    {
+        if ($id) {
+            $resource->setId($id);
+            if (!parent::loadByID($resource)) {
+                throw new \Exception('Resource id not found:' . $id);
+            }
+        }
+        return $resource;
     }
 
 }
