@@ -66,6 +66,14 @@ var BalloutList = React.createClass({
             }
         }.bind(this));
 
+        if (ballotList.length === 0) {
+            ballotList = (
+                <div>
+                <h3>No ballots found.</h3>
+                </div>
+            );
+        }
+
         return (
             <div>
                 <button className="btn btn-success" onClick={this.editBallot.bind(null, -1)}><i className="fa fa-plus"></i> Create ballot</button>
@@ -80,6 +88,7 @@ var BalloutList = React.createClass({
 
 var BallotListRow = React.createClass({
     mixins : ['Panel'],
+
     getDefaultProps: function() {
         return {
             end_date_formatted : '',
@@ -115,7 +124,7 @@ var BallotListRow = React.createClass({
             <div>
                 <h4>Voting period: <span className="text-info date-stamp">{this.props.start_date_formatted}</span> to <span className="text-info date-stamp">{this.props.end_date_formatted}</span></h4>
                 <hr />
-                <button className="btn btn-default"><i className="fa fa-ticket"></i> Add Ticket</button>
+                <Tickets ballotId={this.props.id}/>
             </div>);
         return (
             <Panel heading={heading} body={body} />
