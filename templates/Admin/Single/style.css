@@ -47,3 +47,7 @@
 #ballot-title {
     font-size : 24px;
 }
+
+textarea.form-control {
+    min-height : 140px;
+}
