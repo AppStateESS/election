@@ -16,6 +16,7 @@ class Single extends \election\Controller\Base
         javascript('datetimepicker');
         if (ELECTION_REACT_DEV) {
             $script[] = \election\Factory\React::development('Admin/Single/', 'Mixin.jsx');
+            $script[] = \election\Factory\React::development('Admin/Single/', 'Ticket.jsx');
             $script[] = \election\Factory\React::development('Admin/Single/', 'SingleBallot.jsx');
         } else {
             $script[] = \election\Factory\React::production('Admin/Single/', 'script.min.js');
@@ -41,7 +42,7 @@ EOF;
     public function post(\Request $request)
     {
         if (!$request->isVar('command')) {
-            throw new \Exception('Unknown Clinician command');
+            throw new \Exception('Unknown Single ballot command');
         }
 
         $command = $request->getVar('command');
@@ -55,7 +56,7 @@ EOF;
                 break;
 
             default:
-                throw new \Exception('Unknown Election command');
+                throw new \Exception('Unknown Single ballot command');
         }
 
         $view = new \View\JsonView(array('success' => true));
