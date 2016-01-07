@@ -3,11 +3,6 @@ CREATE TABLE elect_mseat_to_candidate (
   ballot_id INT NOT NULL
 );
 
-CREATE TABLE elect_ticket_to_candidate (
-  ticket_id INT NOT NULL,
-  candidate_id INT NOT NULL
-);
-
 CREATE TABLE elect_ballot_to_ticket (
   ballot_id INT NOT NULL,
   ticket_id INT NOT NULL
