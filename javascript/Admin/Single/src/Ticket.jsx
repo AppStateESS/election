@@ -294,9 +294,17 @@ var TicketRow = React.createClass({
 
 const TicketBody = (props) => (
     <div>
-        <label>Platform:</label>
-        <p>{props.platform}</p>
-        <label>Ticket web site</label>
-        <p><a href={props.site_address} target="_blank">{props.site_address}</a></p>
+        <div className="row">
+            <div className="col-sm-5">
+                <label>Platform:</label>
+                <p>{props.platform}</p>
+                <label>Ticket web site</label>
+                <p><a href={props.site_address} target="_blank">{props.site_address}</a></p>
+            </div>
+            <div className="col-sm-7">
+                <Candidates />
+            </div>
+
+        </div>
     </div>
 );
