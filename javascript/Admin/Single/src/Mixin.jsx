@@ -1,3 +1,5 @@
+'use strict';
+
 var Modal = React.createClass({
     getDefaultProps: function() {
         return {
