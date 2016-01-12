@@ -10,5 +10,28 @@ use election\Factory\Candidate as Factory;
  */
 class Candidate extends \election\Controller\Base
 {
-    
+    public function post(\Request $request)
+    {
+        if (!$request->isVar('command')) {
+            throw new \Exception('Unknown Candidate command');
+        }
+
+        $command = $request->getVar('command');
+        switch ($command) {
+            case 'save':
+                Factory::post();
+                break;
+
+            case 'delete':
+                Factory::delete(Factory::pullPostInteger('ballotId'));
+                break;
+
+            default:
+                throw new \Exception('Unknown Single ballot command');
+        }
+
+        $view = new \View\JsonView(array('success' => true));
+        $response = new \Response($view);
+        return $response;
+    }
 }
