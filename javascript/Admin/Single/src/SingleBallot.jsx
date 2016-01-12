@@ -1,3 +1,5 @@
+'use strict';
+
 var SingleBallot = React.createClass({
     mixins : ['Panel'],
 
@@ -91,8 +93,8 @@ var BallotListRow = React.createClass({
 
     getDefaultProps: function() {
         return {
-            end_date_formatted : '',
-            start_date_formatted : '',
+            endDateFormatted : '',
+            startDateFormatted : '',
             title : '',
             id : 0,
             handleEdit : null
@@ -122,7 +124,7 @@ var BallotListRow = React.createClass({
             </div>);
         var body = (
             <div>
-                <h4>Voting period: <span className="text-info date-stamp">{this.props.start_date_formatted}</span> to <span className="text-info date-stamp">{this.props.end_date_formatted}</span></h4>
+                <h4>Voting period: <span className="text-info date-stamp">{this.props.startDateFormatted}</span> to <span className="text-info date-stamp">{this.props.endDateFormatted}</span></h4>
                 <hr />
                 <Tickets ballotId={this.props.id}/>
             </div>);
@@ -150,8 +152,8 @@ var SingleBallotForm = React.createClass({
         return {
             id : 0,
             title: '',
-            start_date : '',
-            end_date : '',
+            startDate : '',
+            endDate : '',
             hideForm : null
         };
     },
@@ -171,10 +173,10 @@ var SingleBallotForm = React.createClass({
         this.setState({
             ballotId : this.props.id,
             title : this.props.title,
-            startDate : this.props.start_date_formatted,
-            endDate : this.props.end_date_formatted,
-            unixStart : this.props.start_date,
-            unixEnd : this.props.end_date
+            startDate : this.props.startDateFormatted,
+            endDate : this.props.endDateFormatted,
+            unixStart : this.props.startDate,
+            unixEnd : this.props.endDate
         });
     },
 
