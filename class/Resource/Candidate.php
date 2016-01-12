@@ -11,12 +11,12 @@ class Candidate extends \Resource
     /**
      * @var \Variable\String
      */
-    protected $first_name;
+    protected $firstName;
 
     /**
      * @var \Variable\String
      */
-    protected $last_name;
+    protected $lastName;
 
     /**
      * @var \Variable\File
@@ -26,12 +26,12 @@ class Candidate extends \Resource
     /**
      * @var \Variable\Integer
      */
-    protected $ticket_id;
+    protected $ticketId;
 
     /**
      * @var \Variable\Integer
      */
-    protected $ballot_id;
+    protected $ballotId;
 
     /**
      * @var string
@@ -42,23 +42,23 @@ class Candidate extends \Resource
     {
         parent::__construct();
 
-        $this->first_name = new \Variable\String(null, 'first_name');
-        $this->first_name->setLimit(50);
-        $this->last_name = new \Variable\String(null, 'last_name');
-        $this->last_name->setLimit(50);
+        $this->firstName = new \Variable\String(null, 'firstName');
+        $this->firstName->setLimit(50);
+        $this->lastName = new \Variable\String(null, 'lastName');
+        $this->lastName->setLimit(50);
         $this->picture = new \Variable\File(null, 'picture');
-        $this->ticket_id = new \Variable\Integer(0, 'ticket_id');
-        $this->ballot_id = new \Variable\Integer(0, 'ballot_id');
+        $this->ticketId = new \Variable\Integer(0, 'ticketId');
+        $this->ballotId = new \Variable\Integer(0, 'ballotId');
     }
 
     public function setFirstName($var)
     {
-        $this->first_name->set($var);
+        $this->firstName->set($var);
     }
 
     public function setLastName($var)
     {
-        $this->last_name->set($var);
+        $this->lastName->set($var);
     }
 
     public function setPicture($var)
@@ -68,22 +68,22 @@ class Candidate extends \Resource
 
     public function setTicketId($var)
     {
-        $this->ticket_id->set($var);
+        $this->ticketId->set($var);
     }
 
     public function setBallotId($var)
     {
-        $this->ballot_id->set($var);
+        $this->ballotId->set($var);
     }
 
     public function getFirstName()
     {
-        return $this->first_name->get();
+        return $this->firstName->get();
     }
 
     public function getLastName()
     {
-        return $this->last_name->get();
+        return $this->lastName->get();
     }
 
     public function getPicture()
@@ -93,12 +93,12 @@ class Candidate extends \Resource
 
     public function getTicketId()
     {
-        return $this->ticket_id->get();
+        return $this->ticketId->get();
     }
 
     public function getBallotId()
     {
-        return $this->ballot_id->get();
+        return $this->ballotId->get();
     }
 
 }

@@ -14,10 +14,14 @@ class Single extends \election\Controller\Base
     public function getHtmlView($data, \Request $request)
     {
         javascript('datetimepicker');
+        
+        $script[] = '<script type="text/javascript" src="' . PHPWS_SOURCE_HTTP . 'mod/election/node_modules/react-dropzone/dist/react-dropzone.js"></script>';
+        
         if (ELECTION_REACT_DEV) {
-            $script[] = \election\Factory\React::development('Admin/Single/', 'Mixin.jsx');
-            $script[] = \election\Factory\React::development('Admin/Single/', 'Ticket.jsx');
-            $script[] = \election\Factory\React::development('Admin/Single/', 'SingleBallot.jsx');
+            $script[] = \election\Factory\React::development('Admin/Single/', 'Mixin.js');
+            $script[] = \election\Factory\React::development('Admin/Single/', 'Candidate.js');
+            $script[] = \election\Factory\React::development('Admin/Single/', 'Ticket.js');
+            $script[] = \election\Factory\React::development('Admin/Single/', 'SingleBallot.js');
         } else {
             $script[] = \election\Factory\React::production('Admin/Single/', 'script.min.js');
         }
@@ -38,7 +42,7 @@ EOF;
         $view = new \View\HtmlView($content);
         return $view;
     }
-
+    
     public function post(\Request $request)
     {
         if (!$request->isVar('command')) {

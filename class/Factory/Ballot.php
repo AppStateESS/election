@@ -13,7 +13,7 @@ class Ballot extends Base
 
     public static function post()
     {
-        $ballot = self::build(self::pullPostInteger('ballotId'));
+        $ballot = self::build(self::pullPostInteger('ballotId'), new Resource);
         
         $ballot->setTitle(self::pullPostString('title'));
         $ballot->setStartDate(self::pullPostInteger('startDate'), false);
@@ -28,12 +28,12 @@ class Ballot extends Base
         self::saveResource($ballot);
     }
     
-    public static function delete($ballot_id)
+    public static function delete($ballotId)
     {
-        $ballot = self::build($ballot_id, new Resource);
+        $ballot = self::build($ballotId, new Resource);
         $ballot->setActive(false);
         self::saveResource($ballot);
-        Ticket::deleteByBallot($ballot_id);
+        Ticket::deleteByBallot($ballotId);
     }
 
     /**
@@ -43,15 +43,15 @@ class Ballot extends Base
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_ballot');
-        $tbl->addOrderBy('end_date');
+        $tbl->addOrderBy('endDate');
         $tbl->addFieldConditional('active', 1);
         $result = $db->select();
         if (empty($result)) {
             return $result;
         }
         foreach ($result as $key=>&$val) {
-            $val['start_date_formatted'] = date(ELECTION_DATETIME_FORMAT, $val['start_date']);
-            $val['end_date_formatted'] = date(ELECTION_DATETIME_FORMAT, $val['end_date']);
+            $val['startDateFormatted'] = date(ELECTION_DATETIME_FORMAT, $val['startDate']);
+            $val['endDateFormatted'] = date(ELECTION_DATETIME_FORMAT, $val['endDate']);
         }
         return $result;
     }

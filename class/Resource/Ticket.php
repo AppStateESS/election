@@ -13,7 +13,7 @@ class Ticket extends \Resource
      * The ticket is attached to this ballot
      * @var \Variable\Integer
      */
-    protected $ballot_id;
+    protected $ballotId;
     
     /**
      * @var \Variable\String
@@ -28,7 +28,7 @@ class Ticket extends \Resource
     /**
      * @var \Variable\String
      */
-    protected $site_address;
+    protected $siteAddress;
     
     /**
      * @var \Variable\Integer
@@ -44,19 +44,19 @@ class Ticket extends \Resource
     {
         parent::__construct();
 
-        $this->ballot_id = new \Variable\Integer(0, 'ballot_id');
+        $this->ballotId = new \Variable\Integer(0, 'ballotId');
         $this->title = new \Variable\String(null, 'title');
         $this->title->setLimit(200);
         $this->platform = new \Variable\String(null, 'platform');
         $this->platform->allowNull(true);
-        $this->site_address = new \Variable\Url(null, 'site_address');
-        $this->site_address->allowNull(true);
+        $this->siteAddress = new \Variable\Url(null, 'siteAddress');
+        $this->siteAddress->allowNull(true);
         $this->active = new \Variable\Bool(true, 'active');
     }
 
     public function setBallotId($var)
     {
-        $this->ballot_id->set($var);
+        $this->ballotId->set($var);
     }
     
     public function setTitle($var)
@@ -71,12 +71,12 @@ class Ticket extends \Resource
 
     public function setSiteAddress($var)
     {
-        $this->site_address->set($var);
+        $this->siteAddress->set($var);
     }
     
     public function getBallotId()
     {
-        return $this->ballot_id->get();
+        return $this->ballotId->get();
     }
 
     public function getTitle()
@@ -91,7 +91,7 @@ class Ticket extends \Resource
 
     public function getSiteAddress()
     {
-        return $this->site_address->get();
+        return $this->siteAddress->get();
     }
 
     public function setActive($active)

@@ -12,7 +12,7 @@ class Ballot extends Measure
      * Number of seats a student may vote on
      * @var \Variable\Integer  
      */
-    protected $seat_number;
+    protected $seatNumber;
     
     protected $table = 'elect_ballot';
 
@@ -20,17 +20,17 @@ class Ballot extends Measure
     {
         parent::__construct();
         // default is one seat: a ticket ballot
-        $this->seat_number = new \Variable\Integer(1, 'seat_number');
+        $this->seatNumber = new \Variable\Integer(1, 'seatNumber');
     }
     
     public function setSeatNumber($var)
     {
-        $this->seat_number->set($var);
+        $this->seatNumber->set($var);
     }
     
     public function getSeatNumber()
     {
-        return $this->seat_number->get();
+        return $this->seatNumber->get();
     }
 
 }

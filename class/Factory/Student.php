@@ -9,9 +9,9 @@ namespace election\Factory;
 class Student extends Base
 {
 
-    public static function buildHash($username, $ballot_id)
+    public static function buildHash($username, $ballotId)
     {
-        return md5($username . $ballot_id);
+        return md5($username . $ballotId);
     }
 
 }

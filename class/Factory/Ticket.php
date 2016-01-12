@@ -27,14 +27,14 @@ class Ticket extends Base
         $ticket->setBallotId(self::pullPostInteger('ballotId'));
         $ticket->setTitle(self::pullPostString('title'));
         $ticket->setPlatform(self::pullPostString('platform'));
-        $site_address = self::pullPostString('siteAddress');
+        $siteAddress = self::pullPostString('siteAddress');
 
-        if (!empty($site_address)) {
-            if (!preg_match('@^https?:\/\/@', $site_address)) {
-                $site_address = 'http://' . $site_address;
+        if (!empty($siteAddress)) {
+            if (!preg_match('@^https?:\/\/@', $siteAddress)) {
+                $siteAddress = 'http://' . $siteAddress;
             }
         }
-        $ticket->setSiteAddress($site_address);
+        $ticket->setSiteAddress($siteAddress);
 
         self::saveResource($ticket);
     }
@@ -52,24 +52,24 @@ class Ticket extends Base
         }
     }
     
-    public static function delete($ticket_id)
+    public static function delete($ticketId)
     {
-        if (empty($ticket_id)) {
+        if (empty($ticketId)) {
             throw new \Exception('Missing ticket id');
         }
-        $ticket = self::build($ticket_id, new Resource);
+        $ticket = self::build($ticketId, new Resource);
         $ticket->setActive(false);
         self::saveResource($ticket);
     }
     
-    public static function deleteByBallot($ballot_id)
+    public static function deleteByBallot($ballotId)
     {
-        if (empty($ballot_id)) {
+        if (empty($ballotId)) {
             throw new \Exception('Missing ballot id');
         }
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_ticket');
-        $tbl->addFieldConditional('ballot_id', $ballot_id);
+        $tbl->addFieldConditional('ballotId', $ballotId);
         $tbl->addValue('active', 0);
         $db->update();
     }

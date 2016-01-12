@@ -18,13 +18,13 @@ abstract class Measure extends \Resource
      * Time to allow students to vote
      * @var \Variable\DateTime 
      */
-    protected $start_date;
+    protected $startDate;
 
     /**
      * Deadline after which voting ceases
      * @var \Variable\DateTime
      */
-    protected $end_date;
+    protected $endDate;
     
     /**
      *
@@ -38,8 +38,8 @@ abstract class Measure extends \Resource
         $this->title = new \Variable\String(null, 'title');
         $this->title->setLimit(100);
         $this->title->allowEmpty(false);
-        $this->start_date = new \Variable\DateTime(null, 'start_date');
-        $this->end_date = new \Variable\DateTime(null, 'end_date');
+        $this->startDate = new \Variable\DateTime(null, 'startDate');
+        $this->endDate = new \Variable\DateTime(null, 'endDate');
         $this->active = new \Variable\Bool(true, 'active');
     }
 
@@ -53,7 +53,7 @@ abstract class Measure extends \Resource
         if ($formatted) {
             $var = strtotime($var);
         }
-        $this->start_date->set($var);
+        $this->startDate->set($var);
     }
 
     public function setEndDate($var, $formatted=true)
@@ -61,7 +61,7 @@ abstract class Measure extends \Resource
         if ($formatted) {
             $var = strtotime($var);
         }
-        $this->end_date->set($var);
+        $this->endDate->set($var);
     }
     
     public function getTitle()
@@ -71,12 +71,12 @@ abstract class Measure extends \Resource
     
     public function getStartDate()
     {
-        return $this->start_date->get();
+        return $this->startDate->get();
     }
 
     public function getEndDate()
     {
-        return $this->end_date->get();
+        return $this->endDate->get();
     }
     
     public function setActive($var)
