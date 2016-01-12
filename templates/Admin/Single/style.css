@@ -51,3 +51,31 @@
 textarea.form-control {
     min-height : 140px;
 }
+
+.dropzone img {
+    width : 150px;
+}
+
+.dropzone:hover {
+    cursor : pointer;
+}
+
+.dropzone .clickme {
+    width : 150px;
+    height : 200px;
+    border : 2px dashed #6e6e6e;
+    border-radius: 4px;
+    padding : 2em 1em;
+}
+
+.dropzone .clickme p {
+    font-size : 1.5em;
+}
+
+.candidateForm {
+    width : 152px;
+}
+
+.candidateForm input {
+    margin-top : .5em;
+}
