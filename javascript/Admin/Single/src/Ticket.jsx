@@ -1,3 +1,5 @@
+'use strict';
+
 var Tickets = React.createClass({
     getInitialState: function() {
         return {
@@ -9,7 +11,6 @@ var Tickets = React.createClass({
     getDefaultProps: function() {
         return {
             ballotId : 0,
-            reload : null,
         };
     },
 
@@ -35,17 +36,17 @@ var Tickets = React.createClass({
         });
     },
 
-    editTicket: function(ticket_id) {
+    editTicket: function(ticketId) {
         this.setState({
-            ticketFormId : ticket_id
+            ticketFormId : ticketId
         })
     },
 
-    delete : function(ticket_id) {
+    delete : function(ticketId) {
         if (confirm('Are you sure you want to delete this ticket?')) {
             $.post('election/Admin/Ticket', {
                 command : 'delete',
-                ticketId : ticket_id,
+                ticketId : ticketId,
             }, null, 'json')
             	.done(function(data){
                     this.load();
@@ -61,7 +62,7 @@ var Tickets = React.createClass({
     render: function() {
         var form = null;
         if (this.state.ticketFormId === -1) {
-            form = <TicketForm close={this.closeForm} {...this.props} ballot_id={this.props.ballotId} load={this.load}/>
+            form = <TicketForm close={this.closeForm} {...this.props} load={this.load}/>
         }
 
         var ticketList = this.state.tickets.map(function(value){
@@ -90,8 +91,6 @@ var Tickets = React.createClass({
 var TicketForm = React.createClass({
     getInitialState: function() {
         return {
-            ticketId : 0,
-            ballotId : 0,
             title : null,
             siteAddress : null,
             platform : null,
@@ -102,9 +101,10 @@ var TicketForm = React.createClass({
     getDefaultProps: function() {
         return {
             id : 0,
-            ballot_id : 0,
+            ballotId : 0,
+            ticketId : 0,
             title : null,
-            site_address : null,
+            siteAddress : null,
             platform : null,
             close : null,
             load : null
@@ -112,6 +112,7 @@ var TicketForm = React.createClass({
     },
 
     componentWillMount: function() {
+        console.log(this.props);
         if (this.props.id > 0) {
             this.copyPropsToState();
         }
@@ -119,10 +120,8 @@ var TicketForm = React.createClass({
 
     copyPropsToState: function() {
         this.setState({
-            ticketId : this.props.id,
-            ballotId : this.props.ballot_id,
             title : this.props.title,
-            siteAddress : this.props.site_address,
+            siteAddress : this.props.siteAddress,
             platform : this.props.platform
         });
     },
@@ -161,11 +160,12 @@ var TicketForm = React.createClass({
 
     save : function() {
         var error = this.checkForErrors();
+
         if (error === false) {
             $.post('election/Admin/Ticket', {
                 command : 'save',
-                ballotId : this.state.ballotId,
-                ticketId : this.state.ticketId,
+                ballotId : this.props.ballotId,
+                ticketId : this.props.ticketId,
                 title : this.state.title,
                 siteAddress : this.state.siteAddress,
                 platform: this.state.platform
@@ -266,7 +266,7 @@ var TicketRow = React.createClass({
             id : 0,
             title : null,
             platform : null,
-            site_address : null,
+            siteAddress : null,
             handleDelete : null
         };
     },
@@ -295,16 +295,15 @@ var TicketRow = React.createClass({
 const TicketBody = (props) => (
     <div>
         <div className="row">
-            <div className="col-sm-5">
+            <div className="col-sm-7">
                 <label>Platform:</label>
                 <p>{props.platform}</p>
                 <label>Ticket web site</label>
-                <p><a href={props.site_address} target="_blank">{props.site_address}</a></p>
+                <p><a href={props.siteAddress} target="_blank">{props.siteAddress}</a></p>
             </div>
-            <div className="col-sm-7">
-                <Candidates />
+            <div className="col-sm-5">
+                <Candidates ballotId={props.ballotId} ticketId={props.id}/>
             </div>
-
         </div>
     </div>
 );
