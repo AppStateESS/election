@@ -9,3 +9,9 @@ define('ELECTION_REACT_DEV', false);
 
 // This format works correctly with the Javascript Date class. Alter at your own risk.
 define('ELECTION_DATETIME_FORMAT', 'M d, Y, G:i');
+
+// Candidate photos will be resized to match these dimensions.
+// IF CHANGED - make sure to update your the Candidate form style sheet
+// as they will expect the defaults set in defines.dist.php
+define('ELECTION_MAX_CANDIDATE_WIDTH', 150);
+define('ELECTION_MAX_CANDIDATE_HEIGHT', 300);
