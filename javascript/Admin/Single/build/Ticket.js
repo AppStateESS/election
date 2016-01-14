@@ -362,41 +362,30 @@ var TicketRow = React.createClass({
 const TicketBody = props => React.createElement(
     'div',
     null,
+    React.createElement(Candidates, { ballotId: props.ballotId, ticketId: props.id }),
+    React.createElement('hr', null),
     React.createElement(
-        'div',
-        { className: 'row' },
+        'h4',
+        { className: 'clearfix' },
+        'Platform:'
+    ),
+    React.createElement(
+        'p',
+        null,
+        props.platform
+    ),
+    React.createElement(
+        'h4',
+        null,
+        'Ticket web site'
+    ),
+    React.createElement(
+        'p',
+        null,
         React.createElement(
-            'div',
-            { className: 'col-sm-7' },
-            React.createElement(
-                'label',
-                null,
-                'Platform:'
-            ),
-            React.createElement(
-                'p',
-                null,
-                props.platform
-            ),
-            React.createElement(
-                'label',
-                null,
-                'Ticket web site'
-            ),
-            React.createElement(
-                'p',
-                null,
-                React.createElement(
-                    'a',
-                    { href: props.siteAddress, target: '_blank' },
-                    props.siteAddress
-                )
-            )
-        ),
-        React.createElement(
-            'div',
-            { className: 'col-sm-5' },
-            React.createElement(Candidates, { ballotId: props.ballotId, ticketId: props.id })
+            'a',
+            { href: props.siteAddress, target: '_blank' },
+            props.siteAddress
         )
     )
 );

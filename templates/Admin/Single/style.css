@@ -56,6 +56,9 @@ textarea.form-control {
     width : 150px;
 }
 
+.dropzone {
+}
+
 .dropzone:hover {
     cursor : pointer;
 }
@@ -79,3 +82,4 @@ textarea.form-control {
 .candidateForm input {
     margin-top : .5em;
 }
+

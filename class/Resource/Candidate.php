@@ -32,6 +32,12 @@ class Candidate extends \Resource
      * @var \Variable\Integer
      */
     protected $ballotId;
+    
+    /**
+     *
+     * @var \Variable\Bool
+     */
+    protected $active;
 
     /**
      * @var string
@@ -49,6 +55,7 @@ class Candidate extends \Resource
         $this->picture = new \Variable\File(null, 'picture');
         $this->ticketId = new \Variable\Integer(0, 'ticketId');
         $this->ballotId = new \Variable\Integer(0, 'ballotId');
+        $this->active = new \Variable\Bool(true, 'active');
     }
 
     public function setFirstName($var)
@@ -101,4 +108,14 @@ class Candidate extends \Resource
         return $this->ballotId->get();
     }
 
+    public function setActive($var)
+    {
+        $this->active->set($var);
+    }
+    
+    public function getActive()
+    {
+        return $this->active->get();
+    }
+    
 }

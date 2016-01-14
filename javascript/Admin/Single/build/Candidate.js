@@ -6,7 +6,10 @@ var Candidates = React.createClass({
     displayName: 'Candidates',
 
     getInitialState: function () {
-        return {};
+        return {
+            candidates: [],
+            currentForm: 0
+        };
     },
 
     getDefaultProps: function () {
@@ -16,8 +19,130 @@ var Candidates = React.createClass({
         };
     },
 
+    componentDidMount: function () {
+        this.load();
+    },
+
+    load: function () {
+        $.getJSON('election/Admin/Candidate/', {
+            command: 'list',
+            ballotId: this.props.ballotId,
+            ticketId: this.props.ticketId
+        }).done(function (data) {
+            this.setState({
+                currentForm: 0,
+                candidates: data
+            });
+        }.bind(this));
+    },
+
+    setCurrentForm: function (id) {
+        this.setState({
+            currentForm: id
+        });
+    },
+
+    delete: function (candidateId) {
+        if (confirm('Are you sure you want to delete this candidate?')) {
+            $.post('election/Admin/Candidate', {
+                command: 'delete',
+                candidateId: candidateId
+            }, null, 'json').done(function (data) {
+                this.load();
+            }.bind(this));
+        }
+    },
+
     render: function () {
-        return React.createElement(CandidateForm, this.props);
+        var candidates = this.state.candidates.map(function (value) {
+            if (value.id === this.state.currentForm) {
+                return React.createElement(
+                    'div',
+                    { key: value.id, className: 'col-sm-3' },
+                    React.createElement(CandidateForm, _extends({}, value, { candidateId: value.id, reload: this.load, reset: this.setCurrentForm.bind(null, 0) }))
+                );
+            } else {
+                return React.createElement(CandidateProfile, _extends({ key: value.id }, value, { 'delete': this.delete.bind(null, value.id), edit: this.setCurrentForm.bind(null, value.id) }));
+            }
+        }.bind(this));
+
+        if (this.state.currentForm === 0) {
+            var form = React.createElement(
+                'button',
+                { className: 'btn btn-primary', onClick: this.setCurrentForm.bind(null, -1) },
+                React.createElement('i', { className: 'fa fa-user-plus fa-5x' }),
+                React.createElement('br', null),
+                'Add candidate'
+            );
+        } else if (this.state.currentForm === -1) {
+            var form = React.createElement(CandidateForm, _extends({}, this.props, { reload: this.load, reset: this.setCurrentForm.bind(null, 0) }));
+        }
+
+        return React.createElement(
+            'div',
+            null,
+            React.createElement(
+                'div',
+                { className: 'row' },
+                candidates,
+                React.createElement(
+                    'div',
+                    { className: 'col-sm-3' },
+                    form
+                )
+            )
+        );
+    }
+
+});
+
+var CandidateProfile = React.createClass({
+    displayName: 'CandidateProfile',
+
+    getInitialState: function () {
+        return {};
+    },
+
+    getDefaultProps: function () {
+        return {
+            firstName: null,
+            lastName: null,
+            picture: null
+        };
+    },
+
+    render: function () {
+        return React.createElement(
+            'div',
+            { className: 'col-sm-3' },
+            React.createElement('img', { src: this.props.picture, className: 'candidate-pic' }),
+            React.createElement(
+                'div',
+                { className: 'text-center' },
+                React.createElement(
+                    'p',
+                    null,
+                    React.createElement(
+                        'strong',
+                        null,
+                        this.props.firstName,
+                        ' ',
+                        this.props.lastName
+                    )
+                ),
+                React.createElement(
+                    'button',
+                    { className: 'btn btn-primary', title: 'Edit candidate', onClick: this.props.edit },
+                    React.createElement('i', { className: 'fa fa-edit' })
+                ),
+                ' ',
+                React.createElement(
+                    'button',
+                    { className: 'btn btn-danger', onClick: this.props.delete, title: 'Delete candidate' },
+                    React.createElement('i', { className: 'fa fa-times' })
+                )
+            )
+        );
     }
 
 });
@@ -37,8 +162,22 @@ var CandidateForm = React.createClass({
         return {
             ballotId: 0,
             ticketId: 0,
-            candidateId: 0
+            candidateId: 0,
+            reload: null,
+            firstName: '',
+            lastName: '',
+            picture: null
         };
+    },
+
+    componentWillMount: function () {
+        if (this.props.candidateId > 0) {
+            this.setState({
+                firstName: this.props.firstName,
+                lastName: this.props.lastName,
+                picture: this.props.picture
+            });
+        }
     },
 
     updateFirstName: function (e) {
@@ -78,46 +217,38 @@ var CandidateForm = React.createClass({
             data: data,
             cache: false,
             dataType: 'json',
-            processData: false, // Don't process the files
-            contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-            success: function (data, textStatus, jqXHR) {
-                if (typeof data.error === 'undefined') {
-                    // Success so call function to process the form
-                    //this.submitForm(event, data);
-                    console.log('success');
-                } else {
-                    // Handle errors here
-                    console.log('ERRORS: ' + data.error);
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                // Handle errors here
-                console.log('ERRORS: ' + textStatus);
-                // STOP LOADING SPINNER
-            }
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                this.props.reload();
+            }.bind(this)
         });
     },
 
     render: function () {
+
+        var saveButton = null;
+        var disabledButton = this.state.firstName.length === 0 || this.state.lastName.length === 0;
+
         var props = { firstName: this.state.firstName, lastName: this.state.lastName };
         return React.createElement(
             'div',
             { className: 'candidateForm text-center' },
-            React.createElement(Photo, { photo: this.state.photo, update: this.updatePhoto }),
+            React.createElement(Photo, { photo: this.state.photo, update: this.updatePhoto, picture: this.state.picture }),
             React.createElement(CandidateName, _extends({ updateFirstName: this.updateFirstName, updateLastName: this.updateLastName }, props)),
             React.createElement(
                 'div',
                 { className: 'pad-top' },
                 React.createElement(
                     'button',
-                    { className: 'btn btn-success btn-sm', title: 'Save candidate', onClick: this.save },
+                    { className: 'btn btn-success btn-sm', title: 'Save candidate', onClick: this.save, disabled: disabledButton },
                     React.createElement('i', { className: 'fa fa-save' }),
                     ' Save'
                 ),
                 ' ',
                 React.createElement(
                     'button',
-                    { className: 'btn btn-danger btn-sm', title: 'Cancel' },
+                    { className: 'btn btn-danger btn-sm', title: 'Cancel', onClick: this.props.reset },
                     React.createElement('i', { className: 'fa fa-times' }),
                     ' Clear'
                 )
@@ -155,11 +286,13 @@ var Photo = React.createClass({
 
     getDefaultProps: function () {
         return {
-            photo: []
+            photo: [],
+            picture: ''
         };
     },
 
     onDrop: function (photo) {
+        console.log(photo);
         this.props.update(photo);
     },
 
@@ -175,6 +308,8 @@ var Photo = React.createClass({
         if (this.props.photo.length > 0) {
             imageSrc = this.props.photo[0].preview;
             photo = React.createElement('img', { src: imageSrc, className: 'img-responsive' });
+        } else if (this.props.picture.length) {
+            photo = React.createElement('img', { src: this.props.picture, className: 'img-responsive' });
         } else {
             photo = React.createElement(
                 'div',
