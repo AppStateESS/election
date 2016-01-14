@@ -68,7 +68,7 @@ var Tickets = React.createClass({
 
         var ticketList = this.state.tickets.map(function (value) {
             if (value.id === this.state.ticketFormId) {
-                return React.createElement(TicketForm, _extends({ key: value.id }, value, this.props, { close: this.closeForm, load: this.load }));
+                return React.createElement(TicketForm, _extends({ key: value.id, ticketId: value.id }, value, this.props, { close: this.closeForm, load: this.load }));
             } else {
                 return React.createElement(TicketRow, _extends({ key: value.id }, value, { handleEdit: this.editTicket.bind(null, value.id), handleDelete: this.delete.bind(null, value.id) }));
             }
@@ -124,7 +124,6 @@ var TicketForm = React.createClass({
     },
 
     componentWillMount: function () {
-        console.log(this.props);
         if (this.props.id > 0) {
             this.copyPropsToState();
         }
@@ -147,33 +146,41 @@ var TicketForm = React.createClass({
             error = true;
         }
 
-        var site = this.refs.siteAddress.value;
-        if (site.length > 0) {
+        return error;
+    },
+
+    checkUrl: function () {
+        if (this.state.siteAddress && this.state.siteAddress.length > 0) {
             $.getJSON('election/Admin/Ticket', {
                 command: 'checkUrl',
-                checkUrl: site
+                checkUrl: this.state.siteAddress
             }).done(function (data) {
-                if (!data.success) {
+                if (!data.success || data.success === false) {
                     this.setState({
                         siteAddressError: true
                     });
                     $(this.refs.siteAddress).css('borderColor', 'red');
-                    error = true;
+                    return false;
                 } else {
                     this.setState({
                         siteAddressError: false
                     });
+                    $(this.refs.siteAddress).css('borderColor', 'inherit');
+                    return true;
                 }
             }.bind(this));
+        } else {
+            this.setState({
+                siteAddressError: false
+            });
+            $(this.refs.siteAddress).css('borderColor', 'inherit');
+            return true;
         }
-
-        return error;
     },
 
     save: function () {
         var error = this.checkForErrors();
-
-        if (error === false) {
+        if (error === false && this.state.siteAddressError === false) {
             $.post('election/Admin/Ticket', {
                 command: 'save',
                 ballotId: this.props.ballotId,
@@ -198,8 +205,14 @@ var TicketForm = React.createClass({
     },
 
     changeSiteAddress: function (e) {
+        var siteAddress = e.target.value;
+        if (siteAddress.length === 0) {
+            this.setState({
+                siteAddressError: false
+            });
+        }
         this.setState({
-            siteAddress: e.target.value
+            siteAddress: siteAddress
         });
     },
 
@@ -233,7 +246,7 @@ var TicketForm = React.createClass({
                     'div',
                     { className: 'col-sm-10' },
                     React.createElement('input', { ref: 'title', type: 'text', className: 'form-control', onFocus: this.resetBorder,
-                        placeholder: 'Enter names of candidates on ticket (e.g. Jones / Smith)', onChange: this.changeTitle,
+                        placeholder: 'Candidate last names (e.g. Jones / Smith)', onChange: this.changeTitle,
                         value: this.state.title })
                 )
             ),
@@ -253,7 +266,7 @@ var TicketForm = React.createClass({
                     'div',
                     { className: 'col-sm-10' },
                     React.createElement('input', { ref: 'siteAddress', type: 'text', className: 'form-control',
-                        placeholder: 'http://siteaddress.com', onFocus: this.resetBorder, onChange: this.changeSiteAddress,
+                        placeholder: 'http://siteaddress.com', onFocus: this.resetBorder, onBlur: this.checkUrl, onChange: this.changeSiteAddress,
                         value: this.state.siteAddress }),
                     this.state.siteAddressError ? React.createElement(
                         'div',
@@ -278,14 +291,14 @@ var TicketForm = React.createClass({
                     'div',
                     { className: 'col-sm-10' },
                     React.createElement('textarea', { ref: 'platform', className: 'form-control', onFocus: this.resetBorder,
-                        placeholder: 'Candidates election statement', onChange: this.changePlatform,
+                        placeholder: 'Ticket\'s election statement', onChange: this.changePlatform,
                         value: this.state.platform })
                 )
             ),
             React.createElement('hr', null),
             React.createElement(
                 'button',
-                { className: 'btn btn-primary pad-right', onClick: this.save },
+                { className: 'btn btn-primary pad-right', onClick: this.save, disabled: this.state.siteAddressError },
                 React.createElement('i', { className: 'fa fa-save' }),
                 ' Save ticket'
             ),
@@ -318,8 +331,8 @@ var TicketRow = React.createClass({
         return {
             id: 0,
             title: null,
-            platform: null,
-            siteAddress: null,
+            platform: '',
+            siteAddress: '',
             handleDelete: null
         };
     },
@@ -364,28 +377,43 @@ const TicketBody = props => React.createElement(
     null,
     React.createElement(Candidates, { ballotId: props.ballotId, ticketId: props.id }),
     React.createElement('hr', null),
-    React.createElement(
-        'h4',
-        { className: 'clearfix' },
-        'Platform:'
-    ),
-    React.createElement(
-        'p',
-        null,
-        props.platform
-    ),
-    React.createElement(
-        'h4',
-        null,
-        'Ticket web site'
-    ),
-    React.createElement(
-        'p',
+    props.platform.length ? React.createElement(
+        'div',
         null,
         React.createElement(
-            'a',
-            { href: props.siteAddress, target: '_blank' },
-            props.siteAddress
+            'h4',
+            { className: 'clearfix' },
+            'Platform:'
+        ),
+        React.createElement(
+            'p',
+            null,
+            props.platform.split("\n").map(function (item, i) {
+                return React.createElement(
+                    'span',
+                    { key: i },
+                    item,
+                    React.createElement('br', null)
+                );
+            })
         )
-    )
+    ) : '',
+    props.siteAddress.length ? React.createElement(
+        'div',
+        null,
+        React.createElement(
+            'h4',
+            null,
+            'Web site'
+        ),
+        React.createElement(
+            'p',
+            null,
+            React.createElement(
+                'a',
+                { href: props.siteAddress, target: '_blank' },
+                props.siteAddress
+            )
+        )
+    ) : ''
 );

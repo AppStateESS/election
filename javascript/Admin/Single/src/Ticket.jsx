@@ -67,7 +67,7 @@ var Tickets = React.createClass({
 
         var ticketList = this.state.tickets.map(function(value){
             if (value.id === this.state.ticketFormId) {
-                return <TicketForm key={value.id} {...value} {...this.props} close={this.closeForm} load={this.load}/>;
+                return <TicketForm key={value.id} ticketId={value.id} {...value} {...this.props} close={this.closeForm} load={this.load}/>;
             } else {
                 return <TicketRow key={value.id} {...value} handleEdit={this.editTicket.bind(null, value.id)} handleDelete={this.delete.bind(null, value.id)}/>;
             }
@@ -112,7 +112,6 @@ var TicketForm = React.createClass({
     },
 
     componentWillMount: function() {
-        console.log(this.props);
         if (this.props.id > 0) {
             this.copyPropsToState();
         }
@@ -135,33 +134,41 @@ var TicketForm = React.createClass({
             error = true;
         }
 
-        var site = this.refs.siteAddress.value;
-        if (site.length > 0) {
+        return error;
+    },
+
+    checkUrl : function() {
+        if (this.state.siteAddress && this.state.siteAddress.length > 0) {
             $.getJSON('election/Admin/Ticket', {
                 command : 'checkUrl',
-            	checkUrl : site
+                checkUrl : this.state.siteAddress
             }).done(function(data){
-                if (!data.success) {
+                if (!data.success || data.success === false) {
                     this.setState({
                         siteAddressError : true
                     });
                     $(this.refs.siteAddress).css('borderColor', 'red');
-                    error = true;
+                    return false;
                 } else {
                     this.setState({
                         siteAddressError : false
                     });
+                    $(this.refs.siteAddress).css('borderColor', 'inherit');
+                    return true;
                 }
             }.bind(this));
+        } else {
+            this.setState({
+                siteAddressError : false
+            });
+            $(this.refs.siteAddress).css('borderColor', 'inherit');
+            return true;
         }
-
-        return error;
     },
 
     save : function() {
         var error = this.checkForErrors();
-
-        if (error === false) {
+        if (error === false && this.state.siteAddressError === false) {
             $.post('election/Admin/Ticket', {
                 command : 'save',
                 ballotId : this.props.ballotId,
@@ -189,8 +196,14 @@ var TicketForm = React.createClass({
     },
 
     changeSiteAddress: function(e) {
+        var siteAddress = e.target.value;
+        if (siteAddress.length === 0) {
+            this.setState({
+                siteAddressError : false
+            });
+        }
         this.setState({
-            siteAddress : e.target.value
+            siteAddress : siteAddress
         });
     },
 
@@ -214,7 +227,7 @@ var TicketForm = React.createClass({
                     </div>
                     <div className="col-sm-10">
                         <input ref="title" type="text" className="form-control" onFocus={this.resetBorder}
-                            placeholder="Enter names of candidates on ticket (e.g. Jones / Smith)" onChange={this.changeTitle}
+                            placeholder="Candidate last names (e.g. Jones / Smith)" onChange={this.changeTitle}
                             value={this.state.title}/>
                     </div>
                 </div>
@@ -224,7 +237,7 @@ var TicketForm = React.createClass({
                     </div>
                     <div className="col-sm-10">
                     <input ref="siteAddress" type="text" className="form-control"
-                        placeholder="http://siteaddress.com" onFocus={this.resetBorder} onChange={this.changeSiteAddress}
+                        placeholder="http://siteaddress.com" onFocus={this.resetBorder} onBlur={this.checkUrl} onChange={this.changeSiteAddress}
                         value={this.state.siteAddress}/>
                     {this.state.siteAddressError ? <div className="text-danger">Site address format not accepted.</div> : null}
                     </div>
@@ -235,12 +248,12 @@ var TicketForm = React.createClass({
                     </div>
                     <div className="col-sm-10">
                         <textarea ref="platform" className="form-control" onFocus={this.resetBorder}
-                            placeholder="Candidates election statement" onChange={this.changePlatform}
+                            placeholder="Ticket's election statement" onChange={this.changePlatform}
                             value={this.state.platform}/>
                     </div>
                 </div>
                 <hr />
-                <button className="btn btn-primary pad-right" onClick={this.save}><i className="fa fa-save"></i> Save ticket</button>
+                <button className="btn btn-primary pad-right" onClick={this.save} disabled={this.state.siteAddressError}><i className="fa fa-save"></i> Save ticket</button>
                 <button className="btn btn-danger" onClick={this.props.close}><i className="fa fa-times"></i> Cancel</button>
             </div>
         );
@@ -265,8 +278,8 @@ var TicketRow = React.createClass({
         return {
             id : 0,
             title : null,
-            platform : null,
-            siteAddress : null,
+            platform : '',
+            siteAddress : '',
             handleDelete : null
         };
     },
@@ -296,9 +309,19 @@ const TicketBody = (props) => (
     <div>
         <Candidates ballotId={props.ballotId} ticketId={props.id}/>
         <hr />
-        <h4 className="clearfix">Platform:</h4>
-        <p>{props.platform}</p>
-        <h4>Ticket web site</h4>
-        <p><a href={props.siteAddress} target="_blank">{props.siteAddress}</a></p>
+        {props.platform.length ? (
+            <div>
+                <h4 className="clearfix">Platform:</h4>
+                <p>{props.platform.split("\n").map(function(item, i){
+                        return (<span key={i}>{item}<br /></span>);
+                    })}</p>
+            </div>
+        ) : ''}
+        {props.siteAddress.length ? (
+            <div>
+                <h4>Web site</h4>
+                <p><a href={props.siteAddress} target="_blank">{props.siteAddress}</a></p>
+            </div>
+        ) : ''}
     </div>
 );
