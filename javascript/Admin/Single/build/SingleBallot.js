@@ -138,13 +138,13 @@ var BallotListRow = React.createClass({
                 { className: 'change-buttons' },
                 React.createElement(
                     'button',
-                    { className: 'btn btn-primary', 'data-vid': this.props.id, onClick: this.props.handleEdit },
+                    { className: 'btn btn-primary', 'data-vid': this.props.id, onClick: this.props.handleEdit, title: 'Edit ballot' },
                     React.createElement('i', { className: 'fa fa-edit' })
                 ),
                 React.createElement(
                     'button',
                     { className: 'btn btn-danger', onClick: this.handleDelete },
-                    React.createElement('i', { className: 'fa fa-times' })
+                    React.createElement('i', { className: 'fa fa-times', title: 'Remove ballot' })
                 )
             ),
             React.createElement(

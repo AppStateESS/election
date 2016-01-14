@@ -288,8 +288,8 @@ var TicketRow = React.createClass({
         var heading = (
             <div>
                 <div className="change-buttons">
-                    <button className="btn btn-sm btn-primary" data-tid={this.props.id} onClick={this.props.handleEdit}><i className="fa fa-edit"></i></button>
-                    <button className="btn btn-sm btn-danger" onClick={this.props.handleDelete}><i className="fa fa-times"></i></button>
+                    <button className="btn btn-sm btn-primary" data-tid={this.props.id} onClick={this.props.handleEdit} title="Edit ticket"><i className="fa fa-edit"></i></button>
+                    <button className="btn btn-sm btn-danger" onClick={this.props.handleDelete} title="Delete ticket"><i className="fa fa-times"></i></button>
                 </div>
                 <h4>{this.props.title}</h4>
             </div>

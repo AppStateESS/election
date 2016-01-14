@@ -346,12 +346,12 @@ var TicketRow = React.createClass({
                 { className: 'change-buttons' },
                 React.createElement(
                     'button',
-                    { className: 'btn btn-sm btn-primary', 'data-tid': this.props.id, onClick: this.props.handleEdit },
+                    { className: 'btn btn-sm btn-primary', 'data-tid': this.props.id, onClick: this.props.handleEdit, title: 'Edit ticket' },
                     React.createElement('i', { className: 'fa fa-edit' })
                 ),
                 React.createElement(
                     'button',
-                    { className: 'btn btn-sm btn-danger', onClick: this.props.handleDelete },
+                    { className: 'btn btn-sm btn-danger', onClick: this.props.handleDelete, title: 'Delete ticket' },
                     React.createElement('i', { className: 'fa fa-times' })
                 )
             ),

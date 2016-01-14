@@ -117,8 +117,8 @@ var BallotListRow = React.createClass({
         var heading = (
             <div>
                 <div className="change-buttons">
-                    <button className="btn btn-primary" data-vid={this.props.id} onClick={this.props.handleEdit}><i className="fa fa-edit"></i></button>
-                    <button className="btn btn-danger" onClick={this.handleDelete}><i className="fa fa-times"></i></button>
+                    <button className="btn btn-primary" data-vid={this.props.id} onClick={this.props.handleEdit} title="Edit ballot"><i className="fa fa-edit"></i></button>
+                    <button className="btn btn-danger" onClick={this.handleDelete}><i className="fa fa-times" title="Remove ballot"></i></button>
                 </div>
                 <h3>{this.props.title}</h3>
             </div>);
