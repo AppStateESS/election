@@ -23,7 +23,7 @@ class Candidate extends \election\Controller\Base
                 break;
 
             case 'delete':
-                Factory::delete(Factory::pullPostInteger('ballotId'));
+                Factory::delete(Factory::pullPostInteger('candidateId'));
                 break;
 
             default:
@@ -33,5 +33,23 @@ class Candidate extends \election\Controller\Base
         $view = new \View\JsonView(array('success' => true));
         $response = new \Response($view);
         return $response;
+    }
+    
+        
+    protected function getJsonView($data, \Request $request)
+    {
+        if (!$request->isVar('command')) {
+            throw new \Exception('Unknown Candidate command');
+        }
+        $json = array('success' => true);
+
+        $command = $request->getVar('command');
+        switch ($command) {
+            case 'list':
+                $json = Factory::getList(Factory::pullGetInteger('ballotId'));
+                break;
+        }
+        $view = new \View\JsonView($json);
+        return $view;
     }
 }
