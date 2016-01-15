@@ -39,11 +39,14 @@ class Ballot extends Base
     /**
      * @return array
      */
-    public static function getList()
+    public static function getList($multiple_chair=0)
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_ballot');
         $tbl->addOrderBy('endDate');
+        if ($multiple_chair) {
+            $tbl->addFieldConditional('seatNumber', 1, '>');
+        }
         $tbl->addFieldConditional('active', 1);
         $result = $db->select();
         if (empty($result)) {
