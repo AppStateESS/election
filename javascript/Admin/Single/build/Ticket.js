@@ -88,8 +88,9 @@ var Tickets = React.createClass({
             React.createElement(
                 'button',
                 { className: 'btn btn-primary', onClick: this.addTicket },
-                React.createElement('i', { className: 'fa fa-ticket' }),
-                ' Add ticket'
+                React.createElement('i', { className: 'fa fa-ticket fa-5x' }),
+                React.createElement('br', null),
+                'Add ticket'
             ),
             React.createElement('hr', null),
             form,
@@ -347,16 +348,16 @@ var TicketRow = React.createClass({
                 React.createElement(
                     'button',
                     { className: 'btn btn-sm btn-primary', 'data-tid': this.props.id, onClick: this.props.handleEdit, title: 'Edit ticket' },
-                    React.createElement('i', { className: 'fa fa-edit' })
+                    React.createElement('i', { className: 'fa fa-lg fa-edit' })
                 ),
                 React.createElement(
                     'button',
                     { className: 'btn btn-sm btn-danger', onClick: this.props.handleDelete, title: 'Delete ticket' },
-                    React.createElement('i', { className: 'fa fa-times' })
+                    React.createElement('i', { className: 'fa fa-lg fa-times' })
                 )
             ),
             React.createElement(
-                'h4',
+                'h3',
                 null,
                 this.props.title
             )

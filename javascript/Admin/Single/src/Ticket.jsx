@@ -79,7 +79,7 @@ var Tickets = React.createClass({
 
         return (
             <div>
-                <button className="btn btn-primary" onClick={this.addTicket}><i className="fa fa-ticket"></i> Add ticket</button>
+                <button className="btn btn-primary" onClick={this.addTicket}><i className="fa fa-ticket fa-5x"></i><br />Add ticket</button>
                 <hr />
                 {form}
                 {ticketList}
@@ -288,10 +288,10 @@ var TicketRow = React.createClass({
         var heading = (
             <div>
                 <div className="change-buttons">
-                    <button className="btn btn-sm btn-primary" data-tid={this.props.id} onClick={this.props.handleEdit} title="Edit ticket"><i className="fa fa-edit"></i></button>
-                    <button className="btn btn-sm btn-danger" onClick={this.props.handleDelete} title="Delete ticket"><i className="fa fa-times"></i></button>
+                    <button className="btn btn-sm btn-primary" data-tid={this.props.id} onClick={this.props.handleEdit} title="Edit ticket"><i className="fa fa-lg fa-edit"></i></button>
+                    <button className="btn btn-sm btn-danger" onClick={this.props.handleDelete} title="Delete ticket"><i className="fa fa-lg fa-times"></i></button>
                 </div>
-                <h4>{this.props.title}</h4>
+                <h3>{this.props.title}</h3>
             </div>
         );
         var body = <TicketBody {...this.props} />;
