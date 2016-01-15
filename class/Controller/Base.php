@@ -21,15 +21,15 @@ abstract class Base extends \Http\Controller
         $template = new \Template();
         $template->setModuleTemplate('election', 'Admin/tabs.html');
         $vars['single_active'] = null;
-        $vars['multi_active'] = null;
+        $vars['multiple_active'] = null;
         $vars['referendum_active'] = null;
         
         switch ($active) {
             case 'single':
                 $vars['single_active'] = 'active';
                 break;
-            case 'multi':
-                $vars['multi_active'] = 'active';
+            case 'multiple':
+                $vars['multiple_active'] = 'active';
                 break;
             case 'referendum':
                 $vars['referendum_active'] = 'active';
