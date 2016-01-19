@@ -31,14 +31,14 @@ var SingleBallot = React.createClass({
         return React.createElement(
             'div',
             { className: 'election-list' },
-            React.createElement(BalloutList, { listing: this.state.ballotList, reload: this.load })
+            React.createElement(BallotList, { listing: this.state.ballotList, reload: this.load })
         );
     }
 
 });
 
-var BalloutList = React.createClass({
-    displayName: 'BalloutList',
+var BallotList = React.createClass({
+    displayName: 'BallotList',
 
     getInitialState: function () {
         return {

@@ -5,7 +5,17 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 var MultipleBallot = React.createClass({
     displayName: 'MultipleBallot',
 
-    mixins: ['Panel', Ballot],
+    mixins: ['Panel'],
+
+    getInitialState: function () {
+        return {
+            ballotList: []
+        };
+    },
+
+    componentDidMount: function () {
+        this.load();
+    },
 
     load: function () {
         $.getJSON('election/Admin/Multiple', {
@@ -15,6 +25,14 @@ var MultipleBallot = React.createClass({
                 ballotList: data
             });
         }.bind(this));
+    },
+
+    render: function () {
+        return React.createElement(
+            'div',
+            { className: 'election-list' },
+            React.createElement(BallotList, { listing: this.state.ballotList, reload: this.load })
+        );
     }
 });
 
@@ -91,7 +109,145 @@ var BallotListRow = React.createClass({
 var MultipleBallotForm = React.createClass({
     displayName: 'MultipleBallotForm',
 
-    mixins: [BallotForm],
+    getInitialState: function () {
+        return {
+            ballotId: 0,
+            title: '',
+            startDate: '',
+            endDate: '',
+            seatNumber: 2,
+            unixStart: 0,
+            unixEnd: 0
+        };
+    },
+
+    getDefaultProps: function () {
+        return {
+            id: 0,
+            title: '',
+            startDate: '',
+            endDate: '',
+            seatNumber: 2,
+            hideForm: null
+        };
+    },
+
+    componentWillMount: function () {
+        if (this.props.id) {
+            this.copyPropsToState();
+        }
+    },
+
+    componentDidMount: function () {
+        this.initStartDate();
+        this.initEndDate();
+    },
+
+    copyPropsToState: function () {
+        this.setState({
+            ballotId: this.props.id,
+            title: this.props.title,
+            seatNumber: this.props.seatNumber,
+            startDate: this.props.startDateFormatted,
+            endDate: this.props.endDateFormatted,
+            unixStart: this.props.startDate,
+            unixEnd: this.props.endDate
+        });
+    },
+
+    initStartDate: function () {
+        $('#start-date').datetimepicker({
+            minDate: 0,
+            value: this.state.startDate,
+            format: dateFormat,
+            onChangeDateTime: function (ct, i) {
+                this.updateStartDate(this.refs.startDate.value);
+            }.bind(this)
+        });
+    },
+
+    initEndDate: function () {
+        $('#end-date').datetimepicker({
+            minDate: 0,
+            format: dateFormat,
+            value: this.state.endDate,
+            onChangeDateTime: function (ct, i) {
+                this.updateEndDate(this.refs.endDate.value);
+            }.bind(this)
+        });
+    },
+
+    showStartCalendar: function () {
+        $('#start-date').datetimepicker('show');
+    },
+
+    showEndCalendar: function () {
+        $('#end-date').datetimepicker('show');
+    },
+
+    updateTitle: function (e) {
+        this.setState({
+            title: e.target.value
+        });
+    },
+
+    changeStartDate: function (e) {
+        this.updateStartDate(e.target.value);
+    },
+
+    changeEndDate: function (e) {
+        this.updateEndDate(e.target.value);
+    },
+
+    updateStartDate: function (start) {
+        var dateObj = new Date(start);
+        var unix = dateObj.getTime() / 1000;
+        this.setState({
+            startDate: start,
+            unixStart: unix
+        });
+    },
+
+    updateEndDate: function (end) {
+        var dateObj = new Date(end);
+        var unix = dateObj.getTime() / 1000;
+        this.setState({
+            endDate: end,
+            unixEnd: unix
+        });
+    },
+
+    updateSeatNumber: function (e) {
+        this.setState({
+            seatNumber: e.target.value
+        });
+    },
+
+    checkForErrors: function () {
+        var error = false;
+        if (this.state.title.length === 0) {
+            $(this.refs.ballotTitle).css('borderColor', 'red').attr('placeholder', 'Please enter a title');
+            error = true;
+        }
+
+        if (this.state.startDate.length === 0) {
+            $(this.refs.startDate).css('borderColor', 'red').attr('placeholder', 'Please enter a start date');
+            error = true;
+        } else if (this.state.unixStart > this.state.unixEnd) {
+            $(this.refs.endDate).css('borderColor', 'red').attr('placeholder', 'End date must be greater').val('');
+            this.setState({
+                endDate: ''
+            });
+            error = true;
+        }
+
+        if (this.state.endDate.length === 0) {
+            $(this.refs.endDate).css('borderColor', 'red').attr('placeholder', 'Please enter a end date');
+            error = true;
+        }
+
+        return error;
+    },
 
     save: function () {
         var error = this.checkForErrors();
@@ -100,6 +256,7 @@ var MultipleBallotForm = React.createClass({
                 command: 'save',
                 ballotId: this.state.ballotId,
                 title: this.state.title,
+                seatNumber: this.state.seatNumber,
                 startDate: this.state.unixStart,
                 endDate: this.state.unixEnd
             }, null, 'json').done(function (data) {
@@ -111,7 +268,109 @@ var MultipleBallotForm = React.createClass({
     },
 
     render: function () {
-        return this._render;
+        var heading = React.createElement('input', { ref: 'ballotTitle', type: 'text', className: 'form-control', defaultValue: this.props.title,
+            id: 'ballot-title', onFocus: this.resetBorder, onChange: this.updateTitle, placeholder: 'Ballot title' });
+
+        var body = React.createElement(
+            'div',
+            null,
+            React.createElement(
+                'div',
+                { className: 'row' },
+                React.createElement(
+                    'div',
+                    { className: 'col-sm-6' },
+                    React.createElement(
+                        'div',
+                        { className: 'form-group' },
+                        React.createElement(
+                            'label',
+                            { htmlFor: 'start-date', className: 'control-label pad-right' },
+                            'Start voting:'
+                        ),
+                        React.createElement(
+                            'div',
+                            { className: 'input-group' },
+                            React.createElement('input', { ref: 'startDate', type: 'text', className: 'form-control datepicker', id: 'start-date', onFocus: this.resetBorder, onChange: this.changeStartDate }),
+                            React.createElement(
+                                'div',
+                                { className: 'input-group-addon' },
+                                React.createElement('i', { className: 'fa fa-calendar', onClick: this.showStartCalendar })
+                            )
+                        )
+                    )
+                ),
+                React.createElement(
+                    'div',
+                    { className: 'col-sm-6' },
+                    React.createElement(
+                        'div',
+                        { className: 'form-group' },
+                        React.createElement(
+                            'label',
+                            { htmlFor: 'end-date', className: 'control-label pad-right' },
+                            'End voting:'
+                        ),
+                        React.createElement(
+                            'div',
+                            { className: 'input-group' },
+                            React.createElement('input', { ref: 'endDate', type: 'text', className: 'form-control datepicker', id: 'end-date', onFocus: this.resetBorder, onChange: this.changeEndDate }),
+                            React.createElement(
+                                'div',
+                                { className: 'input-group-addon' },
+                                React.createElement('i', { className: 'fa fa-calendar', onClick: this.showEndCalendar })
+                            )
+                        )
+                    )
+                )
+            ),
+            React.createElement(
+                'div',
+                { className: 'row' },
+                React.createElement(
+                    'div',
+                    { className: 'col-sm-3 text-right' },
+                    React.createElement(
+                        'label',
+                        { htmlFor: 'seatNumber' },
+                        'Number of seats:'
+                    )
+                ),
+                React.createElement(
+                    'div',
+                    { className: 'col-sm-3' },
+                    React.createElement(
+                        'select',
+                        { id: 'seatNumber', className: 'form-control', onChange: this.updateSeatNumber },
+                        React.createElement(
+                            'option',
+                            null,
+                            '2'
+                        ),
+                        React.createElement(
+                            'option',
+                            null,
+                            '3'
+                        )
+                    )
+                )
+            ),
+            React.createElement('hr', null),
+            React.createElement(
+                'button',
+                { className: 'btn btn-primary pad-right', onClick: this.save },
+                React.createElement('i', { className: 'fa fa-save' }),
+                ' Save ballot'
+            ),
+            React.createElement(
+                'button',
+                { className: 'btn btn-danger', onClick: this.props.hideForm },
+                React.createElement('i', { className: 'fa fa-times' }),
+                ' Cancel'
+            )
+        );
+
+        return React.createElement(Panel, { heading: heading, body: body });
     }
 
 });

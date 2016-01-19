@@ -26,14 +26,14 @@ var SingleBallot = React.createClass({
     render: function() {
         return (
             <div className='election-list'>
-                <BalloutList listing={this.state.ballotList} reload={this.load}/>
+                <BallotList listing={this.state.ballotList} reload={this.load}/>
             </div>
         );
     }
 
 });
 
-var BalloutList = React.createClass({
+var BallotList = React.createClass({
     getInitialState : function() {
         return {
             ballotEditId : 0
