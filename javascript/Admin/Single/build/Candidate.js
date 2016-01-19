@@ -87,7 +87,7 @@ var Candidates = React.createClass({
                 candidates,
                 React.createElement(
                     'div',
-                    { className: 'col-sm-3' },
+                    { className: 'col-sm-6' },
                     form
                 )
             )
@@ -115,7 +115,13 @@ var CandidateProfile = React.createClass({
         return React.createElement(
             'div',
             { className: 'col-sm-3' },
-            React.createElement('img', { src: this.props.picture, className: 'candidate-pic' }),
+            this.props.picture.length > 0 ? React.createElement('img', { src: this.props.picture, className: 'candidate-pic' }) : React.createElement(
+                'div',
+                { className: 'no-picture text-muted' },
+                React.createElement('i', { className: 'fa fa-user fa-5x' }),
+                React.createElement('br', null),
+                'No picture'
+            ),
             React.createElement(
                 'div',
                 { className: 'text-center' },
@@ -292,7 +298,6 @@ var Photo = React.createClass({
     },
 
     onDrop: function (photo) {
-        console.log(photo);
         this.props.update(photo);
     },
 

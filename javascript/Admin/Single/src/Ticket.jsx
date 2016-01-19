@@ -11,7 +11,14 @@ var Tickets = React.createClass({
     getDefaultProps: function() {
         return {
             ballotId : 0,
+            showTicketForm : false
         };
+    },
+
+    componentDidUpdate: function(prevProps, prevState) {
+        if (this.props.showTicketForm && !prevProps.showTicketForm) {
+            this.addTicket();
+        }
     },
 
     componentDidMount: function() {
@@ -57,6 +64,7 @@ var Tickets = React.createClass({
     closeForm : function()
     {
         this.editTicket(0);
+        this.props.removeForm();
     },
 
     render: function() {
@@ -79,7 +87,6 @@ var Tickets = React.createClass({
 
         return (
             <div>
-                <button className="btn btn-primary" onClick={this.addTicket}><i className="fa fa-ticket fa-5x"></i><br />Add ticket</button>
                 <hr />
                 {form}
                 {ticketList}
@@ -285,43 +292,38 @@ var TicketRow = React.createClass({
     },
 
     render: function() {
-        var heading = (
-            <div>
+        var body = (
+            <div className="well ticket-form-view">
                 <div className="change-buttons">
-                    <button className="btn btn-sm btn-primary" data-tid={this.props.id} onClick={this.props.handleEdit} title="Edit ticket"><i className="fa fa-lg fa-edit"></i></button>
-                    <button className="btn btn-sm btn-danger" onClick={this.props.handleDelete} title="Delete ticket"><i className="fa fa-lg fa-times"></i></button>
+                    <button className="btn btn-sm btn-primary" data-tid={this.props.id} onClick={this.props.handleEdit} title="Edit ticket"><i className="fa fa-lg fa-edit"></i> Edit ticket</button>
+                    <button className="btn btn-sm btn-danger" onClick={this.props.handleDelete} title="Delete ticket"><i className="fa fa-lg fa-trash-o"></i> Delete ticket</button>
                 </div>
                 <h3>{this.props.title}</h3>
+                <div>
+                    <p>{this.props.platform.split("\n").map(function(item, i){
+                            return (
+                                <span key={i}>{item}
+                                    <br />
+                                </span>
+                            );
+                        })}
+                    </p>
+                    {this.props.siteAddress.length ? (
+                        <div>
+                        <h4>Web site: <a href={this.props.siteAddress} target="_blank">{this.props.siteAddress}</a></h4>
+                        </div>
+                    ) : null}
+                </div>
+                <hr />
+                <Candidates ballotId={this.props.ballotId} ticketId={this.props.id}/>
             </div>
         );
-        var body = <TicketBody {...this.props} />;
 
         return (
             <div>
-                <Panel heading={heading} body={body} />
+                <Panel body={body} />
             </div>
         );
     }
 
 });
-
-const TicketBody = (props) => (
-    <div>
-        <Candidates ballotId={props.ballotId} ticketId={props.id}/>
-        <hr />
-        {props.platform.length ? (
-            <div>
-                <h4 className="clearfix">Platform:</h4>
-                <p>{props.platform.split("\n").map(function(item, i){
-                        return (<span key={i}>{item}<br /></span>);
-                    })}</p>
-            </div>
-        ) : ''}
-        {props.siteAddress.length ? (
-            <div>
-                <h4>Web site</h4>
-                <p><a href={props.siteAddress} target="_blank">{props.siteAddress}</a></p>
-            </div>
-        ) : ''}
-    </div>
-);

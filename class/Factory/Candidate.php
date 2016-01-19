@@ -53,7 +53,9 @@ class Candidate extends Base
             return array();
         }
         foreach ($result as &$c) {
-            $c['picture'] = self::getImageHttp($ballotId) . $c['picture'];
+            if (!empty($c['picture'])) {
+                $c['picture'] = self::getImageHttp($ballotId) . $c['picture'];
+            }
         }
         return $result;
     }

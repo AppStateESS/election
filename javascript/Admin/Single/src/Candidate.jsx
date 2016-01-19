@@ -51,8 +51,6 @@ var Candidates = React.createClass({
         }
     },
 
-
-
     render: function() {
         var candidates = this.state.candidates.map(function(value){
             if (value.id === this.state.currentForm) {
@@ -68,9 +66,9 @@ var Candidates = React.createClass({
 
         if (this.state.currentForm === 0) {
             var form = (
-                    <button className="btn btn-primary" onClick={this.setCurrentForm.bind(null, -1)}>
-                        <i className="fa fa-user-plus fa-5x"></i><br />
-                        Add candidate</button>
+                <button className="btn btn-primary" onClick={this.setCurrentForm.bind(null, -1)}>
+    <i className="fa fa-user-plus fa-5x"></i><br />
+    Add candidate</button>
             );
         } else if (this.state.currentForm === -1) {
             var form = (
@@ -82,7 +80,7 @@ var Candidates = React.createClass({
             <div>
                 <div className="row">
                     {candidates}
-                    <div className="col-sm-3">
+                    <div className="col-sm-6">
                     {form}
                     </div>
                 </div>
@@ -109,7 +107,11 @@ var CandidateProfile = React.createClass({
     render: function() {
         return (
             <div className="col-sm-3">
-                <img src={this.props.picture} className="candidate-pic" />
+                {this.props.picture.length > 0 ? (
+                    <img src={this.props.picture} className="candidate-pic" />
+                ) : (
+                    <div className="no-picture text-muted"><i className="fa fa-user fa-5x"></i><br />No picture</div>
+                )}
                 <div className="text-center">
                     <p><strong>{this.props.firstName} {this.props.lastName}</strong></p>
                     <button className="btn btn-primary" title="Edit candidate" onClick={this.props.edit}><i className="fa fa-edit"></i></button>&nbsp;
@@ -251,7 +253,6 @@ var Photo = React.createClass({
     },
 
     onDrop: function (photo) {
-        console.log(photo);
         this.props.update(photo);
     },
 

@@ -28,7 +28,7 @@
     float: right;
 }
 
-.change-buttons button {
+.change-buttons button:first-child {
     margin-right : .5em;
 }
 
@@ -83,18 +83,3 @@ textarea.form-control {
     margin-top : .5em;
 }
 
-.ticket-form-view h3 {
-    margin-top : 0px;
-}
-
-.no-picture {
-    width : 150px;
-    height : 200px;
-    text-align : center;
-    padding-top : 40%;
-    border : 1px solid #e3e3e3;
-}
-
-.no-picture {
-
-}

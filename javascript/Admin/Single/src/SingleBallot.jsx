@@ -78,7 +78,7 @@ var BalloutList = React.createClass({
 
         return (
             <div>
-                <button className="btn btn-success" onClick={this.editBallot.bind(null, -1)}><i className="fa fa-plus"></i> Create ballot</button>
+                <button className="btn btn-success" onClick={this.editBallot.bind(null, -1)}><i className="fa fa-calendar-check-o fa-5x"></i><br />Create ballot</button>
                 <hr />
                 {form}
                 {ballotList}
@@ -91,6 +91,12 @@ var BalloutList = React.createClass({
 var BallotListRow = React.createClass({
     mixins : ['Panel'],
 
+    getInitialState: function() {
+        return {
+            showTicketForm : false
+        };
+    },
+
     getDefaultProps: function() {
         return {
             endDateFormatted : '',
@@ -99,6 +105,12 @@ var BallotListRow = React.createClass({
             id : 0,
             handleEdit : null
         };
+    },
+
+    setShowTicketForm : function(ticket) {
+        this.setState({
+            showTicketForm : ticket
+        });
     },
 
     handleDelete : function(event) {
@@ -117,16 +129,19 @@ var BallotListRow = React.createClass({
         var heading = (
             <div>
                 <div className="change-buttons">
-                    <button className="btn btn-primary" data-vid={this.props.id} onClick={this.props.handleEdit} title="Edit ballot"><i className="fa fa-edit"></i></button>
-                    <button className="btn btn-danger" onClick={this.handleDelete}><i className="fa fa-times" title="Remove ballot"></i></button>
+                    <button className="btn btn-success" data-vid={this.props.id}
+                        onClick={this.setShowTicketForm.bind(null, true)} title="Add ticket"><i className="fa fa-ticket"></i> Add ticket</button>
+                    <button className="btn btn-primary" data-vid={this.props.id}
+                        onClick={this.props.handleEdit} title="Edit ballot"><i className="fa fa-edit"></i> Edit</button>
+                    <button className="btn btn-danger" onClick={this.handleDelete}>
+                        <i className="fa fa-trash-o" title="Remove ballot"></i> Delete</button>
                 </div>
-                <h3>{this.props.title}</h3>
+                <h2>{this.props.title}</h2>
+                <h4>Vote: <span className="text-info date-stamp">{this.props.startDateFormatted}</span> to <span className="text-info date-stamp">{this.props.endDateFormatted}</span></h4>
             </div>);
         var body = (
             <div>
-                <h4>Voting period: <span className="text-info date-stamp">{this.props.startDateFormatted}</span> to <span className="text-info date-stamp">{this.props.endDateFormatted}</span></h4>
-                <hr />
-                <Tickets ballotId={this.props.id}/>
+                <Tickets ballotId={this.props.id} showTicketForm={this.state.showTicketForm} removeForm={this.setShowTicketForm.bind(null, false)}/>
             </div>);
         return (
             <Panel heading={heading} body={body} />
@@ -302,27 +317,23 @@ var SingleBallotForm = React.createClass({
             <div>
                 <div className="row">
                     <div className="col-sm-6">
-                        <div className="form-inline">
-                            <div className="form-group">
-                                <label htmlFor="start-date" className="control-label pad-right">Start voting:</label>
-                                <div className="input-group">
-                                    <input ref="startDate" type="text" className="form-control datepicker" id="start-date" onFocus={this.resetBorder} onChange={this.changeStartDate}/>
-                                    <div className="input-group-addon">
-                                        <i className="fa fa-calendar" onClick={this.showStartCalendar}></i>
-                                    </div>
+                        <div className="form-group">
+                            <label htmlFor="start-date" className="control-label pad-right">Start voting:</label>
+                            <div className="input-group">
+                                <input ref="startDate" type="text" className="form-control datepicker" id="start-date" onFocus={this.resetBorder} onChange={this.changeStartDate}/>
+                                <div className="input-group-addon">
+                                    <i className="fa fa-calendar" onClick={this.showStartCalendar}></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="col-sm-6">
-                        <div className="form-inline">
-                            <div className="form-group">
-                                <label htmlFor="end-date" className="control-label pad-right">End voting:</label>
-                                <div className="input-group">
-                                    <input ref="endDate" type="text" className="form-control datepicker" id="end-date" onFocus={this.resetBorder} onChange={this.changeEndDate}/>
-                                    <div className="input-group-addon">
-                                        <i className="fa fa-calendar" onClick={this.showEndCalendar}></i>
-                                    </div>
+                        <div className="form-group">
+                            <label htmlFor="end-date" className="control-label pad-right">End voting:</label>
+                            <div className="input-group">
+                                <input ref="endDate" type="text" className="form-control datepicker" id="end-date" onFocus={this.resetBorder} onChange={this.changeEndDate}/>
+                                <div className="input-group-addon">
+                                    <i className="fa fa-calendar" onClick={this.showEndCalendar}></i>
                                 </div>
                             </div>
                         </div>

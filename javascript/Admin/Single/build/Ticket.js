@@ -14,8 +14,15 @@ var Tickets = React.createClass({
 
     getDefaultProps: function () {
         return {
-            ballotId: 0
+            ballotId: 0,
+            showTicketForm: false
         };
+    },
+
+    componentDidUpdate: function (prevProps, prevState) {
+        if (this.props.showTicketForm && !prevProps.showTicketForm) {
+            this.addTicket();
+        }
     },
 
     componentDidMount: function () {
@@ -58,6 +65,7 @@ var Tickets = React.createClass({
 
     closeForm: function () {
         this.editTicket(0);
+        this.props.removeForm();
     },
 
     render: function () {
@@ -85,13 +93,6 @@ var Tickets = React.createClass({
         return React.createElement(
             'div',
             null,
-            React.createElement(
-                'button',
-                { className: 'btn btn-primary', onClick: this.addTicket },
-                React.createElement('i', { className: 'fa fa-ticket fa-5x' }),
-                React.createElement('br', null),
-                'Add ticket'
-            ),
             React.createElement('hr', null),
             form,
             ticketList
@@ -339,82 +340,69 @@ var TicketRow = React.createClass({
     },
 
     render: function () {
-        var heading = React.createElement(
+        var body = React.createElement(
             'div',
-            null,
+            { className: 'well ticket-form-view' },
             React.createElement(
                 'div',
                 { className: 'change-buttons' },
                 React.createElement(
                     'button',
                     { className: 'btn btn-sm btn-primary', 'data-tid': this.props.id, onClick: this.props.handleEdit, title: 'Edit ticket' },
-                    React.createElement('i', { className: 'fa fa-lg fa-edit' })
+                    React.createElement('i', { className: 'fa fa-lg fa-edit' }),
+                    ' Edit ticket'
                 ),
                 React.createElement(
                     'button',
                     { className: 'btn btn-sm btn-danger', onClick: this.props.handleDelete, title: 'Delete ticket' },
-                    React.createElement('i', { className: 'fa fa-lg fa-times' })
+                    React.createElement('i', { className: 'fa fa-lg fa-trash-o' }),
+                    ' Delete ticket'
                 )
             ),
             React.createElement(
                 'h3',
                 null,
                 this.props.title
-            )
+            ),
+            React.createElement(
+                'div',
+                null,
+                React.createElement(
+                    'p',
+                    null,
+                    this.props.platform.split("\n").map(function (item, i) {
+                        return React.createElement(
+                            'span',
+                            { key: i },
+                            item,
+                            React.createElement('br', null)
+                        );
+                    })
+                ),
+                this.props.siteAddress.length ? React.createElement(
+                    'div',
+                    null,
+                    React.createElement(
+                        'h4',
+                        null,
+                        'Web site: ',
+                        React.createElement(
+                            'a',
+                            { href: this.props.siteAddress, target: '_blank' },
+                            this.props.siteAddress
+                        )
+                    )
+                ) : null
+            ),
+            React.createElement('hr', null),
+            React.createElement(Candidates, { ballotId: this.props.ballotId, ticketId: this.props.id })
         );
-        var body = React.createElement(TicketBody, this.props);
 
         return React.createElement(
             'div',
             null,
-            React.createElement(Panel, { heading: heading, body: body })
+            React.createElement(Panel, { body: body })
         );
     }
 
 });
-
-const TicketBody = props => React.createElement(
-    'div',
-    null,
-    React.createElement(Candidates, { ballotId: props.ballotId, ticketId: props.id }),
-    React.createElement('hr', null),
-    props.platform.length ? React.createElement(
-        'div',
-        null,
-        React.createElement(
-            'h4',
-            { className: 'clearfix' },
-            'Platform:'
-        ),
-        React.createElement(
-            'p',
-            null,
-            props.platform.split("\n").map(function (item, i) {
-                return React.createElement(
-                    'span',
-                    { key: i },
-                    item,
-                    React.createElement('br', null)
-                );
-            })
-        )
-    ) : '',
-    props.siteAddress.length ? React.createElement(
-        'div',
-        null,
-        React.createElement(
-            'h4',
-            null,
-            'Web site'
-        ),
-        React.createElement(
-            'p',
-            null,
-            React.createElement(
-                'a',
-                { href: props.siteAddress, target: '_blank' },
-                props.siteAddress
-            )
-        )
-    ) : ''
-);

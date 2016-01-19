@@ -92,8 +92,9 @@ var BalloutList = React.createClass({
             React.createElement(
                 'button',
                 { className: 'btn btn-success', onClick: this.editBallot.bind(null, -1) },
-                React.createElement('i', { className: 'fa fa-plus' }),
-                ' Create ballot'
+                React.createElement('i', { className: 'fa fa-calendar-check-o fa-5x' }),
+                React.createElement('br', null),
+                'Create ballot'
             ),
             React.createElement('hr', null),
             form,
@@ -108,6 +109,12 @@ var BallotListRow = React.createClass({
 
     mixins: ['Panel'],
 
+    getInitialState: function () {
+        return {
+            showTicketForm: false
+        };
+    },
+
     getDefaultProps: function () {
         return {
             endDateFormatted: '',
@@ -116,6 +123,12 @@ var BallotListRow = React.createClass({
             id: 0,
             handleEdit: null
         };
+    },
+
+    setShowTicketForm: function (ticket) {
+        this.setState({
+            showTicketForm: ticket
+        });
     },
 
     handleDelete: function (event) {
@@ -138,28 +151,34 @@ var BallotListRow = React.createClass({
                 { className: 'change-buttons' },
                 React.createElement(
                     'button',
-                    { className: 'btn btn-primary', 'data-vid': this.props.id, onClick: this.props.handleEdit, title: 'Edit ballot' },
-                    React.createElement('i', { className: 'fa fa-edit' })
+                    { className: 'btn btn-success', 'data-vid': this.props.id,
+                        onClick: this.setShowTicketForm.bind(null, true), title: 'Add ticket' },
+                    React.createElement('i', { className: 'fa fa-ticket' }),
+                    ' Add ticket'
+                ),
+                React.createElement(
+                    'button',
+                    { className: 'btn btn-primary', 'data-vid': this.props.id,
+                        onClick: this.props.handleEdit, title: 'Edit ballot' },
+                    React.createElement('i', { className: 'fa fa-edit' }),
+                    ' Edit'
                 ),
                 React.createElement(
                     'button',
                     { className: 'btn btn-danger', onClick: this.handleDelete },
-                    React.createElement('i', { className: 'fa fa-times', title: 'Remove ballot' })
+                    React.createElement('i', { className: 'fa fa-trash-o', title: 'Remove ballot' }),
+                    ' Delete'
                 )
             ),
             React.createElement(
-                'h3',
+                'h2',
                 null,
                 this.props.title
-            )
-        );
-        var body = React.createElement(
-            'div',
-            null,
+            ),
             React.createElement(
                 'h4',
                 null,
-                'Voting period: ',
+                'Vote: ',
                 React.createElement(
                     'span',
                     { className: 'text-info date-stamp' },
@@ -171,9 +190,12 @@ var BallotListRow = React.createClass({
                     { className: 'text-info date-stamp' },
                     this.props.endDateFormatted
                 )
-            ),
-            React.createElement('hr', null),
-            React.createElement(Tickets, { ballotId: this.props.id })
+            )
+        );
+        var body = React.createElement(
+            'div',
+            null,
+            React.createElement(Tickets, { ballotId: this.props.id, showTicketForm: this.state.showTicketForm, removeForm: this.setShowTicketForm.bind(null, false) })
         );
         return React.createElement(Panel, { heading: heading, body: body });
     }
@@ -350,24 +372,20 @@ var SingleBallotForm = React.createClass({
                     { className: 'col-sm-6' },
                     React.createElement(
                         'div',
-                        { className: 'form-inline' },
+                        { className: 'form-group' },
+                        React.createElement(
+                            'label',
+                            { htmlFor: 'start-date', className: 'control-label pad-right' },
+                            'Start voting:'
+                        ),
                         React.createElement(
                             'div',
-                            { className: 'form-group' },
-                            React.createElement(
-                                'label',
-                                { htmlFor: 'start-date', className: 'control-label pad-right' },
-                                'Start voting:'
-                            ),
+                            { className: 'input-group' },
+                            React.createElement('input', { ref: 'startDate', type: 'text', className: 'form-control datepicker', id: 'start-date', onFocus: this.resetBorder, onChange: this.changeStartDate }),
                             React.createElement(
                                 'div',
-                                { className: 'input-group' },
-                                React.createElement('input', { ref: 'startDate', type: 'text', className: 'form-control datepicker', id: 'start-date', onFocus: this.resetBorder, onChange: this.changeStartDate }),
-                                React.createElement(
-                                    'div',
-                                    { className: 'input-group-addon' },
-                                    React.createElement('i', { className: 'fa fa-calendar', onClick: this.showStartCalendar })
-                                )
+                                { className: 'input-group-addon' },
+                                React.createElement('i', { className: 'fa fa-calendar', onClick: this.showStartCalendar })
                             )
                         )
                     )
@@ -377,24 +395,20 @@ var SingleBallotForm = React.createClass({
                     { className: 'col-sm-6' },
                     React.createElement(
                         'div',
-                        { className: 'form-inline' },
+                        { className: 'form-group' },
+                        React.createElement(
+                            'label',
+                            { htmlFor: 'end-date', className: 'control-label pad-right' },
+                            'End voting:'
+                        ),
                         React.createElement(
                             'div',
-                            { className: 'form-group' },
-                            React.createElement(
-                                'label',
-                                { htmlFor: 'end-date', className: 'control-label pad-right' },
-                                'End voting:'
-                            ),
+                            { className: 'input-group' },
+                            React.createElement('input', { ref: 'endDate', type: 'text', className: 'form-control datepicker', id: 'end-date', onFocus: this.resetBorder, onChange: this.changeEndDate }),
                             React.createElement(
                                 'div',
-                                { className: 'input-group' },
-                                React.createElement('input', { ref: 'endDate', type: 'text', className: 'form-control datepicker', id: 'end-date', onFocus: this.resetBorder, onChange: this.changeEndDate }),
-                                React.createElement(
-                                    'div',
-                                    { className: 'input-group-addon' },
-                                    React.createElement('i', { className: 'fa fa-calendar', onClick: this.showEndCalendar })
-                                )
+                                { className: 'input-group-addon' },
+                                React.createElement('i', { className: 'fa fa-calendar', onClick: this.showEndCalendar })
                             )
                         )
                     )

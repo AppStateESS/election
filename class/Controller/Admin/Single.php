@@ -18,7 +18,7 @@ class Single extends \election\Controller\Base
         $script[] = '<script type="text/javascript" src="' . PHPWS_SOURCE_HTTP . 'mod/election/node_modules/react-dropzone/dist/react-dropzone.js"></script>';
         
         if (ELECTION_REACT_DEV) {
-            $script[] = \election\Factory\React::development('Admin/Single/', 'Mixin.js');
+            $script[] = \election\Factory\React::development('Admin/Mixin/', 'Mixin.js');
             $script[] = \election\Factory\React::development('Admin/Single/', 'Candidate.js');
             $script[] = \election\Factory\React::development('Admin/Single/', 'Ticket.js');
             $script[] = \election\Factory\React::development('Admin/Single/', 'SingleBallot.js');
