@@ -9,6 +9,7 @@ Allows creation of online ballots.
 * Sophomore
 * Junior
 * Senior
+* Transfer
 
 **College** (2 seats per college)
 * University College
