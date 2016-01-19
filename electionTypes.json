@@ -1,0 +1,17 @@
+{
+  "electionTypes": [
+    {
+      "category": "Class",
+      "types": ["Freshmen", "Sophomore", "Junior", "Senior"]
+    },
+    {"category": "College",
+      "types": ["University College","College of Arts and Sciences","College of Business","College of Education","College of Fine and Applied Arts","College of Health Sciences","Hayes School of Music"]
+    },
+    {"category": "Club Affiliation",
+      "types": ["Honors/Academics","Multicultural Affairs","Sports","Service Initiatives","Special Interest Groups"]
+    },
+    {"category": "Greek Life",
+      "types": ["Interfraternity Council","Pan-hellenic Council","National Pan-hellenic Council"]
+    }
+  ]
+}
