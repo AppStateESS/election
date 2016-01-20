@@ -10,8 +10,14 @@ function election_install(&$content)
     $db->begin();
 
     try {
-        $ballot = new \election\Resource\Ballot;
-        $ballot->createTable($db);
+        $election = new \election\Resource\Election;
+        $election->createTable($db);
+        
+        $single = new \election\Resource\Single;
+        $single->createTable($db);
+        
+        $multiple = new \election\Resource\Multiple;
+        $multiple->createTable($db);
 
         $candidate = new \election\Resource\Candidate;
         $candidate->createTable($db);
@@ -29,7 +35,9 @@ function election_install(&$content)
         $voter->createTable($db);
 
     } catch (\Exception $e) {
-        $db->buildTable($ballot->getTable())->drop(true);
+        $db->buildTable($election->getTable())->drop(true);
+        $db->buildTable($single->getTable())->drop(true);
+        $db->buildTable($multiple->getTable())->drop(true);
         $db->buildTable($candidate->getTable())->drop(true);
         $db->buildTable($referendum->getTable())->drop(true);
         $db->buildTable($refOption->getTable())->drop(true);

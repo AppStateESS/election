@@ -9,7 +9,6 @@ namespace election\Resource;
 class Voter extends \Resource
 {
     /**
-     *
      * @var \Variable\Hash
      */
     protected $hash;

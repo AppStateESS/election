@@ -34,23 +34,29 @@ var Panel = React.createClass({
     getDefaultProps: function() {
         return {
             type : 'default',
-            heading : null,
-            body : null,
-            footer : null
+            heading : '',
+            body : '',
+            footer : ''
         };
     },
 
     render: function() {
         var heading = null;
-        if (this.props.heading !== null) {
+        if (this.props.heading) {
             heading = <div className="panel-heading">{this.props.heading}</div>;
         }
+
         var body = null;
-        if (this.props.body !== null) {
-            body = <div className="panel-body">{this.props.body}</div>;
+        if (this.props.body) {
+            body = (
+                <div className="panel-body">
+                    {this.props.body}
+                </div>
+            )
         }
+
         var footer = null;
-        if (this.props.footer !== null) {
+        if (this.props.footer) {
             footer = <div className="panel-footer">{this.props.footer}</div>;
         }
 
@@ -58,12 +64,13 @@ var Panel = React.createClass({
         return (
             <div className={panelType}>
                 {heading}
+                <ReactCSSTransitionGroup transitionName="expand"  transitionEnterTimeout={500} transitionLeaveTimeout={500}>
                 {body}
+                </ReactCSSTransitionGroup>
                 {footer}
             </div>
         );
     }
-
 });
 
 var Ballot = {

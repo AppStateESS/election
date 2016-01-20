@@ -26,7 +26,7 @@ class Admin extends \Http\Controller
         $command = $request->shiftCommand();
 
         if (empty($command)) {
-            $command = 'Single';
+            $command = 'Election';
         }
         $className = 'election\Controller\Admin\\' . $command;
         if (!class_exists($className)) {

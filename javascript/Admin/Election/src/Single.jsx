@@ -156,10 +156,6 @@ var SingleBallotForm = React.createClass({
         return {
             ballotId : 0,
             title : '',
-            startDate : '',
-            endDate : '',
-            unixStart : 0,
-            unixEnd : 0
         }
     },
 
@@ -167,8 +163,6 @@ var SingleBallotForm = React.createClass({
         return {
             id : 0,
             title: '',
-            startDate : '',
-            endDate : '',
             hideForm : null
         };
     },
@@ -179,50 +173,11 @@ var SingleBallotForm = React.createClass({
         }
     },
 
-    componentDidMount: function() {
-        this.initStartDate();
-        this.initEndDate();
-    },
-
     copyPropsToState: function() {
         this.setState({
             ballotId : this.props.id,
             title : this.props.title,
-            startDate : this.props.startDateFormatted,
-            endDate : this.props.endDateFormatted,
-            unixStart : this.props.startDate,
-            unixEnd : this.props.endDate
         });
-    },
-
-    initStartDate : function() {
-        $('#start-date').datetimepicker({
-            minDate: 0,
-            value : this.state.startDate,
-            format : dateFormat,
-            onChangeDateTime : function(ct, i) {
-                this.updateStartDate(this.refs.startDate.value);
-            }.bind(this)
-        });
-    },
-
-    initEndDate : function() {
-        $('#end-date').datetimepicker({
-            minDate:0,
-            format : dateFormat,
-            value : this.state.endDate,
-            onChangeDateTime : function(ct, i) {
-                this.updateEndDate(this.refs.endDate.value);
-            }.bind(this)
-        });
-    },
-
-    showStartCalendar : function() {
-        $('#start-date').datetimepicker('show');
-    },
-
-    showEndCalendar : function() {
-        $('#end-date').datetimepicker('show');
     },
 
     updateTitle : function(e) {
@@ -231,52 +186,10 @@ var SingleBallotForm = React.createClass({
         });
     },
 
-    changeStartDate: function(e) {
-        this.updateStartDate(e.target.value);
-    },
-
-    changeEndDate: function(e) {
-        this.updateEndDate(e.target.value);
-    },
-
-    updateStartDate : function(start) {
-        var dateObj = new Date(start);
-        var unix = dateObj.getTime() / 1000;
-        this.setState({
-            startDate : start,
-            unixStart : unix
-        });
-    },
-
-    updateEndDate : function(end) {
-        var dateObj = new Date(end);
-        var unix = dateObj.getTime() / 1000;
-        this.setState({
-            endDate : end,
-            unixEnd : unix
-        });
-    },
-
     checkForErrors : function() {
         var error = false;
         if (this.state.title.length === 0) {
             $(this.refs.ballotTitle).css('borderColor', 'red').attr('placeholder', 'Please enter a title');
-            error = true;
-        }
-
-        if (this.state.startDate.length === 0) {
-            $(this.refs.startDate).css('borderColor', 'red').attr('placeholder', 'Please enter a start date');
-            error = true;
-        } else if (this.state.unixStart > this.state.unixEnd) {
-            $(this.refs.endDate).css('borderColor', 'red').attr('placeholder', 'End date must be greater').val('');
-            this.setState({
-                endDate : ''
-            });
-            error = true;
-        }
-
-        if (this.state.endDate.length === 0) {
-            $(this.refs.endDate).css('borderColor', 'red').attr('placeholder', 'Please enter a end date');
             error = true;
         }
 
@@ -290,8 +203,6 @@ var SingleBallotForm = React.createClass({
             	command : 'save',
                 ballotId : this.state.ballotId,
                 title : this.state.title,
-                startDate : this.state.unixStart,
-                endDate: this.state.unixEnd
             }, null, 'json')
             	.done(function(data){
                     this.props.reload();
@@ -314,35 +225,7 @@ var SingleBallotForm = React.createClass({
         );
 
         var body = (
-            <div>
-                <div className="row">
-                    <div className="col-sm-6">
-                        <div className="form-group">
-                            <label htmlFor="start-date" className="control-label pad-right">Start voting:</label>
-                            <div className="input-group">
-                                <input ref="startDate" type="text" className="form-control datepicker" id="start-date" onFocus={this.resetBorder} onChange={this.changeStartDate}/>
-                                <div className="input-group-addon">
-                                    <i className="fa fa-calendar" onClick={this.showStartCalendar}></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-sm-6">
-                        <div className="form-group">
-                            <label htmlFor="end-date" className="control-label pad-right">End voting:</label>
-                            <div className="input-group">
-                                <input ref="endDate" type="text" className="form-control datepicker" id="end-date" onFocus={this.resetBorder} onChange={this.changeEndDate}/>
-                                <div className="input-group-addon">
-                                    <i className="fa fa-calendar" onClick={this.showEndCalendar}></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <hr />
-                <button className="btn btn-primary pad-right" onClick={this.save}><i className="fa fa-save"></i> Save ballot</button>
-                <button className="btn btn-danger" onClick={this.props.hideForm}><i className="fa fa-times"></i> Cancel</button>
-            </div>
+            <div>Body goes here</div>
         );
 
         return (
@@ -350,6 +233,3 @@ var SingleBallotForm = React.createClass({
         );
     }
 });
-
-
-ReactDOM.render(<SingleBallot/>, document.getElementById('single-ballot'));

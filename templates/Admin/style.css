@@ -20,8 +20,9 @@
     cursor : pointer;
 }
 
+.panel-heading h2,
 .panel-heading h3 {
-    margin : 0px 0px 4px 0px;
+    margin : 0px;
 }
 
 .change-buttons {
@@ -95,6 +96,32 @@ textarea.form-control {
     border : 1px solid #e3e3e3;
 }
 
-.no-picture {
+.election-row .panel-heading:hover {
+    cursor : pointer;
+}
 
+.expand-enter {
+    opacity : 0.01;
+    max-height: 0px;
+}
+
+.expand-enter.expand-enter-active {
+    opacity : 1;
+    max-height: 1000px;
+    transition: opacity 500ms ease-in,  max-height 500ms ease-out;
+}
+
+.expand-leave {
+    opacity : 1;
+    max-height: 1000px;
+}
+
+.expand-leave.expand-leave-active {
+    opacity : 0.01;
+    max-height: 0px;
+    transition: opacity 500ms ease-in,  max-height 500ms ease-out;
+}
+
+.pointer {
+    cursor : pointer;
 }

@@ -307,5 +307,3 @@ var MultipleBallotForm = React.createClass({
     }
 
 });
-
-ReactDOM.render(<MultipleBallot/>, document.getElementById('multiple-ballot'));

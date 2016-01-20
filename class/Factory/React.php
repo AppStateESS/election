@@ -10,7 +10,7 @@ class React
 {
     public static function development($directory, $filename)
     {
-        self::requireReact(false, false);
+        self::requireReact(true, false);
         
         $root_directory = PHPWS_SOURCE_HTTP . 'mod/election/javascript/';
         $script = "<script type='text/javascript' src='{$root_directory}{$directory}build/$filename'></script>";
@@ -19,7 +19,7 @@ class React
     
     public static function production($directory, $filename)
     {
-        self::requireReact(false, true);
+        self::requireReact(true, true);
         
         $root_directory = PHPWS_SOURCE_HTTP . 'mod/election/javascript/';
         $hash = md5($directory . $filename);
