@@ -11,10 +11,11 @@ use election\Resource\Ticket as Resource;
 class Ticket extends Base
 {
 
-    public static function getList()
+    public static function getList($singleId)
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_ticket');
+        $tbl->addFieldConditional('singleId', $singleId);
         $tbl->addFieldConditional('active', 1);
         $result = $db->select();
         return $result;
@@ -24,7 +25,7 @@ class Ticket extends Base
     {
         $ticket = self::build(self::pullPostInteger('ticketId'), new Resource);
 
-        $ticket->setBallotId(self::pullPostInteger('ballotId'));
+        $ticket->setSingleId(self::pullPostInteger('singleId'));
         $ticket->setTitle(self::pullPostString('title'));
         $ticket->setPlatform(self::pullPostString('platform'));
         $siteAddress = self::pullPostString('siteAddress');
@@ -61,17 +62,4 @@ class Ticket extends Base
         $ticket->setActive(false);
         self::saveResource($ticket);
     }
-    
-    public static function deleteByBallot($ballotId)
-    {
-        if (empty($ballotId)) {
-            throw new \Exception('Missing ballot id');
-        }
-        $db = \Database::getDB();
-        $tbl = $db->addTable('elect_ticket');
-        $tbl->addFieldConditional('ballotId', $ballotId);
-        $tbl->addValue('active', 0);
-        $db->update();
-    }
-
 }

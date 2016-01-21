@@ -11,7 +11,6 @@ var Candidates = React.createClass({
     getDefaultProps: function() {
         return {
             ticketId : 0,
-            ballotId : 0
         };
     },
 
@@ -21,8 +20,7 @@ var Candidates = React.createClass({
 
     load : function() {
         $.getJSON('election/Admin/Candidate/', {
-        	command : 'list',
-            ballotId : this.props.ballotId,
+        	command : 'ticketList',
             ticketId : this.props.ticketId
         }).done(function(data) {
             this.setState({
@@ -30,7 +28,6 @@ var Candidates = React.createClass({
                 candidates : data
             });
         }.bind(this));
-
     },
 
     setCurrentForm : function(id) {
@@ -106,13 +103,13 @@ var CandidateProfile = React.createClass({
 
     render: function() {
         return (
-            <div className="col-sm-3">
+            <div className="col-sm-3 text-center">
                 {this.props.picture.length > 0 ? (
                     <img src={this.props.picture} className="candidate-pic" />
                 ) : (
                     <div className="no-picture text-muted"><i className="fa fa-user fa-5x"></i><br />No picture</div>
                 )}
-                <div className="text-center">
+                <div>
                     <p><strong>{this.props.firstName} {this.props.lastName}</strong></p>
                     <button className="btn btn-primary" title="Edit candidate" onClick={this.props.edit}><i className="fa fa-edit"></i></button>&nbsp;
                     <button className="btn btn-danger" onClick={this.props.delete} title="Delete candidate"><i className="fa fa-times"></i></button>
@@ -134,7 +131,6 @@ var CandidateForm = React.createClass({
 
     getDefaultProps: function() {
         return {
-            ballotId : 0,
             ticketId : 0,
             candidateId : 0,
             reload : null,
@@ -181,7 +177,6 @@ var CandidateForm = React.createClass({
         {
             data.append(key, value);
         });
-        data.append('ballotId', this.props.ballotId);
         data.append('ticketId', this.props.ticketId);
         data.append('candidateId', this.props.candidateId);
         data.append('firstName', this.state.firstName);

@@ -14,8 +14,7 @@ var Candidates = React.createClass({
 
     getDefaultProps: function () {
         return {
-            ticketId: 0,
-            ballotId: 0
+            ticketId: 0
         };
     },
 
@@ -25,8 +24,7 @@ var Candidates = React.createClass({
 
     load: function () {
         $.getJSON('election/Admin/Candidate/', {
-            command: 'list',
-            ballotId: this.props.ballotId,
+            command: 'ticketList',
             ticketId: this.props.ticketId
         }).done(function (data) {
             this.setState({
@@ -114,7 +112,7 @@ var CandidateProfile = React.createClass({
     render: function () {
         return React.createElement(
             'div',
-            { className: 'col-sm-3' },
+            { className: 'col-sm-3 text-center' },
             this.props.picture.length > 0 ? React.createElement('img', { src: this.props.picture, className: 'candidate-pic' }) : React.createElement(
                 'div',
                 { className: 'no-picture text-muted' },
@@ -124,7 +122,7 @@ var CandidateProfile = React.createClass({
             ),
             React.createElement(
                 'div',
-                { className: 'text-center' },
+                null,
                 React.createElement(
                     'p',
                     null,
@@ -166,7 +164,6 @@ var CandidateForm = React.createClass({
 
     getDefaultProps: function () {
         return {
-            ballotId: 0,
             ticketId: 0,
             candidateId: 0,
             reload: null,
@@ -211,7 +208,6 @@ var CandidateForm = React.createClass({
         $.each(this.state.photo, function (key, value) {
             data.append(key, value);
         });
-        data.append('ballotId', this.props.ballotId);
         data.append('ticketId', this.props.ticketId);
         data.append('candidateId', this.props.candidateId);
         data.append('firstName', this.state.firstName);

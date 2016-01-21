@@ -9,12 +9,6 @@ namespace election\Resource;
 abstract class Base extends \Resource
 {
     /**
-     * Name of the ballot
-     * @var \Variable\String 
-     */
-    protected $title;
-    
-    /**
      * @var \Variable\Bool
      */
     protected $active;
@@ -22,20 +16,7 @@ abstract class Base extends \Resource
     public function __construct()
     {
         parent::__construct();
-        $this->title = new \Variable\String(null, 'title');
-        $this->title->setLimit(100);
-        $this->title->allowEmpty(false);
         $this->active = new \Variable\Bool(true, 'active');
-    }
-
-    public function setTitle($var)
-    {
-        $this->title->set($var);
-    }
-
-    public function getTitle()
-    {
-        return $this->title->get();
     }
     
     public function setActive($var)

@@ -58,7 +58,9 @@ var Panel = React.createClass({
             type: 'default',
             heading: '',
             body: '',
-            footer: ''
+            footer: '',
+            footerClick: null,
+            headerClick: null
         };
     },
 
@@ -67,7 +69,7 @@ var Panel = React.createClass({
         if (this.props.heading) {
             heading = React.createElement(
                 "div",
-                { className: "panel-heading" },
+                { className: "panel-heading", onClick: this.props.headerClick },
                 this.props.heading
             );
         }
@@ -85,7 +87,7 @@ var Panel = React.createClass({
         if (this.props.footer) {
             footer = React.createElement(
                 "div",
-                { className: "panel-footer" },
+                { className: "panel-footer", onClick: this.props.footerClick },
                 this.props.footer
             );
         }
@@ -95,11 +97,7 @@ var Panel = React.createClass({
             "div",
             { className: panelType },
             heading,
-            React.createElement(
-                ReactCSSTransitionGroup,
-                { transitionName: "expand", transitionEnterTimeout: 500, transitionLeaveTimeout: 500 },
-                body
-            ),
+            body,
             footer
         );
     }

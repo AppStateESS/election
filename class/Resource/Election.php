@@ -9,6 +9,12 @@ namespace election\Resource;
 class Election extends Base
 {
     /**
+     * Name of the ballot
+     * @var \Variable\String 
+     */
+    protected $title;
+
+    /**
      * Time to allow students to vote
      * @var \Variable\DateTime 
      */
@@ -19,14 +25,26 @@ class Election extends Base
      * @var \Variable\DateTime
      */
     protected $endDate;
-    
     protected $table = 'elect_election';
 
     public function __construct()
     {
         parent::__construct();
+        $this->title = new \Variable\String(null, 'title');
+        $this->title->setLimit(100);
+        $this->title->allowEmpty(false);
         $this->startDate = new \Variable\DateTime(null, 'startDate');
         $this->endDate = new \Variable\DateTime(null, 'endDate');
+    }
+
+    public function setTitle($var)
+    {
+        $this->title->set($var);
+    }
+
+    public function getTitle()
+    {
+        return $this->title->get();
     }
 
     public function setStartDate($var, $formatted = true)
@@ -54,4 +72,5 @@ class Election extends Base
     {
         return $this->endDate->get();
     }
+
 }

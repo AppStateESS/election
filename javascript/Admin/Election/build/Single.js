@@ -9,7 +9,15 @@ var SingleBallot = React.createClass({
 
     getInitialState: function () {
         return {
-            ballotList: []
+            singleList: [],
+            itemCount: 0,
+            panelOpen: false
+        };
+    },
+
+    getDefaultProps: function () {
+        return {
+            electionId: 0
         };
     },
 
@@ -19,116 +27,195 @@ var SingleBallot = React.createClass({
 
     load: function () {
         $.getJSON('election/Admin/Single', {
-            command: 'list'
+            command: 'list',
+            electionId: this.props.electionId
         }).done(function (data) {
             this.setState({
-                ballotList: data
+                itemCount: data.length,
+                singleList: data
             });
         }.bind(this));
     },
 
+    toggleExpand: function () {
+        this.setState({
+            panelOpen: !this.state.panelOpen
+        });
+    },
+
     render: function () {
-        return React.createElement(
+        var heading = React.createElement(
             'div',
-            { className: 'election-list' },
-            React.createElement(BallotList, { listing: this.state.ballotList, reload: this.load })
+            null,
+            React.createElement(
+                'h4',
+                null,
+                'Single chair - ',
+                this.state.itemCount,
+                ' ballot',
+                this.state.itemCount !== 1 ? 's' : null
+            )
         );
+        if (this.state.panelOpen) {
+            var body = React.createElement(
+                'div',
+                null,
+                React.createElement(SingleList, { electionId: this.props.electionId, reload: this.load, listing: this.state.singleList })
+            );
+            var arrow = React.createElement('i', { className: 'fa fa-chevron-up' });
+        } else {
+            var body = null;
+            var arrow = React.createElement('i', { className: 'fa fa-chevron-down' });
+        }
+
+        var footer = React.createElement(
+            'div',
+            { className: 'text-center pointer', onClick: this.toggleExpand },
+            arrow
+        );
+
+        return React.createElement(Panel, { type: 'info', heading: heading, body: body, footer: footer,
+            headerClick: this.toggleExpand, footerClick: this.toggleExpand });
     }
 
 });
 
-var BallotList = React.createClass({
-    displayName: 'BallotList',
+var SingleList = React.createClass({
+    displayName: 'SingleList',
 
     getInitialState: function () {
         return {
-            ballotEditId: 0
+            currentEdit: -1,
+            openSingle: 0
         };
     },
 
     getDefaultProps: function () {
         return {
             listing: [],
-            reload: null
+            reload: null,
+            electionId: 0
         };
     },
 
-    editBallot: function (ballotId) {
+    setCurrentEdit: function (singleId) {
         this.setState({
-            ballotEditId: ballotId
+            currentEdit: singleId
+        });
+    },
+
+    editRow: function (singleId) {
+        this.setState({
+            currentEdit: singleId
+        });
+    },
+
+    openSingle: function (singleId) {
+        if (singleId === this.state.openSingle) {
+            singleId = 0;
+        }
+
+        this.setState({
+            openSingle: singleId
         });
     },
 
     render: function () {
-        var form = null;
+        var singleList = React.createElement(
+            'div',
+            null,
+            React.createElement(
+                'h3',
+                null,
+                'No single ballots found.'
+            )
+        );
 
-        if (this.state.ballotEditId === -1) {
-            form = React.createElement(SingleBallotForm, { hideForm: this.editBallot.bind(null, 0), reload: this.props.reload });
-        }
+        var shared = {
+            electionId: this.props.electionId,
+            reload: this.props.reload,
+            hideForm: this.setCurrentEdit.bind(null, -1),
+            openSingle: this.openSingle
+        };
 
-        var ballotList = this.props.listing.map(function (value) {
-            if (value.id === this.state.ballotEditId) {
-                return React.createElement(SingleBallotForm, _extends({ key: value.id }, value, { hideForm: this.editBallot.bind(null, 0), reload: this.props.reload }));
+        var singleList = this.props.listing.map(function (value) {
+            if (value.id === this.state.currentEdit) {
+                return React.createElement(SingleBallotForm, _extends({ key: value.id }, value, {
+                    singleId: value.id }, shared));
             } else {
-                return React.createElement(BallotListRow, _extends({ key: value.id }, value, { handleEdit: this.editBallot.bind(null, value.id), reload: this.props.reload }));
+                return React.createElement(SingleListRow, _extends({ key: value.id }, value, {
+                    isOpen: this.state.openSingle === value.id,
+                    singleId: value.id, edit: this.editRow.bind(null, value.id)
+                }, shared));
             }
         }.bind(this));
 
-        if (ballotList.length === 0) {
-            ballotList = React.createElement(
-                'div',
-                null,
-                React.createElement(
-                    'h3',
-                    null,
-                    'No ballots found.'
-                )
-            );
+        var form = React.createElement(
+            'button',
+            { className: 'btn btn-primary', onClick: this.editRow.bind(null, 0) },
+            React.createElement('i', { className: 'fa fa-plus' }),
+            ' Add new ballot'
+        );
+        if (this.state.currentEdit === 0) {
+            form = React.createElement(SingleBallotForm, shared);
         }
 
         return React.createElement(
             'div',
             null,
-            React.createElement(
-                'button',
-                { className: 'btn btn-success', onClick: this.editBallot.bind(null, -1) },
-                React.createElement('i', { className: 'fa fa-calendar-check-o fa-5x' }),
-                React.createElement('br', null),
-                'Create ballot'
-            ),
-            React.createElement('hr', null),
             form,
-            ballotList
+            React.createElement(
+                'div',
+                { className: 'pad-top' },
+                singleList
+            )
         );
     }
 
 });
 
-var BallotListRow = React.createClass({
-    displayName: 'BallotListRow',
+var SingleListRow = React.createClass({
+    displayName: 'SingleListRow',
 
     mixins: ['Panel'],
 
-    getInitialState: function () {
-        return {
-            showTicketForm: false
-        };
-    },
-
     getDefaultProps: function () {
         return {
-            endDateFormatted: '',
-            startDateFormatted: '',
+            electionId: 0,
+            reload: null,
+            hideForm: null,
+            singleId: 0,
             title: '',
-            id: 0,
-            handleEdit: null
+            isOpen: true
         };
     },
 
-    setShowTicketForm: function (ticket) {
-        this.setState({
-            showTicketForm: ticket
-        });
+    getInitialState: function () {
+        return {
+            formId: -1,
+            tickets: [],
+            ticketCount: 0
+        };
+    },
+
+    componentDidMount: function () {
+        this.load();
+    },
+
+    load: function () {
+        $.getJSON('election/Admin/Ticket', {
+            command: 'list',
+            singleId: this.props.singleId
+        }).done(function (data) {
+            this.setState({
+                tickets: data,
+                ticketCount: data.length
+            });
+        }.bind(this));
+    },
+
+    toggleExpand: function () {
+        this.props.openSingle(this.props.singleId);
     },
 
     handleDelete: function (event) {
@@ -142,62 +229,72 @@ var BallotListRow = React.createClass({
         }
     },
 
+    edit: function (e) {
+        e.stopPropagation();
+        this.props.edit();
+    },
+
     render: function () {
         var heading = React.createElement(
             'div',
-            null,
+            { className: 'row' },
             React.createElement(
                 'div',
-                { className: 'change-buttons' },
+                { className: 'col-sm-6' },
                 React.createElement(
-                    'button',
-                    { className: 'btn btn-success', 'data-vid': this.props.id,
-                        onClick: this.setShowTicketForm.bind(null, true), title: 'Add ticket' },
-                    React.createElement('i', { className: 'fa fa-ticket' }),
-                    ' Add ticket'
-                ),
-                React.createElement(
-                    'button',
-                    { className: 'btn btn-primary', 'data-vid': this.props.id,
-                        onClick: this.props.handleEdit, title: 'Edit ballot' },
-                    React.createElement('i', { className: 'fa fa-edit' }),
-                    ' Edit'
-                ),
-                React.createElement(
-                    'button',
-                    { className: 'btn btn-danger', onClick: this.handleDelete },
-                    React.createElement('i', { className: 'fa fa-trash-o', title: 'Remove ballot' }),
-                    ' Delete'
+                    'div',
+                    { className: 'ballot-title' },
+                    this.props.title,
+                    ' - ',
+                    this.state.ticketCount,
+                    ' ticket',
+                    this.state.ticketCount !== 1 ? 's' : null
                 )
             ),
             React.createElement(
-                'h2',
-                null,
-                this.props.title
-            ),
-            React.createElement(
-                'h4',
-                null,
-                'Vote: ',
+                'div',
+                { className: 'col-sm-6' },
                 React.createElement(
-                    'span',
-                    { className: 'text-info date-stamp' },
-                    this.props.startDateFormatted
-                ),
-                ' to ',
-                React.createElement(
-                    'span',
-                    { className: 'text-info date-stamp' },
-                    this.props.endDateFormatted
+                    'div',
+                    { className: 'pull-right' },
+                    React.createElement(
+                        'button',
+                        { className: 'btn btn-success pad-right', onClick: this.edit, title: 'Edit ballot' },
+                        React.createElement('i', { className: 'fa fa-edit' }),
+                        ' Edit'
+                    ),
+                    React.createElement(
+                        'button',
+                        { className: 'btn btn-danger', onClick: this.handleDelete },
+                        React.createElement('i', { className: 'fa fa-trash-o', title: 'Remove ballot' }),
+                        ' Delete'
+                    )
                 )
             )
         );
-        var body = React.createElement(
+
+        if (this.props.isOpen) {
+            var body = React.createElement(
+                'div',
+                null,
+                React.createElement(Tickets, { singleId: this.props.singleId, tickets: this.state.tickets, load: this.load })
+            );
+            var arrow = React.createElement('i', { className: 'fa fa-chevron-up' });
+        } else {
+            var body = null;
+            var arrow = React.createElement('i', { className: 'fa fa-chevron-down' });
+        }
+
+        var footer = React.createElement(
             'div',
-            null,
-            React.createElement(Tickets, { ballotId: this.props.id, showTicketForm: this.state.showTicketForm, removeForm: this.setShowTicketForm.bind(null, false) })
+            { className: 'text-center pointer' },
+            arrow
         );
-        return React.createElement(Panel, { heading: heading, body: body });
+
+        return React.createElement(Panel, { type: 'success', heading: heading,
+            body: body, footer: footer,
+            footerClick: this.toggleExpand,
+            headerClick: this.toggleExpand });
     }
 
 });
@@ -207,16 +304,17 @@ var SingleBallotForm = React.createClass({
 
     getInitialState: function () {
         return {
-            ballotId: 0,
             title: ''
         };
     },
 
     getDefaultProps: function () {
         return {
-            id: 0,
+            singleId: 0,
+            electionId: 0,
             title: '',
-            hideForm: null
+            hideForm: null,
+            reload: null
         };
     },
 
@@ -228,7 +326,6 @@ var SingleBallotForm = React.createClass({
 
     copyPropsToState: function () {
         this.setState({
-            ballotId: this.props.id,
             title: this.props.title
         });
     },
@@ -254,7 +351,8 @@ var SingleBallotForm = React.createClass({
         if (error === false) {
             $.post('election/Admin/Single', {
                 command: 'save',
-                ballotId: this.state.ballotId,
+                singleId: this.props.singleId,
+                electionId: this.props.electionId,
                 title: this.state.title
             }, null, 'json').done(function (data) {
                 this.props.reload();
@@ -269,15 +367,39 @@ var SingleBallotForm = React.createClass({
     },
 
     render: function () {
-        var heading = React.createElement('input', { ref: 'ballotTitle', type: 'text', className: 'form-control', defaultValue: this.props.title,
-            id: 'ballot-title', onFocus: this.resetBorder, onChange: this.updateTitle, placeholder: 'Ballot title' });
-
-        var body = React.createElement(
+        var heading = React.createElement(
             'div',
-            null,
-            'Body goes here'
+            { className: 'row' },
+            React.createElement(
+                'div',
+                { className: 'col-sm-8' },
+                React.createElement('input', { ref: 'singleTitle', type: 'text', className: 'form-control',
+                    defaultValue: this.props.title, id: 'single-title',
+                    onFocus: this.resetBorder, onChange: this.updateTitle,
+                    placeholder: 'Ballot title' })
+            ),
+            React.createElement(
+                'div',
+                { className: 'col-sm-4' },
+                React.createElement(
+                    'div',
+                    { className: 'pull-right' },
+                    React.createElement(
+                        'button',
+                        { className: 'btn btn-primary pad-right', onClick: this.save },
+                        React.createElement('i', { className: 'fa fa-save' }),
+                        ' Save'
+                    ),
+                    React.createElement(
+                        'button',
+                        { className: 'btn btn-danger', onClick: this.props.hideForm },
+                        React.createElement('i', { className: 'fa fa-times' }),
+                        ' Cancel'
+                    )
+                )
+            )
         );
 
-        return React.createElement(Panel, { heading: heading, body: body });
+        return React.createElement(Panel, { type: 'success', heading: heading });
     }
 });

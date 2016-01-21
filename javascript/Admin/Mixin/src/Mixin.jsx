@@ -36,14 +36,16 @@ var Panel = React.createClass({
             type : 'default',
             heading : '',
             body : '',
-            footer : ''
+            footer : '',
+            footerClick : null,
+            headerClick : null
         };
     },
 
     render: function() {
         var heading = null;
         if (this.props.heading) {
-            heading = <div className="panel-heading">{this.props.heading}</div>;
+            heading = <div className="panel-heading" onClick={this.props.headerClick}>{this.props.heading}</div>;
         }
 
         var body = null;
@@ -57,16 +59,16 @@ var Panel = React.createClass({
 
         var footer = null;
         if (this.props.footer) {
-            footer = <div className="panel-footer">{this.props.footer}</div>;
+            footer = <div className="panel-footer" onClick={this.props.footerClick}>{this.props.footer}</div>;
         }
 
         var panelType = 'panel panel-' + this.props.type;
         return (
             <div className={panelType}>
                 {heading}
-                <ReactCSSTransitionGroup transitionName="expand"  transitionEnterTimeout={500} transitionLeaveTimeout={500}>
+                {/*<ReactCSSTransitionGroup transitionName="expand"  transitionEnterTimeout={500} transitionLeaveTimeout={500}>*/}
                 {body}
-                </ReactCSSTransitionGroup>
+                {/*</ReactCSSTransitionGroup>*/}
                 {footer}
             </div>
         );

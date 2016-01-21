@@ -15,7 +15,8 @@ var MultipleBallot = React.createClass({
 
     load : function() {
         $.getJSON('election/Admin/Multiple', {
-        	command : 'list'
+        	command : 'list',
+            electionId : this.props.electionId
         }).done(function(data){
             this.setState({
                 ballotList : data
@@ -24,11 +25,19 @@ var MultipleBallot = React.createClass({
     },
 
     render: function() {
+        var heading = (
+            <div>
+                <h4>Multiple chair - 0 ballots</h4>
+            </div>
+        );
+        return <Panel type="primary" heading={heading}/>;
+        /*
         return (
             <div className='election-list'>
                 <BallotList listing={this.state.ballotList} reload={this.load}/>
             </div>
         );
+        */
     }
 });
 

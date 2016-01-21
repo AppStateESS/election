@@ -2,7 +2,7 @@
 
 namespace election\Controller\Admin;
 
-use election\Factory\Ballot as Factory;
+use election\Factory\Single as Factory;
 
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
@@ -53,7 +53,7 @@ EOF;
                 break;
 
             case 'delete':
-                Factory::delete(Factory::pullPostInteger('ballotId'));
+                Factory::delete(Factory::pullPostInteger('singleId'));
                 break;
 
             default:
@@ -75,7 +75,7 @@ EOF;
         $command = $request->getVar('command');
         switch ($command) {
             case 'list':
-                $json = Factory::getList();
+                $json = Factory::getList(Factory::pullGetInteger('electionId'));
                 break;
         }
         $view = new \View\JsonView($json);

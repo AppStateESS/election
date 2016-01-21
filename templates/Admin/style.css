@@ -38,11 +38,11 @@
 }
 
 .pad-right {
-    margin-right : 1em;
+    margin-right : 0.8em;
 }
 
 .pad-top {
-    margin-top : 1em;
+    margin-top : 0.8em;
 }
 
 #ballot-title {
@@ -124,4 +124,14 @@ textarea.form-control {
 
 .pointer {
     cursor : pointer;
+}
+
+.ballot-title {
+    font-size : 1.2em;
+    font-weight : bold;
+}
+
+.ticket-title {
+    font-size : 1.3em;
+    font-weight : bold;
 }

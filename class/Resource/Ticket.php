@@ -6,15 +6,14 @@ namespace election\Resource;
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Matthew McNaney <mcnaney at gmail dot com>
  */
-class Ticket extends \Resource
+class Ticket extends Base
 {
-    
     /**
      * The ticket is attached to this ballot
      * @var \Variable\Integer
      */
-    protected $ballotId;
-    
+    protected $singleId;
+
     /**
      * @var \Variable\String
      */
@@ -29,12 +28,7 @@ class Ticket extends \Resource
      * @var \Variable\String
      */
     protected $siteAddress;
-    
-    /**
-     * @var \Variable\Integer
-     */
-    protected $active;
-    
+
     /**
      * @var string
      */
@@ -43,22 +37,20 @@ class Ticket extends \Resource
     public function __construct()
     {
         parent::__construct();
-
-        $this->ballotId = new \Variable\Integer(0, 'ballotId');
+        $this->singleId = new \Variable\Integer(0, 'ballotId');
         $this->title = new \Variable\String(null, 'title');
         $this->title->setLimit(200);
         $this->platform = new \Variable\String(null, 'platform');
         $this->platform->allowNull(true);
         $this->siteAddress = new \Variable\Url(null, 'siteAddress');
         $this->siteAddress->allowNull(true);
-        $this->active = new \Variable\Bool(true, 'active');
     }
 
-    public function setBallotId($var)
+    public function setSingleId($var)
     {
-        $this->ballotId->set($var);
+        $this->singleId->set($var);
     }
-    
+
     public function setTitle($var)
     {
         $this->title->set($var);
@@ -73,10 +65,10 @@ class Ticket extends \Resource
     {
         $this->siteAddress->set($var);
     }
-    
-    public function getBallotId()
+
+    public function getSingleId()
     {
-        return $this->ballotId->get();
+        return $this->singleId->get();
     }
 
     public function getTitle()
@@ -94,13 +86,4 @@ class Ticket extends \Resource
         return $this->siteAddress->get();
     }
 
-    public function setActive($active)
-    {
-        $this->active->set($active);
-    }
-    
-    public function getActive()
-    {
-        return $this->active->get();
-    }
 }

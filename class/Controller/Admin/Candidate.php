@@ -45,8 +45,8 @@ class Candidate extends \election\Controller\Base
 
         $command = $request->getVar('command');
         switch ($command) {
-            case 'list':
-                $json = Factory::getList(Factory::pullGetInteger('ballotId'));
+            case 'ticketList':
+                $json = Factory::getTicketList(Factory::pullGetInteger('ticketId'));
                 break;
         }
         $view = new \View\JsonView($json);

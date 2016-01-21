@@ -20,6 +20,8 @@ class Election extends \election\Controller\Base
         if (ELECTION_REACT_DEV) {
             $script[] = \election\Factory\React::development('Admin/Mixin/', 'Mixin.js');
             $script[] = \election\Factory\React::development('Admin/Election/', 'Referendum.js');
+            $script[] = \election\Factory\React::development('Admin/Election/', 'Candidate.js');
+            $script[] = \election\Factory\React::development('Admin/Election/', 'Ticket.js');
             $script[] = \election\Factory\React::development('Admin/Election/', 'Multiple.js');
             $script[] = \election\Factory\React::development('Admin/Election/', 'Single.js');
             $script[] = \election\Factory\React::development('Admin/Election/', 'Election.js');

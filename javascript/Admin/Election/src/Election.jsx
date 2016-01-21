@@ -51,11 +51,11 @@ var Election = React.createClass({
             </div>
         );
     }
-
 });
 
 var CreateElectionButton = (props) => (
-    <button className="btn btn-lg btn-primary" onClick={props.handleClick}><i className="fa fa-gavel"></i> Create new election</button>
+    <button className="btn btn-lg btn-primary" onClick={props.handleClick}>
+        <i className="fa fa-calendar-check-o"></i> Create new election</button>
 );
 
 var ElectionForm = React.createClass({
@@ -265,7 +265,8 @@ var ElectionForm = React.createClass({
 var ElectionList = React.createClass({
     getInitialState: function() {
         return {
-            currentEdit : 0
+            currentEdit : 0,
+            openElection : 0
         };
     },
 
@@ -283,15 +284,33 @@ var ElectionList = React.createClass({
         });
     },
 
+    openElection: function(electionId)
+    {
+        if (electionId === this.state.openElection) {
+            electionId = 0;
+        }
+        this.setState({
+            openElection : electionId
+        });
+    },
+
     render: function() {
         var electionListing = <h3>No elections found</h3>;
 
         if (this.props.elections.length > 0) {
+            var shared = {
+                load : this.props.load,
+                electionId : 0
+            };
             electionListing = this.props.elections.map(function(value){
+                shared.electionId = value.id;
                 if (value.id === this.state.currentEdit) {
-                    return <ElectionForm key={value.id} {...value} electionId={value.id} hideForm={this.editRow.bind(null, 0)} load={this.props.load}/>
+                    return <ElectionForm key={value.id} {...value}
+                         hideForm={this.editRow.bind(null, 0)} {...shared}/>
                 } else {
-                    return <ElectionRow key={value.id} {...value} edit={this.editRow.bind(this, value.id)}/>
+                    return <ElectionRow key={value.id} isOpen={this.state.openElection === value.id}
+                        openElection={this.openElection} {...value} {...shared}
+                        edit={this.editRow.bind(this, value.id)}/>
                 }
             }.bind(this));
         }
@@ -306,21 +325,31 @@ var ElectionList = React.createClass({
 });
 
 var ElectionRow = React.createClass({
-    getInitialState: function() {
-        return {
-            panelOpen : false
-        };
-    },
-
     getDefaultProps: function() {
         return {
+            electionId : 0,
+            isOpen : true,
+            openElection : null,
+            title : '',
+            edit : null
         };
     },
 
     toggleExpand: function() {
-        this.setState({
-            panelOpen : !this.state.panelOpen
-        });
+        this.props.openElection(this.props.electionId);
+    },
+
+    deleteElection : function() {
+        if (confirm('Are you sure you want to delete this election?')) {
+            $.post('election/Admin/Election', {
+            	command : 'delete',
+                electionId : this.props.electionId
+            }, null, 'json')
+            	.done(function(data){
+            		this.props.load();
+            	}.bind(this));
+
+        }
     },
 
     render: function() {
@@ -328,7 +357,6 @@ var ElectionRow = React.createClass({
         var date = <h4>{this.props.startDateFormatted} - {this.props.endDateFormatted}</h4>;
 
         var heading = (
-
             <div className="row">
                 <div className="col-sm-9">
                     {title}
@@ -337,19 +365,17 @@ var ElectionRow = React.createClass({
                 <div className="col-sm-3">
                     <div className="text-right">
                         <button className="btn btn-block btn-success" onClick={this.props.edit}><i className="fa fa-edit"></i> Edit election</button>
-                        <button className="btn btn-block btn-danger"><i className="fa fa-trash-o"></i> Delete election</button>
+                        <button className="btn btn-block btn-danger" onClick={this.deleteElection}><i className="fa fa-trash-o"></i> Delete election</button>
                     </div>
                 </div>
             </div>
         );
 
-
-        if (this.state.panelOpen) {
+        if (this.props.isOpen) {
             var body = (
                 <div>
-                    <VoteChoice />
-                    <SingleBallot />
-                    <MultipleBallot />
+                    <SingleBallot electionId={this.props.electionId}/>
+                    <MultipleBallot electionId={this.props.electionId}/>
                     <Referendum />
                 </div>
             );
@@ -359,34 +385,14 @@ var ElectionRow = React.createClass({
             var arrow = <i className="fa fa-chevron-down"></i>;
         }
 
-        var footer = (<div className="text-center pointer" onClick={this.toggleExpand}>{arrow}</div>);
+        var footer = (<div className="text-center pointer">{arrow}</div>);
 
-        return <Panel type="info" heading={heading} body={body} footer={footer} />;
-    }
-});
-
-var VoteChoice = React.createClass({
-    getInitialState: function() {
-        return {
-        };
-    },
-
-    getDefaultProps: function() {
-        return {
-        };
-    },
-
-    render: function() {
-        return (
-            <div className="well">
-                Create new...&nbsp;
-                <button className="btn btn-primary pad-right"><i className="fa fa-user"></i> Single ballot</button>
-                <button className="btn btn-primary pad-right"><i className="fa fa-users"></i> Multiple chair ballot</button>
-                <button className="btn btn-primary"><i className="fa fa-gavel"></i> Referendum</button>
-            </div>
+        return (<Panel type="primary" heading={heading}
+             body={body} footer={footer}
+             footerClick={this.toggleExpand}
+             headerClick={this.toggleExpand}/>
         );
     }
-
 });
 
 ReactDOM.render(<Election/>, document.getElementById('election-dashboard'));

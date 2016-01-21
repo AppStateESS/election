@@ -10,11 +10,12 @@ var Referendum = React.createClass({
     },
 
     render: function() {
-        return (
+        var heading = (
             <div>
-                Referendum!
+                <h4>Multiple chair - 0 ballots</h4>
             </div>
         );
+        return <Panel type="primary" heading={heading}/>;
     }
 
 });

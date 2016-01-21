@@ -2,7 +2,7 @@
 
 namespace election\Controller\Admin;
 
-use election\Factory\Ballot as Factory;
+use election\Factory\Multiple as Factory;
 
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
@@ -76,7 +76,7 @@ EOF;
         $command = $request->getVar('command');
         switch ($command) {
             case 'list':
-                $json = Factory::getList(1);
+                $json = Factory::getList(Factory::pullGetInteger('electionId'));
                 break;
         }
         $view = new \View\JsonView($json);

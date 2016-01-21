@@ -3,47 +3,18 @@
 var Tickets = React.createClass({
     getInitialState: function() {
         return {
-            tickets : [],
-            ticketFormId : 0
+            ticketFormId : -1
         };
     },
 
     getDefaultProps: function() {
         return {
-            ballotId : 0,
-            showTicketForm : false
+            singleId : 0,
+            tickets : [],
         };
     },
 
-    componentDidUpdate: function(prevProps, prevState) {
-        if (this.props.showTicketForm && !prevProps.showTicketForm) {
-            this.addTicket();
-        }
-    },
-
-    componentDidMount: function() {
-        this.load();
-    },
-
-    load : function() {
-        $.getJSON('election/Admin/Ticket', {
-        	command : 'list',
-            ballotId : this.props.ballotId
-        }).done(function(data){
-            this.setState({
-                tickets : data
-            });
-        }.bind(this));
-
-    },
-
-    addTicket: function() {
-        this.setState({
-            ticketFormId : -1
-        });
-    },
-
-    editTicket: function(ticketId) {
+    editFormId: function(ticketId) {
         this.setState({
             ticketFormId : ticketId
         })
@@ -56,40 +27,49 @@ var Tickets = React.createClass({
                 ticketId : ticketId,
             }, null, 'json')
             	.done(function(data){
-                    this.load();
+                    this.props.load();
             	}.bind(this));
         }
     },
 
-    closeForm : function()
-    {
-        this.editTicket(0);
-        this.props.removeForm();
-    },
-
     render: function() {
+
+        var shared = {
+            close : this.editFormId.bind(null, -1),
+            load : this.props.load,
+            singleId : this.props.singleId
+        };
         var form = null;
-        if (this.state.ticketFormId === -1) {
-            form = <TicketForm close={this.closeForm} {...this.props} load={this.load}/>
+        if (this.state.ticketFormId === 0) {
+            form = <TicketForm {...shared} singleId={this.props.singleId}/>
+        } else {
+            form = (
+                <button className="btn btn-primary" onClick={this.editFormId.bind(null,0)}>
+                    <i className="fa fa-plus"></i> Add a new ticket
+                </button>);
         }
 
-        var ticketList = this.state.tickets.map(function(value){
-            if (value.id === this.state.ticketFormId) {
-                return <TicketForm key={value.id} ticketId={value.id} {...value} {...this.props} close={this.closeForm} load={this.load}/>;
-            } else {
-                return <TicketRow key={value.id} {...value} handleEdit={this.editTicket.bind(null, value.id)} handleDelete={this.delete.bind(null, value.id)}/>;
-            }
-        }.bind(this));
+        var ticketList = (
+            <div>
+                No tickets yet!
+            </div>);
 
-        if (ticketList.length === 0) {
-            ticketList = <div>No tickets currently assigned to this ballot.</div>;
+        if (this.props.tickets.length > 0) {
+            ticketList = this.props.tickets.map(function(value){
+                if (value.id === this.state.ticketFormId) {
+                    return <TicketForm key={value.id} ticketId={value.id} {...value} {...shared}/>;
+                } else {
+                    return <TicketRow key={value.id} {...value} handleEdit={this.editFormId.bind(null, value.id)} handleDelete={this.delete.bind(null, value.id)}/>;
+                }
+            }.bind(this));
         }
 
         return (
             <div>
-                <hr />
                 {form}
-                {ticketList}
+                <div className="pad-top">
+                    {ticketList}
+                </div>
             </div>
         );
     }
@@ -107,14 +87,13 @@ var TicketForm = React.createClass({
 
     getDefaultProps: function() {
         return {
-            id : 0,
-            ballotId : 0,
+            close : null,
+            load : null,
+            singleId : 0,
             ticketId : 0,
             title : null,
             siteAddress : null,
             platform : null,
-            close : null,
-            load : null
         };
     },
 
@@ -178,7 +157,7 @@ var TicketForm = React.createClass({
         if (error === false && this.state.siteAddressError === false) {
             $.post('election/Admin/Ticket', {
                 command : 'save',
-                ballotId : this.props.ballotId,
+                singleId : this.props.singleId,
                 ticketId : this.props.ticketId,
                 title : this.state.title,
                 siteAddress : this.state.siteAddress,
@@ -292,30 +271,37 @@ var TicketRow = React.createClass({
     },
 
     render: function() {
+        var platform = <em>No platform</em>;
+        if (this.props.platform.length > 0) {
+            platform = (
+                <p>{this.props.platform.split("\n").map(function(item, i){
+                        return (
+                            <span key={i}>{item}
+                                <br />
+                            </span>
+                        );
+                    })}
+                </p>
+            );
+        }
+
         var body = (
-            <div className="well ticket-form-view">
+            <div className="ticket-form-view">
                 <div className="change-buttons">
-                    <button className="btn btn-sm btn-primary" data-tid={this.props.id} onClick={this.props.handleEdit} title="Edit ticket"><i className="fa fa-lg fa-edit"></i> Edit ticket</button>
+                    <button className="btn btn-sm btn-success" data-tid={this.props.id} onClick={this.props.handleEdit} title="Edit ticket"><i className="fa fa-lg fa-edit"></i> Edit ticket</button>
                     <button className="btn btn-sm btn-danger" onClick={this.props.handleDelete} title="Delete ticket"><i className="fa fa-lg fa-trash-o"></i> Delete ticket</button>
                 </div>
-                <h3>{this.props.title}</h3>
+                <div className="ticket-title">{this.props.title}</div>
                 <div>
-                    <p>{this.props.platform.split("\n").map(function(item, i){
-                            return (
-                                <span key={i}>{item}
-                                    <br />
-                                </span>
-                            );
-                        })}
-                    </p>
-                    {this.props.siteAddress.length ? (
-                        <div>
-                        <h4>Web site: <a href={this.props.siteAddress} target="_blank">{this.props.siteAddress}</a></h4>
-                        </div>
-                    ) : null}
+                    {platform}
+                    <div>
+                        {this.props.siteAddress.length ? (
+                            <p><strong>Web site:</strong> <a href={this.props.siteAddress} target="_blank">{this.props.siteAddress}</a></p>
+                        ) : <em>No website</em>}
+                    </div>
                 </div>
                 <hr />
-                <Candidates ballotId={this.props.ballotId} ticketId={this.props.id}/>
+                <Candidates singleId={this.props.singleId} ticketId={this.props.id}/>
             </div>
         );
 

@@ -31,7 +31,7 @@ class Candidate extends \Resource
     /**
      * @var \Variable\Integer
      */
-    protected $ballotId;
+    protected $multipleId;
     
     /**
      *
@@ -54,7 +54,7 @@ class Candidate extends \Resource
         $this->lastName->setLimit(50);
         $this->picture = new \Variable\File(null, 'picture');
         $this->ticketId = new \Variable\Integer(0, 'ticketId');
-        $this->ballotId = new \Variable\Integer(0, 'ballotId');
+        $this->multipleId = new \Variable\Integer(0, 'ballotId');
         $this->active = new \Variable\Bool(true, 'active');
     }
 
@@ -78,9 +78,9 @@ class Candidate extends \Resource
         $this->ticketId->set($var);
     }
 
-    public function setBallotId($var)
+    public function setMultipleId($var)
     {
-        $this->ballotId->set($var);
+        $this->multipleId->set($var);
     }
 
     public function getFirstName()
@@ -103,9 +103,9 @@ class Candidate extends \Resource
         return $this->ticketId->get();
     }
 
-    public function getBallotId()
+    public function getMultipleId()
     {
-        return $this->ballotId->get();
+        return $this->multipleId->get();
     }
 
     public function setActive($var)

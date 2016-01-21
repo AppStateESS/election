@@ -20,7 +20,7 @@ class Ticket extends \election\Controller\Base
         $command = $request->getVar('command');
         switch ($command) {
             case 'list':
-                $json = Factory::getList();
+                $json = Factory::getList(Factory::pullGetString('singleId'));
                 break;
             
             case 'checkUrl':

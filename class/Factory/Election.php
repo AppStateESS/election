@@ -27,7 +27,6 @@ class Election extends Base
         $election = self::build($electionId, new Resource);
         $election->setActive(false);
         self::saveResource($election);
-        Ballot::deleteByElectionId($electionId);
     }
 
     /**
