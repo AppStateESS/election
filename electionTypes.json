@@ -1,17 +1,138 @@
 {
-  "electionTypes": [
-    {
-      "category": "Class",
-      "types": ["Freshmen", "Sophomore", "Junior", "Senior"]
-    },
-    {"category": "College",
-      "types": ["University College","College of Arts and Sciences","College of Business","College of Education","College of Fine and Applied Arts","College of Health Sciences","Hayes School of Music"]
-    },
-    {"category": "Club Affiliation",
-      "types": ["Honors/Academics","Multicultural Affairs","Sports","Service Initiatives","Special Interest Groups"]
-    },
-    {"category": "Greek Life",
-      "types": ["Interfraternity Council","Pan-hellenic Council","National Pan-hellenic Council"]
-    }
-  ]
+    "electionTypes": [
+        {
+            "category": "Class",
+            "subcategory": [
+                {
+                    "name": "Freshmen",
+                    "type": "freshmen",
+                    "matchName": "classification",
+                    "matchValue": "Freshman"
+                },
+                {
+                    "name": "Sophomore",
+                    "type": "sophomore",
+                    "matchName": "classification",
+                    "matchValue": "Sophomore"
+                },
+                {
+                    "name": "Junior",
+                    "type": "junior",
+                    "matchName": "classification",
+                    "matchValue": "Junior"
+                },
+                {
+                    "name": "Senior",
+                    "type": "senior",
+                    "matchName": "classification",
+                    "matchValue": "Senior"
+                }
+            ]
+        },
+        {
+            "category": "College",
+            "subcategory": [
+                {
+                    "name": "University College",
+                    "type": "university-college",
+                    "matchName": "collegeCode",
+                    "matchValue": "CG"
+                },
+                {
+                    "name": "College of Arts and Sciences",
+                    "type": "college-arts-science",
+                    "matchName": "collegeCode",
+                    "matchValue": "CAS"
+                },
+                {
+                    "name": "College of Business",
+                    "type": "college-business",
+                    "matchName": "collegeCode",
+                    "matchValue": "CB"
+                },
+                {
+                    "name": "College of Education",
+                    "type": "college-education",
+                    "matchName": "collegeCode",
+                    "matchValue": "CE"
+                },
+                {
+                    "name": "College of Fine and Applied Arts",
+                    "type": "college-fine-applied-arts",
+                    "matchName": "collegeCode",
+                    "matchValue": "CFAA"
+                },
+                {
+                    "name": "College of Health Sciences",
+                    "type": "college-health-sciences",
+                    "matchName": "collegeCode",
+                    "matchValue": "CHS"
+                },
+                {
+                    "name": "Hayes School of Music",
+                    "type": "music-school",
+                    "matchName": "collegeCode",
+                    "matchValue": "CM"
+                }
+            ]
+        },
+        {
+            "category": "Club Affiliation",
+            "subcategory": [
+                {
+                    "name": "Honors/Academics",
+                    "type": "honors",
+                    "matchName": "club",
+                    "matchValue": "HA"
+                },
+                {
+                    "name": "Multicultural Affairs",
+                    "type": "multicultural",
+                    "matchName": "club",
+                    "matchValue": "MA"
+                },
+                {
+                    "name": "Sports",
+                    "type": "sports",
+                    "matchName": "club",
+                    "matchValue": "S"
+                },
+                {
+                    "name": "Service Initiatives",
+                    "type": "service",
+                    "matchName": "club",
+                    "matchValue": "SI"
+                },
+                {
+                    "name": "Special Interest Groups",
+                    "type": "special-interest",
+                    "matchName": "club",
+                    "matchValue": "SIG"
+                }
+            ]
+        },
+        {
+            "category": "Greek Life",
+            "subcategory": [
+                {
+                    "name": "Interfraternity Council",
+                    "type": "ic",
+                    "matchName": "greek",
+                    "matchValue": "IC"
+                },
+                {
+                    "name": "Pan-hellenic Council",
+                    "type": "phc",
+                    "matchName": "greek",
+                    "matchValue": "PHC"
+                },
+                {
+                    "name": "National Pan-hellenic Council",
+                    "type": "nphc",
+                    "matchName": "greek",
+                    "matchValue": "NPHC"
+                }
+            ]
+        }
+    ]
 }
