@@ -3,6 +3,29 @@
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+var electionTypes = {};
+var categoryTypes = {};
+
+var getElectionTypes = function () {
+    $.getJSON('election/Admin/Election', {
+        command: 'getElectionTypes'
+    }).done(function (data) {
+        electionTypes = data;
+        sortCategoryTypes();
+    }.bind(this));
+};
+
+$(document).ready(function () {
+    getElectionTypes();
+});
+
+var sortCategoryTypes = function () {
+    electionTypes.electionTypes.forEach(function (value) {
+        value.subcategory.forEach(function (subval) {
+            categoryTypes[subval.type] = subval.name;
+        });
+    });
+};
 
 var Election = React.createClass({
     displayName: 'Election',
