@@ -14,4 +14,4 @@ define('ELECTION_DATETIME_FORMAT', 'M d, Y, G:i');
 // IF CHANGED - make sure to update your the Candidate form style sheet
 // as they will expect the defaults set in defines.dist.php
 define('ELECTION_MAX_CANDIDATE_WIDTH', 150);
-define('ELECTION_MAX_CANDIDATE_HEIGHT', 300);
+define('ELECTION_MAX_CANDIDATE_HEIGHT', 200);
