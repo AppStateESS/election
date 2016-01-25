@@ -48,5 +48,11 @@ class Election extends Base
         }
         return $result;
     }
+    
+    public static function getFilterTypes()
+    {
+        $filename = PHPWS_SOURCE_DIR . 'mod/election/electionTypes.json';
+        return file_get_contents($filename);
+    }
 
 }
