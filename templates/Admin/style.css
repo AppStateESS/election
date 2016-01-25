@@ -76,12 +76,31 @@ textarea.form-control {
     font-size : 1.5em;
 }
 
-.candidateForm {
-    width : 152px;
+.candidate-form input {
+    margin-top : .5em;
 }
 
-.candidateForm input {
-    margin-top : .5em;
+.photo-matte {
+    height : 240px;
+}
+
+.helper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: bottom;
+}
+
+.helper img {
+    vertical-align: bottom;
+}
+
+
+.candidate-profile,
+.candidate-form {
+    width : 152px;
+    float : left;
+    margin : 0px 1em 1em 1em;
+    text-align : center;
 }
 
 .ticket-form-view h3 {
