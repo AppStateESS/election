@@ -313,7 +313,6 @@ var SingleBallotForm = React.createClass({
                 .always(function(){
                     this.props.hideForm();
                 }.bind(this));
-
         }
     },
 
@@ -328,7 +327,7 @@ var SingleBallotForm = React.createClass({
                     <input ref="singleTitle" type="text" className="form-control"
                         defaultValue={this.props.title} id="single-title"
                         onFocus={this.resetBorder} onChange={this.updateTitle}
-                        placeholder='Ballot title' />
+                        placeholder='Ballot title (e.g. President/Vice President)' />
                 </div>
                 <div className="col-sm-4">
                     <div className="pull-right">

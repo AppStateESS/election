@@ -376,7 +376,7 @@ var SingleBallotForm = React.createClass({
                 React.createElement('input', { ref: 'singleTitle', type: 'text', className: 'form-control',
                     defaultValue: this.props.title, id: 'single-title',
                     onFocus: this.resetBorder, onChange: this.updateTitle,
-                    placeholder: 'Ballot title' })
+                    placeholder: 'Ballot title (e.g. President/Vice President)' })
             ),
             React.createElement(
                 'div',
