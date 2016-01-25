@@ -10,6 +10,7 @@ use election\Factory\Candidate as Factory;
  */
 class Candidate extends \election\Controller\Base
 {
+
     public function post(\Request $request)
     {
         if (!$request->isVar('command')) {
@@ -34,8 +35,7 @@ class Candidate extends \election\Controller\Base
         $response = new \Response($view);
         return $response;
     }
-    
-        
+
     protected function getJsonView($data, \Request $request)
     {
         if (!$request->isVar('command')) {
@@ -48,8 +48,12 @@ class Candidate extends \election\Controller\Base
             case 'ticketList':
                 $json = Factory::getTicketList(Factory::pullGetInteger('ticketId'));
                 break;
+            case 'candidateList':
+                $json = Factory::getCandidateList(Factory::pullGetInteger('multipleId'));
+                break;
         }
         $view = new \View\JsonView($json);
         return $view;
     }
+
 }
