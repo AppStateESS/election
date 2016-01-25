@@ -2,3 +2,5 @@
 /nbproject/project.properties
 /nbproject/private/
 /node_modules/
+.babelrc
+/conf/defines.php
