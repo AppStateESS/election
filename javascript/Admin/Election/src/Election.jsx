@@ -399,7 +399,7 @@ var ElectionRow = React.createClass({
                 <div>
                     <SingleBallot electionId={this.props.electionId}/>
                     <MultipleBallot electionId={this.props.electionId}/>
-                    <Referendum />
+                    <Referendum electionId={this.props.electionId}/>
                 </div>
             );
             var arrow = <i className="fa fa-chevron-up"></i>;

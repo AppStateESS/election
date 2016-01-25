@@ -459,7 +459,7 @@ var ElectionRow = React.createClass({
                 null,
                 React.createElement(SingleBallot, { electionId: this.props.electionId }),
                 React.createElement(MultipleBallot, { electionId: this.props.electionId }),
-                React.createElement(Referendum, null)
+                React.createElement(Referendum, { electionId: this.props.electionId })
             );
             var arrow = React.createElement('i', { className: 'fa fa-chevron-up' });
         } else {
