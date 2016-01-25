@@ -98,12 +98,6 @@ var MultipleList = React.createClass({
         };
     },
 
-    setCurrentEdit: function (multipleId) {
-        this.setState({
-            currentEdit: multipleId
-        });
-    },
-
     editRow: function (multipleId) {
         this.setState({
             currentEdit: multipleId
@@ -134,7 +128,7 @@ var MultipleList = React.createClass({
         var shared = {
             electionId: this.props.electionId,
             reload: this.props.reload,
-            hideForm: this.setCurrentEdit.bind(null, -1),
+            hideForm: this.editRow.bind(null, -1),
             openMultiple: this.openMultiple
         };
 
@@ -417,8 +411,6 @@ var MultipleForm = React.createClass({
     },
 
     render: function () {
-        var seats = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25];
-
         var heading = React.createElement(
             'div',
             { className: 'row' },
@@ -452,17 +444,9 @@ var MultipleForm = React.createClass({
                             null,
                             'Available seats'
                         ),
-                        React.createElement(
-                            'select',
-                            { onChange: this.updateSeatNumber, className: 'form-control' },
-                            seats.map(function (val, i) {
-                                return React.createElement(
-                                    'option',
-                                    { key: i },
-                                    val
-                                );
-                            })
-                        )
+                        React.createElement('input', { type: 'number', className: 'form-control',
+                            onChange: this.updateSeatNumber,
+                            defaultValue: this.props.seatNumber })
                     ),
                     React.createElement(
                         'div',
