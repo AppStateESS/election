@@ -10,7 +10,6 @@ use election\Resource\Multiple as Resource;
  */
 class Multiple extends Ballot
 {
-
     public static function post()
     {
         $multiple = self::build(self::pullPostInteger('multipleId'), new Resource);
@@ -18,6 +17,7 @@ class Multiple extends Ballot
         $multiple->setTitle(self::pullPostString('title'));
         $multiple->setSeatNumber(self::pullPostInteger('seatNumber'));
         $multiple->setElectionId(self::pullPostInteger('electionId'));
+        $multiple->setCategory(self::pullPostString('category'));
 
         self::saveResource($multiple);
     }
@@ -34,4 +34,5 @@ class Multiple extends Ballot
     {
         return parent::ballotList($electionId, 'elect_multiple');
     }
+
 }
