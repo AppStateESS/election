@@ -15,6 +15,12 @@ class Multiple extends Ballot
     protected $seatNumber;
 
     /**
+     *
+     * @var \Variable\String
+     */
+    protected $category;
+
+    /**
      * @var string
      */
     protected $table = 'elect_multiple';
@@ -23,6 +29,8 @@ class Multiple extends Ballot
     {
         parent::__construct();
         $this->seatNumber = new \Variable\Integer(2, 'seatNumber');
+        $this->category = new \Variable\String(null, 'category');
+        $this->category->setLimit(255);
     }
 
     public function setSeatNumber($var)
@@ -33,6 +41,16 @@ class Multiple extends Ballot
     public function getSeatNumber()
     {
         return $this->seatNumber->get();
+    }
+    
+    public function setCategory($var)
+    {
+        $this->category->set($var);
+    }
+    
+    public function getCategory()
+    {
+        return $this->category->get();
     }
 
 }
