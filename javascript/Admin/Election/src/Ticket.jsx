@@ -257,6 +257,7 @@ var TicketRow = React.createClass({
 
     getInitialState: function() {
         return {
+            candidates : []
         };
     },
 
@@ -268,6 +269,21 @@ var TicketRow = React.createClass({
             siteAddress : '',
             handleDelete : null
         };
+    },
+
+    componentDidMount: function() {
+        this.load();
+    },
+
+    load : function() {
+        $.getJSON('election/Admin/Candidate', {
+            command : 'ticketList',
+            ticketId : this.props.id
+        }).done(function(data) {
+            this.setState({
+                candidates : data
+            });
+        }.bind(this));
     },
 
     render: function() {
@@ -301,7 +317,7 @@ var TicketRow = React.createClass({
                     </div>
                 </div>
                 <hr />
-                <Candidates singleId={this.props.singleId} ticketId={this.props.id}/>
+                <Candidates type="ticket" candidates={this.state.candidates} singleId={this.props.singleId} ticketId={this.props.id} reload={this.load}/>
             </div>
         );
 

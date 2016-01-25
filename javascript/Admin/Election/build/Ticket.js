@@ -308,7 +308,9 @@ var TicketRow = React.createClass({
     mixins: ['Panel'],
 
     getInitialState: function () {
-        return {};
+        return {
+            candidates: []
+        };
     },
 
     getDefaultProps: function () {
@@ -319,6 +321,21 @@ var TicketRow = React.createClass({
             siteAddress: '',
             handleDelete: null
         };
+    },
+
+    componentDidMount: function () {
+        this.load();
+    },
+
+    load: function () {
+        $.getJSON('election/Admin/Candidate', {
+            command: 'ticketList',
+            ticketId: this.props.id
+        }).done(function (data) {
+            this.setState({
+                candidates: data
+            });
+        }.bind(this));
     },
 
     render: function () {
@@ -395,7 +412,7 @@ var TicketRow = React.createClass({
                 )
             ),
             React.createElement('hr', null),
-            React.createElement(Candidates, { singleId: this.props.singleId, ticketId: this.props.id })
+            React.createElement(Candidates, { type: 'ticket', candidates: this.state.candidates, singleId: this.props.singleId, ticketId: this.props.id, reload: this.load })
         );
 
         return React.createElement(
