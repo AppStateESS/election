@@ -80,6 +80,11 @@ EOF;
             case 'list':
                 $json = Factory::getList();
                 break;
+            
+            case 'getElectionTypes':
+                echo Factory::getFilterTypes();
+                exit();
+                break;
         }
         $view = new \View\JsonView($json);
         return $view;
