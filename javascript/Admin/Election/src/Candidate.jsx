@@ -3,31 +3,24 @@
 var Candidates = React.createClass({
     getInitialState: function() {
         return {
-            candidates : [],
             currentForm : 0
         };
     },
 
     getDefaultProps: function() {
         return {
+            candidates : [],
             ticketId : 0,
+            multipleId : 0,
+            type : 'ticket'
         };
     },
 
-    componentDidMount: function() {
-        this.load();
-    },
-
     load : function() {
-        $.getJSON('election/Admin/Candidate/', {
-        	command : 'ticketList',
-            ticketId : this.props.ticketId
-        }).done(function(data) {
-            this.setState({
-                currentForm : 0,
-                candidates : data
-            });
-        }.bind(this));
+        this.props.reload();
+        this.setState({
+            currentForm : 0
+        });
     },
 
     setCurrentForm : function(id) {
@@ -49,23 +42,29 @@ var Candidates = React.createClass({
     },
 
     render: function() {
-        var candidates = this.state.candidates.map(function(value){
+        var candidates = this.props.candidates.map(function(value){
             if (value.id === this.state.currentForm) {
                 return (
-                    <div key={value.id} className="col-sm-3">
-                        <CandidateForm  {...value} candidateId={value.id} reload={this.load} reset={this.setCurrentForm.bind(null, 0)}/>
+                    <div key={value.id} className="col-sm-4 col-xs-6 pad-bottom">
+                        <CandidateForm  {...this.props} {...value} candidateId={value.id} reload={this.load} reset={this.setCurrentForm.bind(null, 0)}/>
                     </div>
                 );
             } else {
-                return <CandidateProfile key={value.id} {...value} delete={this.delete.bind(null, value.id)} edit={this.setCurrentForm.bind(null, value.id)}/>;
+                return <CandidateProfile key={value.id} {...value}
+                    delete={this.delete.bind(null, value.id)}
+                    edit={this.setCurrentForm.bind(null, value.id)}/>;
             }
         }.bind(this));
 
         if (this.state.currentForm === 0) {
             var form = (
-                <button className="btn btn-primary" onClick={this.setCurrentForm.bind(null, -1)}>
-    <i className="fa fa-user-plus fa-5x"></i><br />
-    Add candidate</button>
+                <div className="photo-matte">
+                    <span className="helper"></span>
+                    <button className="btn btn-primary" onClick={this.setCurrentForm.bind(null, -1)}>
+                        <i className="fa fa-user-plus fa-5x"></i><br />
+                        Add candidate
+                    </button>
+                </div>
             );
         } else if (this.state.currentForm === -1) {
             var form = (
@@ -75,12 +74,8 @@ var Candidates = React.createClass({
 
         return (
             <div>
-                <div className="row">
-                    {candidates}
-                    <div className="col-sm-6">
-                    {form}
-                    </div>
-                </div>
+                {candidates}
+                {form}
             </div>
         );
     }
@@ -88,11 +83,6 @@ var Candidates = React.createClass({
 });
 
 var CandidateProfile = React.createClass({
-    getInitialState: function() {
-        return {
-        };
-    },
-
     getDefaultProps: function() {
         return {
             firstName : null,
@@ -103,12 +93,15 @@ var CandidateProfile = React.createClass({
 
     render: function() {
         return (
-            <div className="col-sm-3 text-center">
-                {this.props.picture.length > 0 ? (
-                    <img src={this.props.picture} className="candidate-pic" />
-                ) : (
-                    <div className="no-picture text-muted"><i className="fa fa-user fa-5x"></i><br />No picture</div>
-                )}
+            <div className="candidate-profile">
+                <div className="photo-matte">
+                    <span className="helper"></span>
+                    {this.props.picture.length > 0 ? (
+                        <img src={this.props.picture} className="candidate-pic" />
+                    ) : (
+                        <div className="no-picture text-muted"><i className="fa fa-user fa-5x"></i><br />No picture</div>
+                    )}
+                </div>
                 <div>
                     <p><strong>{this.props.firstName} {this.props.lastName}</strong></p>
                     <button className="btn btn-primary" title="Edit candidate" onClick={this.props.edit}><i className="fa fa-edit"></i></button>&nbsp;
@@ -132,6 +125,8 @@ var CandidateForm = React.createClass({
     getDefaultProps: function() {
         return {
             ticketId : 0,
+            multipleId : 0,
+            type : 'ticket',
             candidateId : 0,
             reload : null,
             firstName : '',
@@ -168,16 +163,19 @@ var CandidateForm = React.createClass({
         });
     },
 
-    save : function()
-    {
+    save : function() {
         var data = new FormData();
         data.append('command', 'save');
+        data.append('type', this.props.type);
 
-        $.each(this.state.photo, function(key, value)
-        {
+        $.each(this.state.photo, function(key, value) {
             data.append(key, value);
         });
-        data.append('ticketId', this.props.ticketId);
+        if (this.props.ticketId) {
+            data.append('ticketId', this.props.ticketId);
+        } else {
+            data.append('multipleId', this.props.multipleId);
+        }
         data.append('candidateId', this.props.candidateId);
         data.append('firstName', this.state.firstName);
         data.append('lastName', this.state.lastName);
@@ -203,7 +201,7 @@ var CandidateForm = React.createClass({
 
         var props = {firstName : this.state.firstName, lastName:this.state.lastName};
         return (
-            <div className="candidateForm text-center">
+            <div className="candidate-form text-center">
                 <Photo photo={this.state.photo} update={this.updatePhoto} picture={this.state.picture}/>
                 <CandidateName updateFirstName={this.updateFirstName} updateLastName={this.updateLastName} {...props}/>
                 <div className="pad-top">

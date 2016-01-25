@@ -7,31 +7,24 @@ var Candidates = React.createClass({
 
     getInitialState: function () {
         return {
-            candidates: [],
             currentForm: 0
         };
     },
 
     getDefaultProps: function () {
         return {
-            ticketId: 0
+            candidates: [],
+            ticketId: 0,
+            multipleId: 0,
+            type: 'ticket'
         };
     },
 
-    componentDidMount: function () {
-        this.load();
-    },
-
     load: function () {
-        $.getJSON('election/Admin/Candidate/', {
-            command: 'ticketList',
-            ticketId: this.props.ticketId
-        }).done(function (data) {
-            this.setState({
-                currentForm: 0,
-                candidates: data
-            });
-        }.bind(this));
+        this.props.reload();
+        this.setState({
+            currentForm: 0
+        });
     },
 
     setCurrentForm: function (id) {
@@ -52,25 +45,32 @@ var Candidates = React.createClass({
     },
 
     render: function () {
-        var candidates = this.state.candidates.map(function (value) {
+        var candidates = this.props.candidates.map(function (value) {
             if (value.id === this.state.currentForm) {
                 return React.createElement(
                     'div',
-                    { key: value.id, className: 'col-sm-3' },
-                    React.createElement(CandidateForm, _extends({}, value, { candidateId: value.id, reload: this.load, reset: this.setCurrentForm.bind(null, 0) }))
+                    { key: value.id, className: 'col-sm-4 col-xs-6 pad-bottom' },
+                    React.createElement(CandidateForm, _extends({}, this.props, value, { candidateId: value.id, reload: this.load, reset: this.setCurrentForm.bind(null, 0) }))
                 );
             } else {
-                return React.createElement(CandidateProfile, _extends({ key: value.id }, value, { 'delete': this.delete.bind(null, value.id), edit: this.setCurrentForm.bind(null, value.id) }));
+                return React.createElement(CandidateProfile, _extends({ key: value.id }, value, {
+                    'delete': this.delete.bind(null, value.id),
+                    edit: this.setCurrentForm.bind(null, value.id) }));
             }
         }.bind(this));
 
         if (this.state.currentForm === 0) {
             var form = React.createElement(
-                'button',
-                { className: 'btn btn-primary', onClick: this.setCurrentForm.bind(null, -1) },
-                React.createElement('i', { className: 'fa fa-user-plus fa-5x' }),
-                React.createElement('br', null),
-                'Add candidate'
+                'div',
+                { className: 'photo-matte' },
+                React.createElement('span', { className: 'helper' }),
+                React.createElement(
+                    'button',
+                    { className: 'btn btn-primary', onClick: this.setCurrentForm.bind(null, -1) },
+                    React.createElement('i', { className: 'fa fa-user-plus fa-5x' }),
+                    React.createElement('br', null),
+                    'Add candidate'
+                )
             );
         } else if (this.state.currentForm === -1) {
             var form = React.createElement(CandidateForm, _extends({}, this.props, { reload: this.load, reset: this.setCurrentForm.bind(null, 0) }));
@@ -79,16 +79,8 @@ var Candidates = React.createClass({
         return React.createElement(
             'div',
             null,
-            React.createElement(
-                'div',
-                { className: 'row' },
-                candidates,
-                React.createElement(
-                    'div',
-                    { className: 'col-sm-6' },
-                    form
-                )
-            )
+            candidates,
+            form
         );
     }
 
@@ -96,10 +88,6 @@ var Candidates = React.createClass({
 
 var CandidateProfile = React.createClass({
     displayName: 'CandidateProfile',
-
-    getInitialState: function () {
-        return {};
-    },
 
     getDefaultProps: function () {
         return {
@@ -112,13 +100,18 @@ var CandidateProfile = React.createClass({
     render: function () {
         return React.createElement(
             'div',
-            { className: 'col-sm-3 text-center' },
-            this.props.picture.length > 0 ? React.createElement('img', { src: this.props.picture, className: 'candidate-pic' }) : React.createElement(
+            { className: 'candidate-profile' },
+            React.createElement(
                 'div',
-                { className: 'no-picture text-muted' },
-                React.createElement('i', { className: 'fa fa-user fa-5x' }),
-                React.createElement('br', null),
-                'No picture'
+                { className: 'photo-matte' },
+                React.createElement('span', { className: 'helper' }),
+                this.props.picture.length > 0 ? React.createElement('img', { src: this.props.picture, className: 'candidate-pic' }) : React.createElement(
+                    'div',
+                    { className: 'no-picture text-muted' },
+                    React.createElement('i', { className: 'fa fa-user fa-5x' }),
+                    React.createElement('br', null),
+                    'No picture'
+                )
             ),
             React.createElement(
                 'div',
@@ -165,6 +158,8 @@ var CandidateForm = React.createClass({
     getDefaultProps: function () {
         return {
             ticketId: 0,
+            multipleId: 0,
+            type: 'ticket',
             candidateId: 0,
             reload: null,
             firstName: '',
@@ -204,11 +199,16 @@ var CandidateForm = React.createClass({
     save: function () {
         var data = new FormData();
         data.append('command', 'save');
+        data.append('type', this.props.type);
 
         $.each(this.state.photo, function (key, value) {
             data.append(key, value);
         });
-        data.append('ticketId', this.props.ticketId);
+        if (this.props.ticketId) {
+            data.append('ticketId', this.props.ticketId);
+        } else {
+            data.append('multipleId', this.props.multipleId);
+        }
         data.append('candidateId', this.props.candidateId);
         data.append('firstName', this.state.firstName);
         data.append('lastName', this.state.lastName);
@@ -235,7 +235,7 @@ var CandidateForm = React.createClass({
         var props = { firstName: this.state.firstName, lastName: this.state.lastName };
         return React.createElement(
             'div',
-            { className: 'candidateForm text-center' },
+            { className: 'candidate-form text-center' },
             React.createElement(Photo, { photo: this.state.photo, update: this.updatePhoto, picture: this.state.picture }),
             React.createElement(CandidateName, _extends({ updateFirstName: this.updateFirstName, updateLastName: this.updateLastName }, props)),
             React.createElement(
