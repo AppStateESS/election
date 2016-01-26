@@ -149,6 +149,7 @@ var ReferendumForm = React.createClass({
 
     getDefaultProps: function() {
         return {
+            referendumId : 0,
             electionId : 0,
             title : '',
             description : '',
@@ -184,13 +185,13 @@ var ReferendumForm = React.createClass({
 
     checkForErrors : function() {
         var error = false;
-        if (this.state.title.length === 0) {
+        if (!this.state.title.length) {
             $(this.refs.referendumTitle).css('borderColor', 'red').attr('placeholder', 'Please enter a title');
             error = true;
         }
 
-        if (this.state.description.length === 0) {
-            $(this.refs.referendumTitle).css('borderColor', 'red').attr('placeholder', 'Please enter a description');
+        if (!this.state.description.length) {
+            $(this.refs.referendumDescription).css('borderColor', 'red').attr('placeholder', 'Please enter a description');
             error = true;
         }
 
@@ -203,6 +204,7 @@ var ReferendumForm = React.createClass({
             $.post('election/Admin/Referendum', {
             	command : 'save',
                 electionId : this.props.electionId,
+                referendumId : this.props.referendumId,
                 title : this.state.title,
                 description : this.state.description
             }, null, 'json')
@@ -246,6 +248,76 @@ var ReferendumForm = React.createClass({
 
         return (
             <Panel type="success" heading={heading} body={body}/>
+        );
+    }
+
+});
+
+var ReferendumListRow = React.createClass({
+    mixins : ['Panel'],
+
+    getInitialState: function() {
+        return {
+            formId : -1,
+        };
+    },
+
+    getDefaultProps: function() {
+        return {
+            electionId : 0,
+            reload : null,
+            hideForm : null,
+            referendumId : 0,
+            title : '',
+            description : '',
+            isOpen : true,
+            edit : null,
+            openReferendum : null
+        };
+    },
+
+    deleteReferendum : function() {
+        if (confirm('Are you sure you want to delete this referendum?')) {
+            $.post('election/Admin/Referendum', {
+            	command : 'delete',
+                referendumId : this.props.referendumId
+            }, null, 'json')
+            	.done(function(data){
+            		this.props.reload();
+            	}.bind(this));
+
+        }
+    },
+
+    render: function() {
+        var heading = (
+            <div className="row">
+                <div className="col-sm-8">
+                    <h3>{this.props.title}</h3>
+                </div>
+                <div className="col-sm-4 text-right">
+                    <button className="btn btn-success pad-right" onClick={this.props.edit}>
+                        <i className="fa fa-edit"></i> Edit
+                    </button>
+                    <button className="btn btn-danger" onClick={this.deleteReferendum}>
+                        <i className="fa fa-trash-o"></i> Delete
+                    </button>
+                </div>
+            </div>
+        );
+
+        var body = (
+            <p>{this.props.description.split("\n").map(function(item, i){
+                    return (
+                        <span key={i}>{item}
+                            <br />
+                        </span>
+                    );
+                })}
+            </p>
+        );
+        return (<Panel type="success" heading={heading}
+             body={body}/>
         );
     }
 
