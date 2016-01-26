@@ -25,9 +25,6 @@ function election_install(&$content)
         $referendum = new \election\Resource\Referendum;
         $referendum->createTable($db);
         
-        $refOption = new \election\Resource\ReferendumOption;
-        $refOption->createTable($db);
-        
         $ticket = new \election\Resource\Ticket;
         $ticket->createTable($db);
         
@@ -40,7 +37,6 @@ function election_install(&$content)
         $db->buildTable($multiple->getTable())->drop(true);
         $db->buildTable($candidate->getTable())->drop(true);
         $db->buildTable($referendum->getTable())->drop(true);
-        $db->buildTable($refOption->getTable())->drop(true);
         $db->buildTable($ticket->getTable())->drop(true);
         $db->buildTable($voter->getTable())->drop(true);
         
