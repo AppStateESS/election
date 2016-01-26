@@ -66,9 +66,9 @@ var Panel = React.createClass({
         return (
             <div className={panelType}>
                 {heading}
-                {/*<ReactCSSTransitionGroup transitionName="expand"  transitionEnterTimeout={500} transitionLeaveTimeout={500}>*/}
+                <ReactCSSTransitionGroup transitionName="expand"  transitionEnterTimeout={500} transitionLeaveTimeout={500}>
                 {body}
-                {/*</ReactCSSTransitionGroup>*/}
+                </ReactCSSTransitionGroup>
                 {footer}
             </div>
         );

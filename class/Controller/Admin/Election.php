@@ -18,7 +18,7 @@ class Election extends \election\Controller\Base
         $script[] = '<script type="text/javascript" src="' . PHPWS_SOURCE_HTTP . 'mod/election/node_modules/react-dropzone/dist/react-dropzone.js"></script>';
 
         if (ELECTION_REACT_DEV) {
-            $script[] = \election\Factory\React::development('Admin/Mixin/', 'Mixin.js');
+            $script[] = \election\Factory\React::development('Admin/Election/', 'Mixin.js');
             $script[] = \election\Factory\React::development('Admin/Election/', 'Referendum.js');
             $script[] = \election\Factory\React::development('Admin/Election/', 'Candidate.js');
             $script[] = \election\Factory\React::development('Admin/Election/', 'Ticket.js');

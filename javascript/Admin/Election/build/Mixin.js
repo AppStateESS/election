@@ -97,7 +97,11 @@ var Panel = React.createClass({
             "div",
             { className: panelType },
             heading,
-            body,
+            React.createElement(
+                ReactCSSTransitionGroup,
+                { transitionName: "expand", transitionEnterTimeout: 500, transitionLeaveTimeout: 500 },
+                body
+            ),
             footer
         );
     }
