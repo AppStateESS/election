@@ -2,7 +2,6 @@
 
 namespace election;
 
-
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Matthew McNaney <mcnaney at gmail dot com>
@@ -28,14 +27,11 @@ class Module extends \Module implements \SettingDefaults
 
     public function getController(\Request $request)
     {
+        \Current_User::requireLogin();
         $cmd = $request->shiftCommand();
-        if ($cmd == 'Admin') {
-            if (\Current_User::allow('election')) {
-                $admin = new \election\Controller\Admin($this);
-                return $admin;
-            } else {
-                \Current_User::requireLogin();
-            }
+        if ($cmd == 'Admin' && \Current_User::allow('election')) {
+            $admin = new \election\Controller\Admin($this);
+            return $admin;
         } else {
             $user = new \election\Controller\User($this);
             return $user;
@@ -44,13 +40,17 @@ class Module extends \Module implements \SettingDefaults
 
     public function getSettingDefaults()
     {
+        
     }
 
     public function runTime(\Request $request)
     {
-        
-        if (\Current_User::allow('election')) {
-            \election\Controller\Admin::loadAdminBar();
+        if (\Current_User::isLogged()) {
+            if (\Current_User::allow('election')) {
+                \election\Controller\Admin::loadAdminBar();
+            } else {
+                \election\Controller\User::loadUserBar();
+            }
         }
     }
 
