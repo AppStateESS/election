@@ -24,7 +24,7 @@ class Referendum extends \election\Controller\Base
                 break;
 
             case 'delete':
-                Factory::delete(Factory::pullPostInteger('ballotId'));
+                Factory::delete(Factory::pullPostInteger('referendumId'));
                 break;
 
             default:
