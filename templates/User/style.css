@@ -1,0 +1,80 @@
+.panel-heading h2,
+.panel-heading h3 {
+    margin : 0px;
+}
+
+.pad-right {
+    margin-right : 0.8em;
+}
+
+.pad-top {
+    margin-top : 0.8em;
+}
+
+textarea.form-control {
+    min-height : 140px;
+}
+
+.photo-matte {
+    height : 240px;
+}
+
+.helper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: bottom;
+}
+
+.helper img {
+    vertical-align: bottom;
+}
+
+.candidate-profile,
+.candidate-form {
+    width : 152px;
+    float : left;
+    margin : 0px 1em 1em 1em;
+    text-align : center;
+}
+
+.ticket-form-view h3 {
+    margin-top : 0px;
+}
+
+.no-picture {
+    width : 150px;
+    height : 200px;
+    text-align : center;
+    padding-top : 40%;
+    border : 1px solid #e3e3e3;
+}
+
+.election-row .panel-heading:hover {
+    cursor : pointer;
+}
+
+.expand-enter {
+    opacity : 0.01;
+    max-height: 0px;
+}
+
+.expand-enter.expand-enter-active {
+    opacity : 1;
+    max-height: 1000px;
+    transition: opacity 500ms ease-in,  max-height 500ms ease-out;
+}
+
+.expand-leave {
+    opacity : 1;
+    max-height: 1000px;
+}
+
+.expand-leave.expand-leave-active {
+    opacity : 0.01;
+    max-height: 0px;
+    transition: opacity 500ms ease-in,  max-height 500ms ease-out;
+}
+
+.pointer {
+    cursor : pointer;
+}

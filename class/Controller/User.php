@@ -26,7 +26,7 @@ class User extends \Http\Controller
         $command = $request->shiftCommand();
 
         if (empty($command)) {
-            $command = 'Welcome';
+            $command = 'Election';
         }
 
         $className = 'election\Controller\User\\' . $command;
@@ -35,6 +35,17 @@ class User extends \Http\Controller
         }
         $commandObject = new $className($this->getModule());
         return $commandObject;
+    }
+    
+    public static function loadUserBar()
+    {
+        $auth = \Current_User::getAuthorization();
+        $vars['logout_uri'] = $auth->logout_link;
+        $vars['username'] = \Current_User::getDisplayName();
+        $template =  new \Template($vars);
+        $template->setModuleTemplate('election', 'User/navbar.html');
+        $content = $template->get();
+        \Layout::plug($content, 'NAV_LINKS');
     }
 
 }
