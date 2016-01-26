@@ -26,6 +26,7 @@ class Ballot extends Base
         $this->title->setLimit(100);
         $this->title->allowEmpty(false);
         $this->electionId = new \Variable\Integer(0, 'electionId');
+        $this->electionId->setRange(1);
     }
 
     public function setTitle($var)
