@@ -24,6 +24,9 @@ class Election extends Base
 
     public static function delete($electionId)
     {
+        if (empty($electionId)) {
+            throw new \Exception('Missing id');
+        }
         $election = self::build($electionId, new Resource);
         $election->setActive(false);
         self::saveResource($election);
@@ -48,7 +51,7 @@ class Election extends Base
         }
         return $result;
     }
-    
+
     public static function getFilterTypes()
     {
         $filename = PHPWS_SOURCE_DIR . 'mod/election/electionTypes.json';

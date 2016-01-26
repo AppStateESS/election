@@ -10,6 +10,7 @@ use election\Resource\Multiple as Resource;
  */
 class Multiple extends Ballot
 {
+
     public static function post()
     {
         $multiple = self::build(self::pullPostInteger('multipleId'), new Resource);
@@ -24,6 +25,9 @@ class Multiple extends Ballot
 
     public static function delete($multipleId)
     {
+        if (empty($multipleId)) {
+            throw new \Exception('Missing id');
+        }
         $multiple = self::build($multipleId, new Resource);
         $multiple->setActive(false);
         self::saveResource($multiple);

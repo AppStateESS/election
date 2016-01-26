@@ -15,7 +15,7 @@ class Candidate extends Base
     {
         $candidate = self::build(self::pullPostInteger('candidateId'), new Resource);
         $type = self::pullPostString('type');
-        
+
         if ($type == 'ticket') {
             $candidate->setTicketId((int) self::pullPostInteger('ticketId'));
         } elseif ($type === 'multiple') {
@@ -27,7 +27,7 @@ class Candidate extends Base
         if (empty($candidate->getTicketId()) && empty($candidate->getMultipleId())) {
             throw new \Exception('Missing candidate foreign key');
         }
-        
+
         $candidate->setFirstName(ucfirst(self::pullPostString('firstName')));
         $candidate->setLastName(ucfirst(self::pullPostString('lastName')));
 
@@ -143,6 +143,9 @@ class Candidate extends Base
 
     public static function delete($candidateId)
     {
+        if (empty($candidateId)) {
+            throw new \Exception('Missing id');
+        }
         $candidate = self::build($candidateId, new Resource);
         $candidate->setActive(false);
         self::saveResource($candidate);
