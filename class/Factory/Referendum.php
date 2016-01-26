@@ -16,16 +16,19 @@ class Referendum extends Base
 
         $referendum->setTitle(self::pullPostString('title'));
         $referendum->setDescription(self::pullPostString('description'));
+        $referendum->setElectionId(self::pullPostInteger('electionId'));
 
         self::saveResource($referendum);
     }
 
     public static function delete($referendumId)
     {
+        if (empty($referendumId)) {
+            throw new \Exception('Missing id');
+        }
         $referendum = self::build($referendumId, new Resource);
         $referendum->setActive(false);
         self::saveResource($referendum);
-        Ticket::deleteByBallotId($referendumId);
     }
 
     public static function getList($electionId)
