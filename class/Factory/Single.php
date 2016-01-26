@@ -23,6 +23,9 @@ class Single extends Ballot
 
     public static function delete($singleId)
     {
+        if (empty($singleId)) {
+            throw new \Exception('Missing id');
+        }
         $single = self::build($singleId, new Resource);
         $single->setActive(false);
         self::saveResource($single);
@@ -33,5 +36,5 @@ class Single extends Ballot
     {
         return parent::ballotList($electionId, 'elect_single');
     }
-    
+
 }
