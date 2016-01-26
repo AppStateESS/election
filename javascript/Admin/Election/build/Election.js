@@ -435,20 +435,16 @@ var ElectionRow = React.createClass({
                 'div',
                 { className: 'col-sm-3' },
                 React.createElement(
-                    'div',
-                    { className: 'text-right' },
-                    React.createElement(
-                        'button',
-                        { className: 'btn btn-block btn-success', onClick: this.props.edit },
-                        React.createElement('i', { className: 'fa fa-edit' }),
-                        ' Edit election'
-                    ),
-                    React.createElement(
-                        'button',
-                        { className: 'btn btn-block btn-danger', onClick: this.deleteElection },
-                        React.createElement('i', { className: 'fa fa-trash-o' }),
-                        ' Delete election'
-                    )
+                    'button',
+                    { className: 'btn btn-block btn-success', onClick: this.props.edit },
+                    React.createElement('i', { className: 'fa fa-edit' }),
+                    ' Edit election'
+                ),
+                React.createElement(
+                    'button',
+                    { className: 'btn btn-block btn-danger', onClick: this.deleteElection },
+                    React.createElement('i', { className: 'fa fa-trash-o' }),
+                    ' Delete election'
                 )
             )
         );

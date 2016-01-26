@@ -386,10 +386,8 @@ var ElectionRow = React.createClass({
                     {date}
                 </div>
                 <div className="col-sm-3">
-                    <div className="text-right">
-                        <button className="btn btn-block btn-success" onClick={this.props.edit}><i className="fa fa-edit"></i> Edit election</button>
-                        <button className="btn btn-block btn-danger" onClick={this.deleteElection}><i className="fa fa-trash-o"></i> Delete election</button>
-                    </div>
+                    <button className="btn btn-block btn-success" onClick={this.props.edit}><i className="fa fa-edit"></i> Edit election</button>
+                    <button className="btn btn-block btn-danger" onClick={this.deleteElection}><i className="fa fa-trash-o"></i> Delete election</button>
                 </div>
             </div>
         );
