@@ -45,6 +45,9 @@ class Referendum extends Base
         if (empty($result)) {
             return array();
         }
+        if (empty($result)) {
+            $result = array();
+        }
         return $result;
     }
 }
