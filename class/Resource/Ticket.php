@@ -37,7 +37,7 @@ class Ticket extends Base
     public function __construct()
     {
         parent::__construct();
-        $this->singleId = new \Variable\Integer(0, 'ballotId');
+        $this->singleId = new \Variable\Integer(0, 'singleId');
         $this->title = new \Variable\String(null, 'title');
         $this->title->setLimit(200);
         $this->platform = new \Variable\String(null, 'platform');
