@@ -36,5 +36,22 @@ class Single extends Ballot
     {
         return parent::ballotList($electionId, 'elect_single');
     }
+    
+    public static function getListWithTickets($electionId, $addCandidates=true)
+    {
+        $singleList = self::getList($electionId);
+        if (empty($singleList)) {
+            return null;
+        }
+        
+        foreach ($singleList as &$value) {
+            if ($addCandidates) {
+                $value['tickets'] = Ticket::getListWithCandidates($value['id']);
+            } else {
+                $value['tickets'] = Ticket::getList($value['id']);
+            }
+        }
+        return $singleList;
+    }
 
 }

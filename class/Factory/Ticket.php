@@ -52,7 +52,7 @@ class Ticket extends Base
             return false;
         }
     }
-    
+
     public static function delete($ticketId)
     {
         if (empty($ticketId)) {
@@ -62,4 +62,19 @@ class Ticket extends Base
         $ticket->setActive(false);
         self::saveResource($ticket);
     }
+
+    public static function getListWithCandidates($singleId)
+    {
+        $tickets = self::getList($singleId);
+        if (empty($tickets)) {
+            return null;
+        }
+        
+        foreach ($tickets as &$value) {
+            $candidates = Candidate::getTicketList($value['id']);
+            $value['candidates'] = $candidates;
+        }
+        return $tickets;
+    }
+
 }
