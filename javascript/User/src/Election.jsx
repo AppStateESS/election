@@ -5,6 +5,7 @@ var Election = React.createClass({
             single : [],
             multiple : [],
             referendum : [],
+            ballotCount : 0,
             stage : 'single',
             votes : {},
             student : {}
