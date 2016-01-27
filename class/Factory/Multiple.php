@@ -31,7 +31,6 @@ class Multiple extends Ballot
         $multiple = self::build($multipleId, new Resource);
         $multiple->setActive(false);
         self::saveResource($multiple);
-        Ticket::deleteByBallotId($multipleId);
     }
 
     public static function getList($electionId)
@@ -43,7 +42,7 @@ class Multiple extends Ballot
     {
         $multiple = self::getList($electionId);
         if (empty($multiple)) {
-            return null;
+            return array();
         }
         
         foreach ($multiple as &$value) {
