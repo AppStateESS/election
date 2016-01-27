@@ -57,5 +57,16 @@ class Election extends Base
         $filename = PHPWS_SOURCE_DIR . 'mod/election/electionTypes.json';
         return file_get_contents($filename);
     }
+    
+    public static function getCurrent()
+    {
+        $db = \Database::getDB();
+        $tbl = $db->addTable('elect_election');
+        $now = time();
+        $tbl->addFieldConditional('startDate', $now, '<=');
+        $tbl->addFieldConditional('endDate', $now, '>=');
+        $election = $db->selectOneRow();
+        return $election;
+    }
 
 }
