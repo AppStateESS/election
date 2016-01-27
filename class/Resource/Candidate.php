@@ -54,7 +54,7 @@ class Candidate extends \Resource
         $this->lastName->setLimit(50);
         $this->picture = new \Variable\File(null, 'picture');
         $this->ticketId = new \Variable\Integer(0, 'ticketId');
-        $this->multipleId = new \Variable\Integer(0, 'ballotId');
+        $this->multipleId = new \Variable\Integer(0, 'multipleId');
         $this->active = new \Variable\Bool(true, 'active');
     }
 
