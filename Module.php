@@ -46,11 +46,7 @@ class Module extends \Module implements \SettingDefaults
     public function runTime(\Request $request)
     {
         if (\Current_User::isLogged()) {
-            if (\Current_User::allow('election')) {
-                \election\Controller\Admin::loadAdminBar();
-            } else {
-                \election\Controller\User::loadUserBar();
-            }
+            \election\Controller\User::loadNavBar();
         }
     }
 

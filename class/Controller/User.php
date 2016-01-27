@@ -36,16 +36,19 @@ class User extends \Http\Controller
         $commandObject = new $className($this->getModule());
         return $commandObject;
     }
-    
-    public static function loadUserBar()
+        
+    public static function loadNavBar()
     {
         $auth = \Current_User::getAuthorization();
+        
+        $vars['is_admin'] = \Current_User::allow('election');
         $vars['logout_uri'] = $auth->logout_link;
         $vars['username'] = \Current_User::getDisplayName();
         $template =  new \Template($vars);
-        $template->setModuleTemplate('election', 'User/navbar.html');
+        $template->setModuleTemplate('election', 'navbar.html');
         $content = $template->get();
         \Layout::plug($content, 'NAV_LINKS');
     }
+
 
 }
