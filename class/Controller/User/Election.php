@@ -10,6 +10,7 @@ use election\Factory\Election as Factory;
  */
 class Election extends \election\Controller\Base
 {
+
     public function getHtmlView($data, \Request $request)
     {
         if (ELECTION_REACT_DEV) {
@@ -31,6 +32,44 @@ $react
 EOF;
         $view = new \View\HtmlView($content);
         return $view;
+    }
+
+    protected function getJsonView($data, \Request $request)
+    {
+        if (!$request->isVar('command')) {
+            throw new \Exception('Unknown Election command');
+        }
+        $json = array('success' => true);
+
+        $command = $request->getVar('command');
+        switch ($command) {
+            case 'list':
+                $json = self::getVotingData();
+                break;
+        }
+        $view = new \View\JsonView($json);
+        return $view;
+    }
+
+    private function getVotingData()
+    {
+        $election = Factory::getCurrent();
+        if (empty($election)) {
+            return array('election' => null);
+        }
+        
+        $single = \election\Factory\Single::getListWithTickets($election['id']);
+        $multiple = \election\Factory\Multiple::getListWithCandidates($election['id']);
+        $referendum = \election\Factory\Referendum::getList($election['id']);
+        
+        $voting_data = array(
+            'election' => $election,
+            'single' => $single,
+            'multiple' => $multiple,
+            'referendum' => $referendum
+        );
+
+        return $voting_data;
     }
 
 }
