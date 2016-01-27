@@ -54,20 +54,25 @@ EOF;
     private function getVotingData()
     {
         $election = Factory::getCurrent();
-        if (empty($election)) {
-            return array('election' => null);
+        if (!empty($election)) {
+            $single = \election\Factory\Single::getListWithTickets($election['id']);
+            $multiple = \election\Factory\Multiple::getListWithCandidates($election['id']);
+            $referendum = \election\Factory\Referendum::getList($election['id']);
+
+            $voting_data = array(
+                'election' => $election,
+                'single' => $single,
+                'multiple' => $multiple,
+                'referendum' => $referendum
+            );
+        } else {
+            $voting_data = array(
+                'election' => array(),
+                'single' => array(),
+                'multiple' => array(),
+                'referendum' => array()
+            );
         }
-        
-        $single = \election\Factory\Single::getListWithTickets($election['id']);
-        $multiple = \election\Factory\Multiple::getListWithCandidates($election['id']);
-        $referendum = \election\Factory\Referendum::getList($election['id']);
-        
-        $voting_data = array(
-            'election' => $election,
-            'single' => $single,
-            'multiple' => $multiple,
-            'referendum' => $referendum
-        );
 
         return $voting_data;
     }
