@@ -29,7 +29,6 @@ class Single extends Ballot
         $single = self::build($singleId, new Resource);
         $single->setActive(false);
         self::saveResource($single);
-        Ticket::deleteByBallotId($singleId);
     }
 
     public static function getList($electionId)
@@ -41,7 +40,7 @@ class Single extends Ballot
     {
         $singleList = self::getList($electionId);
         if (empty($singleList)) {
-            return null;
+            return array();
         }
         
         foreach ($singleList as &$value) {
