@@ -1,5 +1,5 @@
 var Candidate = React.createClass({
-    displayName: "Candidate",
+    displayName: 'Candidate',
 
     getInitialState: function () {
         return {};
@@ -7,20 +7,39 @@ var Candidate = React.createClass({
 
     getDefaultProps: function () {
         return {
-            firstName: null,
-            lastName: null,
-            picture: defaultPicture
+            firstName: '',
+            lastName: '',
+            picture: ''
         };
     },
 
     render: function () {
-        console.log(this.props);
         return React.createElement(
-            "div",
+            'div',
             null,
-            this.props.firstName,
-            this.props.lastName,
-            React.createElement("img", { src: this.props.picture, className: "img-responsive" })
+            React.createElement(
+                'div',
+                { className: 'photo-matte' },
+                React.createElement('span', { className: 'helper' }),
+                this.props.picture.length > 0 ? React.createElement('img', { src: this.props.picture, className: 'candidate-pic' }) : React.createElement(
+                    'div',
+                    { className: 'no-picture text-muted' },
+                    React.createElement('i', { className: 'fa fa-user fa-5x' }),
+                    React.createElement('br', null),
+                    'No picture'
+                )
+            ),
+            React.createElement(
+                'p',
+                null,
+                React.createElement(
+                    'strong',
+                    null,
+                    this.props.firstName,
+                    ' ',
+                    this.props.lastName
+                )
+            )
         );
     }
 
