@@ -56,23 +56,30 @@ EOF;
         $student_id = \election\Factory\Student::getId();
         $election = Factory::getCurrent();
         if (!empty($election)) {
-            if (Factory::studentHasVoted()) {
-                
-            }
-            
-            
-            $single = \election\Factory\Single::getListWithTickets($election['id']);
-            $multiple = \election\Factory\Multiple::getListWithCandidates($election['id']);
-            $referendum = \election\Factory\Referendum::getList($election['id']);
+            $hasVoted = \election\Factory\Student::hasVoted($election['id']);
 
-            $voting_data = array(
-                'election' => $election,
-                'single' => $single,
-                'multiple' => $multiple,
-                'referendum' => $referendum
-            );
+            if (!$hasVoted) {
+                $single = \election\Factory\Single::getListWithTickets($election['id']);
+                $multiple = \election\Factory\Multiple::getListWithCandidates($election['id']);
+                $referendum = \election\Factory\Referendum::getList($election['id']);
+                $voting_data = array(
+                    'election' => $election,
+                    'single' => $single,
+                    'multiple' => $multiple,
+                    'referendum' => $referendum
+                );
+            } else {
+                $voting_data = array(
+                    'hasVoted' => true,
+                    'election' => $election,
+                    'single' => array(),
+                    'multiple' => array(),
+                    'referendum' => array()
+                );
+            }
         } else {
             $voting_data = array(
+                'hasVoted' => false,
                 'election' => array(),
                 'single' => array(),
                 'multiple' => array(),
