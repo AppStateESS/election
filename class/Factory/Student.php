@@ -43,7 +43,11 @@ class Student extends Base
     
     public static function hasVoted($electionId)
     {
-        
+        $db = \Database::getDB();
+        $vote = $db->addTable('elect_vote_complete');
+        $vote->addFieldConditional('bannerId', self::getBannerId());
+        $result = $db->selectOneRow();
+        return (bool)$result;
     }
 
 }
