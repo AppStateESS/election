@@ -67,7 +67,7 @@ class Ticket extends Base
     {
         $tickets = self::getList($singleId);
         if (empty($tickets)) {
-            return null;
+            return array();
         }
         
         foreach ($tickets as &$value) {

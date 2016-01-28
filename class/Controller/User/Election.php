@@ -13,8 +13,10 @@ class Election extends \election\Controller\Base
 
     public function getHtmlView($data, \Request $request)
     {
+        $script[] = '<script type="text/javascript">var defaultPicture = \''. PHPWS_SOURCE_HTTP .'mod/election/img/no-picture.gif\';</script>';
         if (ELECTION_REACT_DEV) {
             $script[] = \election\Factory\React::development('Mixin/', 'Mixin.js');
+            $script[] = \election\Factory\React::development('User/', 'Candidate.js');
             $script[] = \election\Factory\React::development('User/', 'Referendum.js');
             $script[] = \election\Factory\React::development('User/', 'Multiple.js');
             $script[] = \election\Factory\React::development('User/', 'Single.js');
@@ -53,16 +55,18 @@ EOF;
 
     private function getVotingData()
     {
-        $student_id = \election\Factory\Student::getId();
+        $student_id = \election\Factory\Student::getBannerId();
         $election = Factory::getCurrent();
         if (!empty($election)) {
             $hasVoted = \election\Factory\Student::hasVoted($election['id']);
-
+            // delete this
+            //$hasVoted = true;
             if (!$hasVoted) {
                 $single = \election\Factory\Single::getListWithTickets($election['id']);
                 $multiple = \election\Factory\Multiple::getListWithCandidates($election['id']);
                 $referendum = \election\Factory\Referendum::getList($election['id']);
                 $voting_data = array(
+                    'hasVoted' => false,
                     'election' => $election,
                     'single' => $single,
                     'multiple' => $multiple,
@@ -80,7 +84,7 @@ EOF;
         } else {
             $voting_data = array(
                 'hasVoted' => false,
-                'election' => array(),
+                'election' => null,
                 'single' => array(),
                 'multiple' => array(),
                 'referendum' => array()
