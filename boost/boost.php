@@ -6,6 +6,6 @@
  */
 
 $proper_name = 'Election';
-$version = '1.0.1';
+$version = '1.0.2';
 $import_sql = true;
 $image_dir = true;
