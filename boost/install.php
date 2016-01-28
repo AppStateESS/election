@@ -27,9 +27,6 @@ function election_install(&$content)
         
         $ticket = new \election\Resource\Ticket;
         $ticket->createTable($db);
-        
-        $voter = new \election\Resource\Voter;
-        $voter->createTable($db);
 
     } catch (\Exception $e) {
         $db->buildTable($election->getTable())->drop(true);
@@ -38,7 +35,6 @@ function election_install(&$content)
         $db->buildTable($candidate->getTable())->drop(true);
         $db->buildTable($referendum->getTable())->drop(true);
         $db->buildTable($ticket->getTable())->drop(true);
-        $db->buildTable($voter->getTable())->drop(true);
         
         $db->rollback();
         throw $e;
