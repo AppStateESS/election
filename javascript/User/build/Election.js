@@ -23,7 +23,7 @@ var Election = React.createClass({
             command: 'list'
         }).done(function (data) {
             this.setState({
-                studentVoted: data.studentVoted,
+                hasVoted: data.hasVoted,
                 election: data.election,
                 single: data.single,
                 multiple: data.multiple,
