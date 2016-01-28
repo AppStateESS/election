@@ -53,8 +53,14 @@ EOF;
 
     private function getVotingData()
     {
+        $student_id = \election\Factory\Student::getId();
         $election = Factory::getCurrent();
         if (!empty($election)) {
+            if (Factory::studentHasVoted()) {
+                
+            }
+            
+            
             $single = \election\Factory\Single::getListWithTickets($election['id']);
             $multiple = \election\Factory\Multiple::getListWithCandidates($election['id']);
             $referendum = \election\Factory\Referendum::getList($election['id']);

@@ -9,9 +9,41 @@ namespace election\Factory;
 class Student extends Base
 {
 
-    public static function buildHash($username, $ballotId)
+    public static function getSingleHash($singleId)
     {
-        return md5($username . $ballotId);
+        return md5(self::getBannerId() . $singleId);
+    }
+
+    public static function getMultipleHash($multipleId)
+    {
+        return md5(self::getBannerId() . $multipleId);
+    }
+
+    public static function getReferendumHash($referendumId)
+    {
+        return md5(self::getBannerId() . $referendumId);
+    }
+
+    /**
+     *  \/\/\ \___/ /\/\/      
+     *       \     /           
+     *       /_   _\         A A A
+     *      // \ / \\        | | |
+     *     / \o/ \o/ \       `-+-'
+     *    |     V     |        |
+     *     \ _______ /         |
+     *      \\!!!!!//          |
+     *       \\___//           |
+     *        \___/            |
+     */
+    public static function getBannerId()
+    {
+        return 666;
+    }
+    
+    public static function hasVoted($electionId)
+    {
+        
     }
 
 }

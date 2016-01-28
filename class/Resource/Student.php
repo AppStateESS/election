@@ -6,16 +6,17 @@ namespace election\Resource;
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Matthew McNaney <mcnaney at gmail dot com>
  */
-class Student extends \Resource
+class Student
 {
-    protected $first_name;
-    protected $last_name;
+    protected $bannerId;
+    protected $firstName;
+    protected $lastName;
     
     public function __construct()
     {
         parent::__construct();
-        $this->first_name = new \Variable\String(null, 'first_name');
-        $this->last_name = new \Variable\String(null, 'last_name');
-        
+        $this->bannerId = new \Variable\Integer(null, 'bannerId');
+        $this->firstName = new \Variable\String(null, 'firstName');
+        $this->lastName = new \Variable\String(null, 'lastName');
     }
 }
