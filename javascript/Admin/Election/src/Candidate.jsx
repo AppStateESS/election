@@ -46,7 +46,7 @@ var Candidates = React.createClass({
             if (value.id === this.state.currentForm) {
                 return (
                     <div key={value.id} className="col-sm-4 col-xs-6 pad-bottom">
-                        <CandidateForm  {...this.props} {...value} candidateId={value.id} reload={this.load} reset={this.setCurrentForm.bind(null, 0)}/>
+                        <CandidateForm {...this.props} {...value} candidateId={value.id} reload={this.load} reset={this.setCurrentForm.bind(null, 0)}/>
                     </div>
                 );
             } else {
@@ -87,6 +87,7 @@ var CandidateProfile = React.createClass({
         return {
             firstName : null,
             lastName : null,
+            title : null,
             picture : null
         };
     },
@@ -103,7 +104,10 @@ var CandidateProfile = React.createClass({
                     )}
                 </div>
                 <div>
-                    <p><strong>{this.props.firstName} {this.props.lastName}</strong></p>
+                    <p>
+                        <strong>{this.props.firstName} {this.props.lastName}</strong><br />
+                        {this.props.title}
+                    </p>
                     <button className="btn btn-primary" title="Edit candidate" onClick={this.props.edit}><i className="fa fa-edit"></i></button>&nbsp;
                     <button className="btn btn-danger" onClick={this.props.delete} title="Delete candidate"><i className="fa fa-times"></i></button>
                 </div>
@@ -118,6 +122,7 @@ var CandidateForm = React.createClass({
         return {
             firstName : '',
             lastName : '',
+            title : '',
             photo : []
         };
     },
@@ -131,6 +136,7 @@ var CandidateForm = React.createClass({
             reload : null,
             firstName : '',
             lastName: '',
+            title : '',
             picture : null
         };
     },
@@ -140,7 +146,8 @@ var CandidateForm = React.createClass({
             this.setState({
                 firstName : this.props.firstName,
                 lastName : this.props.lastName,
-                picture  : this.props.picture
+                picture  : this.props.picture,
+                title : this.props.title
             });
         }
     },
@@ -163,6 +170,12 @@ var CandidateForm = React.createClass({
         });
     },
 
+    updateTitle : function(e) {
+        this.setState({
+            title : e.target.value
+        });
+    },
+
     save : function() {
         var data = new FormData();
         data.append('command', 'save');
@@ -179,6 +192,7 @@ var CandidateForm = React.createClass({
         data.append('candidateId', this.props.candidateId);
         data.append('firstName', this.state.firstName);
         data.append('lastName', this.state.lastName);
+        data.append('title', this.state.title);
 
         $.ajax({
             url : 'election/Admin/Candidate',
@@ -203,7 +217,7 @@ var CandidateForm = React.createClass({
         return (
             <div className="candidate-form text-center">
                 <Photo photo={this.state.photo} update={this.updatePhoto} picture={this.state.picture}/>
-                <CandidateName updateFirstName={this.updateFirstName} updateLastName={this.updateLastName} {...props}/>
+                <CandidateInfo updateFirstName={this.updateFirstName} updateLastName={this.updateLastName} updateTitle={this.updateTitle} {...this.state}/>
                 <div className="pad-top">
                     <button className="btn btn-success btn-sm" title="Save candidate" onClick={this.save} disabled={disabledButton}><i className="fa fa-save"></i> Save</button>
                     &nbsp;
@@ -215,12 +229,13 @@ var CandidateForm = React.createClass({
 
 });
 
-var CandidateName = React.createClass({
+var CandidateInfo = React.createClass({
 
     getDefaultProps: function() {
         return {
             firstName : null,
-            lastName : null
+            lastName : null,
+            title : null
         };
     },
 
@@ -229,8 +244,10 @@ var CandidateName = React.createClass({
             <div>
                 <input type="text" className="form-control" name="firstName" value={this.props.firstName} placeholder="First name"
                     onChange={this.props.updateFirstName} value={this.props.firstName}/>
-                <input type="text" className="form-control" name="firstName" value={this.props.lastName} placeholder="Last name"
+                <input type="text" className="form-control" name="lastName" value={this.props.lastName} placeholder="Last name"
                     onChange={this.props.updateLastName} value={this.props.lastName}/>
+                <input type="text" className="form-control" name="title" value={this.props.title} placeholder="Position title"
+                    onChange={this.props.updateTitle} value={this.props.title}/>
             </div>
         );
     }

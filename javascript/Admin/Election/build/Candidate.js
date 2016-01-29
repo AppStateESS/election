@@ -93,6 +93,7 @@ var CandidateProfile = React.createClass({
         return {
             firstName: null,
             lastName: null,
+            title: null,
             picture: null
         };
     },
@@ -125,7 +126,9 @@ var CandidateProfile = React.createClass({
                         this.props.firstName,
                         ' ',
                         this.props.lastName
-                    )
+                    ),
+                    React.createElement('br', null),
+                    this.props.title
                 ),
                 React.createElement(
                     'button',
@@ -151,6 +154,7 @@ var CandidateForm = React.createClass({
         return {
             firstName: '',
             lastName: '',
+            title: '',
             photo: []
         };
     },
@@ -164,6 +168,7 @@ var CandidateForm = React.createClass({
             reload: null,
             firstName: '',
             lastName: '',
+            title: '',
             picture: null
         };
     },
@@ -173,7 +178,8 @@ var CandidateForm = React.createClass({
             this.setState({
                 firstName: this.props.firstName,
                 lastName: this.props.lastName,
-                picture: this.props.picture
+                picture: this.props.picture,
+                title: this.props.title
             });
         }
     },
@@ -196,6 +202,12 @@ var CandidateForm = React.createClass({
         });
     },
 
+    updateTitle: function (e) {
+        this.setState({
+            title: e.target.value
+        });
+    },
+
     save: function () {
         var data = new FormData();
         data.append('command', 'save');
@@ -212,6 +224,7 @@ var CandidateForm = React.createClass({
         data.append('candidateId', this.props.candidateId);
         data.append('firstName', this.state.firstName);
         data.append('lastName', this.state.lastName);
+        data.append('title', this.state.title);
 
         $.ajax({
             url: 'election/Admin/Candidate',
@@ -237,7 +250,7 @@ var CandidateForm = React.createClass({
             'div',
             { className: 'candidate-form text-center' },
             React.createElement(Photo, { photo: this.state.photo, update: this.updatePhoto, picture: this.state.picture }),
-            React.createElement(CandidateName, _extends({ updateFirstName: this.updateFirstName, updateLastName: this.updateLastName }, props)),
+            React.createElement(CandidateInfo, _extends({ updateFirstName: this.updateFirstName, updateLastName: this.updateLastName, updateTitle: this.updateTitle }, this.state)),
             React.createElement(
                 'div',
                 { className: 'pad-top' },
@@ -260,13 +273,14 @@ var CandidateForm = React.createClass({
 
 });
 
-var CandidateName = React.createClass({
-    displayName: 'CandidateName',
+var CandidateInfo = React.createClass({
+    displayName: 'CandidateInfo',
 
     getDefaultProps: function () {
         return {
             firstName: null,
-            lastName: null
+            lastName: null,
+            title: null
         };
     },
 
@@ -276,8 +290,10 @@ var CandidateName = React.createClass({
             null,
             React.createElement('input', { type: 'text', className: 'form-control', name: 'firstName', value: this.props.firstName, placeholder: 'First name',
                 onChange: this.props.updateFirstName, value: this.props.firstName }),
-            React.createElement('input', { type: 'text', className: 'form-control', name: 'firstName', value: this.props.lastName, placeholder: 'Last name',
-                onChange: this.props.updateLastName, value: this.props.lastName })
+            React.createElement('input', { type: 'text', className: 'form-control', name: 'lastName', value: this.props.lastName, placeholder: 'Last name',
+                onChange: this.props.updateLastName, value: this.props.lastName }),
+            React.createElement('input', { type: 'text', className: 'form-control', name: 'title', value: this.props.title, placeholder: 'Position title',
+                onChange: this.props.updateTitle, value: this.props.title })
         );
     }
 

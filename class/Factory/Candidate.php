@@ -30,6 +30,7 @@ class Candidate extends Base
 
         $candidate->setFirstName(ucfirst(self::pullPostString('firstName')));
         $candidate->setLastName(ucfirst(self::pullPostString('lastName')));
+        $candidate->setTitle(self::pullPostString('title'));
 
         if (!empty($_FILES)) {
             $picture = self::savePicture($_FILES[0], $candidate);

@@ -6,7 +6,7 @@ namespace election\Resource;
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Matthew McNaney <mcnaney at gmail dot com>
  */
-class Candidate extends \Resource
+class Candidate extends Base
 {
     /**
      * @var \Variable\String
@@ -24,6 +24,11 @@ class Candidate extends \Resource
     protected $picture;
 
     /**
+     * @var \Variable\String
+     */
+    protected $title;
+
+    /**
      * @var \Variable\Integer
      */
     protected $ticketId;
@@ -32,9 +37,8 @@ class Candidate extends \Resource
      * @var \Variable\Integer
      */
     protected $multipleId;
-    
+
     /**
-     *
      * @var \Variable\Bool
      */
     protected $active;
@@ -52,6 +56,8 @@ class Candidate extends \Resource
         $this->firstName->setLimit(50);
         $this->lastName = new \Variable\String(null, 'lastName');
         $this->lastName->setLimit(50);
+        $this->title = new \Variable\String('', 'title');
+        $this->title->setLimit(100);
         $this->picture = new \Variable\File(null, 'picture');
         $this->ticketId = new \Variable\Integer(0, 'ticketId');
         $this->multipleId = new \Variable\Integer(0, 'multipleId');
@@ -112,10 +118,20 @@ class Candidate extends \Resource
     {
         $this->active->set($var);
     }
-    
+
     public function getActive()
     {
         return $this->active->get();
     }
-    
+
+    public function setTitle($var)
+    {
+        $this->title->set($var);
+    }
+
+    public function getTitle()
+    {
+        return $this->title->get();
+    }
+
 }

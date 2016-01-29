@@ -8,7 +8,8 @@ var Candidate = React.createClass({
         return {
             firstName : '',
             lastName : '',
-            picture : ''
+            picture : '',
+            title : ''
         };
     },
 
@@ -23,7 +24,8 @@ var Candidate = React.createClass({
                         <div className="no-picture text-muted"><i className="fa fa-user fa-5x"></i><br />No picture</div>
                     )}
                 </div>
-                <p><strong>{this.props.firstName} {this.props.lastName}</strong></p>
+                <p><strong>{this.props.firstName} {this.props.lastName}</strong><br />
+            {this.props.title}</p>
             </div>
         );
     }
