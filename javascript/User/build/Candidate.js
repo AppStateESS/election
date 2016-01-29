@@ -9,7 +9,8 @@ var Candidate = React.createClass({
         return {
             firstName: '',
             lastName: '',
-            picture: ''
+            picture: '',
+            title: ''
         };
     },
 
@@ -38,7 +39,9 @@ var Candidate = React.createClass({
                     this.props.firstName,
                     ' ',
                     this.props.lastName
-                )
+                ),
+                React.createElement('br', null),
+                this.props.title
             )
         );
     }
