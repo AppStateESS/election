@@ -39,9 +39,10 @@ class Ticket extends Base
         parent::__construct();
         $this->singleId = new \Variable\Integer(0, 'singleId');
         $this->title = new \Variable\String(null, 'title');
-        $this->title->setLimit(200);
+        $this->title->setLimit(100);
         $this->platform = new \Variable\String(null, 'platform');
         $this->platform->allowNull(true);
+        $this->platform->setLimit(500);
         $this->siteAddress = new \Variable\Url(null, 'siteAddress');
         $this->siteAddress->allowNull(true);
     }
