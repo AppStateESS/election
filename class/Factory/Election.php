@@ -39,7 +39,7 @@ class Election extends Base
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_election');
-        $tbl->addOrderBy('endDate');
+        $tbl->addOrderBy('endDate', 'desc');
         $tbl->addFieldConditional('active', 1);
         $result = $db->select();
         if (empty($result)) {
@@ -57,7 +57,7 @@ class Election extends Base
         $filename = PHPWS_SOURCE_DIR . 'mod/election/electionTypes.json';
         return file_get_contents($filename);
     }
-    
+
     public static function getCurrent()
     {
         $db = \Database::getDB();
@@ -67,6 +67,38 @@ class Election extends Base
         $tbl->addFieldConditional('endDate', $now, '>=');
         $election = $db->selectOneRow();
         return $election;
+    }
+
+    /**
+     * Returns true is startDate and endDate fall within another election
+     * @param integer $startDate
+     * @param integer $endDate
+     * @param integer $electionId
+     * @return boolean
+     */
+    public static function checkForConflict($startDate, $endDate, $electionId)
+    {
+        $db = \Database::getDB();
+        $tbl = $db->addTable('elect_election');
+        $tbl->addFieldConditional('id', $electionId, '!=');
+        $tbl->addFieldConditional('active', 1);
+
+        $startField = $tbl->getField('startDate');
+        $endField = $tbl->getField('endDate');
+
+        $c1a = $db->createConditional($startField, $startDate, '<');
+        $c1b = $db->createConditional($endField, $startDate, '>');
+        $c1ab = $db->createConditional($c1a, $c1b, 'and');
+
+        $c2a = $db->createConditional($startField, $endDate, '<');
+        $c2b = $db->createConditional($endField, $endDate, '>');
+        $c2ab = $db->createConditional($c2a, $c2b, 'and');
+
+        $c12 = $db->createConditional($c1ab, $c2ab, 'or');
+
+        $db->addConditional($c12);
+        $result = $db->selectOneRow();
+        return array('conflict'=>(bool)$result);
     }
 
 }

@@ -202,7 +202,8 @@ var ElectionForm = React.createClass({
         } else if (this.state.unixStart > this.state.unixEnd) {
             $(this.refs.endDate).css('borderColor', 'red').attr('placeholder', 'End date must be greater').val('');
             this.setState({
-                endDate : ''
+                endDate : '',
+                unixEnd : 0
             });
             error = true;
         }
@@ -215,22 +216,45 @@ var ElectionForm = React.createClass({
         return error;
     },
 
+    checkForConflict : function() {
+        return $.getJSON('election/Admin/Election', {
+            command: 'checkConflict',
+            startDate: this.state.unixStart,
+            endDate: this.state.unixEnd,
+            electionId : this.props.electionId
+        });
+    },
+
     save : function() {
         var error = this.checkForErrors();
         if (error === false) {
-            $.post('election/Admin/Election', {
-                command : 'save',
-                electionId : this.props.electionId,
-                title : this.state.title,
-                startDate : this.state.unixStart,
-                endDate: this.state.unixEnd
-            }, null, 'json')
-                .done(function(data){
-                    this.props.load();
-                }.bind(this))
-                .always(function(){
-                    this.props.hideForm();
-                }.bind(this));
+            var conflict = this.checkForConflict();
+            conflict.done(function(data){
+                if (data.conflict === false) {
+                    $.post('election/Admin/Election', {
+                        command : 'save',
+                        electionId : this.props.electionId,
+                        title : this.state.title,
+                        startDate : this.state.unixStart,
+                        endDate: this.state.unixEnd
+                    }, null, 'json')
+                    .done(function(data){
+                        this.props.load();
+                    }.bind(this))
+                    .always(function(){
+                        this.props.hideForm();
+                    }.bind(this));
+                } else {
+                    $(this.refs.startDate).css('borderColor', 'red').attr('placeholder', 'Date conflict');
+                    $(this.refs.endDate).css('borderColor', 'red').attr('placeholder', 'Date conflict');
+                    this.setState({
+                        startDate : '',
+                        unixStart : 0,
+                        endDate : '',
+                        unixEnd : 0
+                    });
+                }
+            }.bind(this));
         }
     },
 
@@ -243,7 +267,8 @@ var ElectionForm = React.createClass({
             <div className="row pad-top">
                 <div className="col-sm-6">
                     <div className="input-group">
-                        <input placeholder="Voting start date and time" ref="startDate" type="text" className="form-control datepicker" id="start-date" onFocus={this.resetBorder} onChange={this.changeStartDate}/>
+                        <input placeholder="Voting start date and time" ref="startDate" type="text" className="form-control datepicker" id="start-date"
+                            onFocus={this.resetBorder} onChange={this.changeStartDate} value={this.state.startDate}/>
                         <div className="input-group-addon">
                             <i className="fa fa-calendar" onClick={this.showStartCalendar}></i>
                         </div>
@@ -251,7 +276,8 @@ var ElectionForm = React.createClass({
                 </div>
                 <div className="col-sm-6">
                     <div className="input-group">
-                        <input placeholder="Voting deadline" ref="endDate" type="text" className="form-control datepicker" id="end-date" onFocus={this.resetBorder} onChange={this.changeEndDate}/>
+                        <input placeholder="Voting deadline" ref="endDate" type="text" className="form-control datepicker" id="end-date"
+                             onFocus={this.resetBorder} onChange={this.changeEndDate} value={this.state.endDate}/>
                         <div className="input-group-addon">
                             <i className="fa fa-calendar" onClick={this.showEndCalendar}></i>
                         </div>
@@ -305,6 +331,14 @@ var ElectionList = React.createClass({
         this.setState({
             currentEdit : electionId
         });
+    },
+
+    componentDidUpdate: function(prevProps, prevState) {
+        if (this.state.openElection === 0 && this.props.elections) {
+            this.setState({
+                openElection : this.props.elections[0].id
+            });
+        }
     },
 
     openElection: function(electionId)

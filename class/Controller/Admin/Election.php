@@ -85,6 +85,11 @@ EOF;
                 echo Factory::getFilterTypes();
                 exit();
                 break;
+            
+            case 'checkConflict':
+                $json = Factory::checkForConflict(Factory::pullGetInteger('startDate'),
+                        Factory::pullGetInteger('endDate'), Factory::pullGetInteger('electionId'));
+                break;
         }
         $view = new \View\JsonView($json);
         return $view;
