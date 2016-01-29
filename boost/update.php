@@ -37,6 +37,11 @@ function election_update(&$content, $version)
             $vcomplete = $db->addTable('elect_vote_complete');
             $vcomplete->renameField($vcomplete->getField('voterHash'), 'bannerId');
             
+        case version_compare($version, '1.0.3', '<'):
+            $db = \Database::getDB();
+            $candidate = $db->addTable('elect_candidate');
+            $title_column = new \Database\Datatype\Varchar($candidate, 'title');
+            $title_column->add();
     }
     
     return true;
