@@ -1,20 +1,25 @@
 'use strict';
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var Election = React.createClass({
     displayName: 'Election',
 
     getInitialState: function () {
         return {
             election: null,
+            currentSingle: 0,
+            currentMultiple: 0,
+            currentReferendum: 0,
             single: [],
             multiple: [],
             referendum: [],
             ballotCount: 0,
+            referendumCount: 0,
             stage: 'single',
-            vote: {},
-            student: {}
+            singleVote: [],
+            multipleVote: [],
+            referendumVote: [],
+            student: {},
+            unqualified: []
         };
     },
 
@@ -35,13 +40,28 @@ var Election = React.createClass({
                     election: data.election
                 });
             } else {
+                var singleLength = data.single.length;
+                var multipleLength = data.multiple.length;
+                var referendumLength = data.referendum.length;
+                if (singleLength === 0) {
+                    stage = 'multiple';
+                }
+                if (multipleLength === 0) {
+                    stage = 'referendum';
+                }
+                if (referendumLength === 0) {
+                    stage = 'empty';
+                }
+                var ballotCount = singleLength + multipleLength;
                 this.setState({
                     stage: stage,
                     hasVoted: data.hasVoted,
                     election: data.election,
                     single: data.single,
                     multiple: data.multiple,
-                    referendum: data.referendum
+                    referendum: data.referendum,
+                    ballotCount: ballotCount,
+                    referendumCount: referendumLength
                 });
             }
         }.bind(this));
@@ -53,19 +73,31 @@ var Election = React.createClass({
         });
     },
 
-    updateVote: function (vote) {
+    updateSingleVote: function (ticketId) {
+        var stage = this.state.stage;
+        var current = this.state.currentSingle;
+        var singleVote = this.state.singleVote;
+        var currentVote = singleVote[current];
+        currentVote = {
+            singleId: this.state.single[this.state.currentSingle].id,
+            ticketId: ticketId
+        };
+        singleVote[current] = currentVote;
+
+        var nextSingle = current + 1;
+
+        if (typeof this.state.single[nextSingle] === 'undefined') {
+            stage = 'multiple';
+        }
         this.setState({
-            vote: vote
+            stage: stage,
+            singleVote: singleVote,
+            currentSingle: nextSingle
         });
     },
 
     render: function () {
         var content = null;
-        var shared = {
-            election: this.state.election,
-            updateVote: this.updateVote,
-            vote: this.state.vote
-        };
         switch (this.state.stage) {
             case 'empty':
                 content = React.createElement(Empty, null);
@@ -76,21 +108,42 @@ var Election = React.createClass({
                 break;
 
             case 'single':
-                content = React.createElement(Single, _extends({}, shared, { ballots: this.state.single }));
+                content = React.createElement(Single, { election: this.state.election,
+                    ballot: this.state.single[this.state.currentSingle],
+                    updateVote: this.updateSingleVote, vote: this.state.singleVote });
                 break;
 
             case 'multiple':
-                content = React.createElement(Multiple, null);
+                content = React.createElement(Multiple, { election: this.state.election,
+                    ballot: this.state.multiple[this.state.currentMultiple],
+                    updateVote: this.updateMultipleVote, vote: this.state.multipleVote,
+                    unqualified: this.state.unqualified });
                 break;
 
             case 'referendum':
-                content = React.createElement(Referendum, null);
+                content = React.createElement(Referendum, { election: this.state.election,
+                    referendums: this.state.referendum,
+                    updateVote: this.updateReferendumVote, vote: this.state.referendumVote });
                 break;
+        }
+
+        var countdown = null;
+
+        if (this.state.singleVote.length === 0 && this.state.multipleVote.length === 0 && this.state.referendumVote.length === 0) {
+            countdown = React.createElement(Countdown, { ballotCount: this.state.ballotCount,
+                referendumCount: this.state.referendumCount });
+        } else {
+            countdown = React.createElement(
+                'div',
+                null,
+                'Alternate countdown'
+            );
         }
 
         return React.createElement(
             'div',
             null,
+            countdown,
             content
         );
     }
@@ -109,10 +162,6 @@ var Empty = () => React.createElement(
 
 var Finished = React.createClass({
     displayName: 'Finished',
-
-    getInitialState: function () {
-        return {};
-    },
 
     getDefaultProps: function () {
         return {
@@ -134,6 +183,75 @@ var Finished = React.createClass({
                 null,
                 'Thank you for voting! Watch SGA for results.'
             )
+        );
+    }
+
+});
+
+var Countdown = React.createClass({
+    displayName: 'Countdown',
+
+    getInitialState: function () {
+        return {
+            seen: false
+        };
+    },
+
+    getDefaultProps: function () {
+        return {
+            ballotCount: 0,
+            referendumCount: 0,
+            vote: null
+        };
+    },
+
+    plural: function (item, single, plural) {
+        if (typeof single === 'undefined' || single.length === 0) {
+            single = '';
+        }
+        if (typeof plural === 'undefined' || plural.length === 0) {
+            plural = 's';
+        }
+        return item != 1 ? plural : single;
+    },
+
+    render: function () {
+        var ballots = null;
+        var referendum = null;
+        var totalItems = 0;
+        var isAre = 'are';
+        var and = '';
+
+        if (this.props.ballotCount > 0) {
+            totalItems += this.props.ballotCount;
+            ballots = this.props.ballotCount + ' ballot' + this.plural(this.props.ballotCount);
+        }
+
+        if (this.props.referendumCount > 0) {
+            totalItems += this.props.referendumCount;
+            referendum = this.props.referendumCount + ' referend' + this.plural(this.props.referendumCount, 'um', 'a');
+        }
+
+        if (totalItems < 2) {
+            isAre = 'is';
+        }
+
+        if (this.props.ballotCount > 0 && this.props.referendumCount > 0) {
+            and = 'and';
+        }
+
+        return React.createElement(
+            'div',
+            { className: 'alert alert-info' },
+            'There ',
+            isAre,
+            ' currently ',
+            ballots,
+            ' ',
+            and,
+            ' ',
+            referendum,
+            ' for you to vote on. We\'ll review all your selections later, before your votes are submitted.'
         );
     }
 
