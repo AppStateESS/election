@@ -30,6 +30,7 @@ class Election extends \election\Controller\Base
         }
         $react = implode("\n", $script);
 
+        \Layout::addStyle('election', 'style.css');
         \Layout::addStyle('election', 'Admin/style.css');
         //$settings = \Current_User::isDeity() ? 'true' : 'false';
 
