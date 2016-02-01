@@ -13,10 +13,9 @@ class Election extends \election\Controller\Base
 
     public function getHtmlView($data, \Request $request)
     {
-        $script[] = '<script type="text/javascript">var defaultPicture = \''. PHPWS_SOURCE_HTTP .'mod/election/img/no-picture.gif\';</script>';
+        $script[] = '<script type="text/javascript">var defaultPicture = \'' . PHPWS_SOURCE_HTTP . 'mod/election/img/no-picture.gif\';</script>';
         if (ELECTION_REACT_DEV) {
             $script[] = \election\Factory\React::development('Mixin/', 'Mixin.js');
-            $script[] = \election\Factory\React::development('User/', 'Candidate.js');
             $script[] = \election\Factory\React::development('User/', 'Referendum.js');
             $script[] = \election\Factory\React::development('User/', 'Multiple.js');
             $script[] = \election\Factory\React::development('User/', 'Single.js');
@@ -26,6 +25,7 @@ class Election extends \election\Controller\Base
         }
         $react = implode("\n", $script);
 
+        \Layout::addStyle('election', 'style.css');
         \Layout::addStyle('election', 'User/style.css');
 
         $content = <<<EOF
@@ -55,6 +55,8 @@ EOF;
 
     private function getVotingData()
     {
+        $unqualified = array('Fake election One', 'Fake election two', 'Fake election three');
+        
         $student_id = \election\Factory\Student::getBannerId();
         $election = Factory::getCurrent();
         if (!empty($election)) {
@@ -70,7 +72,8 @@ EOF;
                     'election' => $election,
                     'single' => $single,
                     'multiple' => $multiple,
-                    'referendum' => $referendum
+                    'referendum' => $referendum,
+                    'unqualified' => $unqualified
                 );
             } else {
                 $voting_data = array(
@@ -78,7 +81,8 @@ EOF;
                     'election' => $election,
                     'single' => array(),
                     'multiple' => array(),
-                    'referendum' => array()
+                    'referendum' => array(),
+                    'unqualified' => array()
                 );
             }
         } else {
@@ -87,7 +91,8 @@ EOF;
                 'election' => null,
                 'single' => array(),
                 'multiple' => array(),
-                'referendum' => array()
+                'referendum' => array(),
+                'unqualified' => array()
             );
         }
 
