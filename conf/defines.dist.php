@@ -15,3 +15,6 @@ define('ELECTION_DATETIME_FORMAT', 'M d, Y, G:i');
 // as they will expect the defaults set in defines.dist.php
 define('ELECTION_MAX_CANDIDATE_WIDTH', 150);
 define('ELECTION_MAX_CANDIDATE_HEIGHT', 200);
+
+// If true, tickets displayed randomly. False, alphabetically.
+define('ELECTION_RANDOMIZE_TICKETS', true);
