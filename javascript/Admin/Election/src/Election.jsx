@@ -1,6 +1,5 @@
 'use strict';
 
-var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 var electionTypes = {};
 var categoryTypes = {};
 
