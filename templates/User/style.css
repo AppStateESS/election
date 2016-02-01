@@ -38,3 +38,8 @@
     float : left;
     margin-right : 2em;
 }
+
+.remaining-seats {
+    font-size : 1.2em;
+    font-weight : bold;
+}

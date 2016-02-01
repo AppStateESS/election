@@ -9,6 +9,7 @@ var Multiple = React.createClass({
     },
 
     render: function() {
+        console.log(this.props.ballot);
         return <MultipleBallot multipleId={this.props.ballot.id} {...this.props.ballot}
             updateVote={this.props.updateVote} vote={this.props.vote}/>;
     }
@@ -17,13 +18,15 @@ var Multiple = React.createClass({
 var MultipleBallot = React.createClass({
     getInitialState: function() {
         return {
-            selectedRows : []
+            selectedRows : [],
+            remaining : 0
         };
     },
 
     getDefaultProps: function() {
         return {
             updateVote : null,
+            seatNumber : 2,
             title : null,
             candidates : [],
             vote : null,
@@ -34,14 +37,21 @@ var MultipleBallot = React.createClass({
     select : function(candidateId) {
         var selectedRows = this.state.selectedRows;
         var found = $.inArray(candidateId, selectedRows);
+        var remaining = this.state.remaining;
+
         if (found === -1) {
+            remaining++;
             selectedRows.push(candidateId);
         } else {
+            if (remaining > 0) {
+                remaining--;
+            }
             selectedRows.splice(found,1);
         }
 
         this.setState({
-            selectedRows : selectedRows
+            selectedRows : selectedRows,
+            remaining : remaining
         });
     },
 
@@ -61,8 +71,8 @@ var MultipleBallot = React.createClass({
 
         return (
             <div className="multiple-ticket-vote">
-                <h1>{this.props.title}</h1>
-                <p className="warning">Select up to blanks seats</p>
+                <h2>{this.props.title}</h2>
+                <div className="remaining-seats alert alert-success">You have selected {this.state.remaining} of the allowed {this.props.seatNumber} seats.</div>
                 <ul className="list-group">
                     {candidates}
                 </ul>

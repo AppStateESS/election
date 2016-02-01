@@ -13,6 +13,7 @@ var Multiple = React.createClass({
     },
 
     render: function () {
+        console.log(this.props.ballot);
         return React.createElement(MultipleBallot, _extends({ multipleId: this.props.ballot.id }, this.props.ballot, {
             updateVote: this.props.updateVote, vote: this.props.vote }));
     }
@@ -23,13 +24,15 @@ var MultipleBallot = React.createClass({
 
     getInitialState: function () {
         return {
-            selectedRows: []
+            selectedRows: [],
+            remaining: 0
         };
     },
 
     getDefaultProps: function () {
         return {
             updateVote: null,
+            seatNumber: 2,
             title: null,
             candidates: [],
             vote: null,
@@ -40,14 +43,21 @@ var MultipleBallot = React.createClass({
     select: function (candidateId) {
         var selectedRows = this.state.selectedRows;
         var found = $.inArray(candidateId, selectedRows);
+        var remaining = this.state.remaining;
+
         if (found === -1) {
+            remaining++;
             selectedRows.push(candidateId);
         } else {
+            if (remaining > 0) {
+                remaining--;
+            }
             selectedRows.splice(found, 1);
         }
 
         this.setState({
-            selectedRows: selectedRows
+            selectedRows: selectedRows,
+            remaining: remaining
         });
     },
 
@@ -66,14 +76,18 @@ var MultipleBallot = React.createClass({
             "div",
             { className: "multiple-ticket-vote" },
             React.createElement(
-                "h1",
+                "h2",
                 null,
                 this.props.title
             ),
             React.createElement(
-                "p",
-                { className: "warning" },
-                "Select up to blanks seats"
+                "div",
+                { className: "remaining-seats alert alert-success" },
+                "You have selected ",
+                this.state.remaining,
+                " of the allowed ",
+                this.props.seatNumber,
+                " seats."
             ),
             React.createElement(
                 "ul",
