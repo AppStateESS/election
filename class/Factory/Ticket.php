@@ -11,12 +11,17 @@ use election\Resource\Ticket as Resource;
 class Ticket extends Base
 {
 
-    public static function getList($singleId)
+    public static function getList($singleId, $random = false)
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_ticket');
         $tbl->addFieldConditional('singleId', $singleId);
         $tbl->addFieldConditional('active', 1);
+        if ($random) {
+            $tbl->randomOrder();
+        } else {
+            $tbl->addOrderBy('title');
+        }
         $result = $db->select();
         return $result;
     }
@@ -63,16 +68,31 @@ class Ticket extends Base
         self::saveResource($ticket);
     }
 
-    public static function getListWithCandidates($singleId)
+    /**
+     * Returns an array of tickets within a single chair ballot.
+     * 
+     * Candidates ARE REQUIRED. A ticket without candidates is unset.
+     * 
+     * @param type $singleId
+     * @param type $random If true, the candidates are returned in a random order.
+     *  If false, the order is alphabetical.
+     * @return array
+     */
+    public static function getListWithCandidates($singleId, $random = true)
     {
-        $tickets = self::getList($singleId);
+        $tickets = self::getList($singleId, $random);
         if (empty($tickets)) {
             return array();
         }
-        
-        foreach ($tickets as &$value) {
+
+        foreach ($tickets as $key => &$value) {
+            $candidates = null;
             $candidates = Candidate::getTicketList($value['id']);
-            $value['candidates'] = $candidates;
+            if (empty($candidates)) {
+                unset($tickets[$key]);
+            } else {
+                $value['candidates'] = $candidates;
+            }
         }
         return $tickets;
     }
