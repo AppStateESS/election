@@ -62,8 +62,7 @@ var Candidates = React.createClass({
         if (this.state.currentForm === 0) {
             var form = React.createElement(
                 'div',
-                { className: 'photo-matte' },
-                React.createElement('span', { className: 'helper' }),
+                null,
                 React.createElement(
                     'button',
                     { className: 'btn btn-primary', onClick: this.setCurrentForm.bind(null, -1) },
@@ -105,8 +104,12 @@ var CandidateProfile = React.createClass({
             React.createElement(
                 'div',
                 { className: 'photo-matte' },
-                React.createElement('span', { className: 'helper' }),
-                this.props.picture.length > 0 ? React.createElement('img', { src: this.props.picture, className: 'candidate-pic' }) : React.createElement(
+                this.props.picture.length > 0 ? React.createElement(
+                    'div',
+                    null,
+                    React.createElement('span', { className: 'helper' }),
+                    React.createElement('img', { src: this.props.picture, className: 'candidate-pic' })
+                ) : React.createElement(
                     'div',
                     { className: 'no-picture text-muted' },
                     React.createElement('i', { className: 'fa fa-user fa-5x' }),

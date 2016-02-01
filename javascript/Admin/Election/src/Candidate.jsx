@@ -58,8 +58,7 @@ var Candidates = React.createClass({
 
         if (this.state.currentForm === 0) {
             var form = (
-                <div className="photo-matte">
-                    <span className="helper"></span>
+                <div>
                     <button className="btn btn-primary" onClick={this.setCurrentForm.bind(null, -1)}>
                         <i className="fa fa-user-plus fa-5x"></i><br />
                         Add candidate
@@ -96,9 +95,11 @@ var CandidateProfile = React.createClass({
         return (
             <div className="candidate-profile">
                 <div className="photo-matte">
-                    <span className="helper"></span>
                     {this.props.picture.length > 0 ? (
-                        <img src={this.props.picture} className="candidate-pic" />
+                        <div>
+                            <span className="helper"></span>
+                            <img src={this.props.picture} className="candidate-pic" />
+                        </div>
                     ) : (
                         <div className="no-picture text-muted"><i className="fa fa-user fa-5x"></i><br />No picture</div>
                     )}
