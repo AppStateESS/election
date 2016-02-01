@@ -35,19 +35,34 @@ class Single extends Ballot
     {
         return parent::ballotList($electionId, 'elect_single');
     }
-    
-    public static function getListWithTickets($electionId, $addCandidates=true)
+
+    /**
+     * Returns a list of single ballots with included tickets.
+     * 
+     * Tickets ARE REQUIRED. A ballot without tickets will be unset.
+     * 
+     * @param type $electionId
+     * @param type $addCandidates
+     * @return array
+     */
+    public static function getListWithTickets($electionId, $addCandidates = true)
     {
         $singleList = self::getList($electionId);
         if (empty($singleList)) {
             return array();
         }
-        
-        foreach ($singleList as &$value) {
+
+        foreach ($singleList as $key => &$value) {
+            $tickets = null;
             if ($addCandidates) {
-                $value['tickets'] = Ticket::getListWithCandidates($value['id']);
+                $tickets = Ticket::getListWithCandidates($value['id'], ELECTION_RANDOMIZE_TICKETS);
             } else {
-                $value['tickets'] = Ticket::getList($value['id']);
+                $tickets = Ticket::getList($value['id'], ELECTION_RANDOMIZE_TICKETS);
+            }
+            if (empty($tickets)) {
+                unset($singleList[$key]);
+            } else {
+                $value['tickets'] = $tickets;
             }
         }
         return $singleList;
