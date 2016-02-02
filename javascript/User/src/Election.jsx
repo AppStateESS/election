@@ -75,6 +75,7 @@ var Election = React.createClass({
     updateSingleVote : function(ticketId) {
         var stage = this.state.stage;
         var current = this.state.currentSingle;
+        var nextSingle = current + 1;
         var singleVote = this.state.singleVote;
         var currentVote = singleVote[current];
         currentVote = {
@@ -82,8 +83,6 @@ var Election = React.createClass({
             ticketId : ticketId
         };
         singleVote[current] = currentVote;
-
-        var nextSingle = current + 1;
 
         if (typeof this.state.single[nextSingle] === 'undefined') {
             stage = 'multiple';
@@ -93,7 +92,29 @@ var Election = React.createClass({
             singleVote : singleVote,
             currentSingle : nextSingle
         });
+    },
 
+    updateMultipleVote: function(chairs) {
+        var stage = this.state.stage;
+        var current = this.state.currentMultiple;
+        var nextMultiple = current + 1;
+        var multipleVote = this.state.multipleVote;
+        var currentVote = multipleVote[current];
+
+        currentVote = {
+            multipleId : this.state.multiple[this.state.currentMultiple].id,
+            chairs : chairs
+        }
+        multipleVote[current] = currentVote;
+        if (typeof this.state.multiple[nextMultiple] === 'undefined') {
+            stage = 'referendum';
+        }
+
+        this.setState({
+            stage : stage,
+            multipleVote : multipleVote,
+            currentMultiple : nextMultiple
+        });
     },
 
     render: function() {
@@ -122,7 +143,7 @@ var Election = React.createClass({
 
             case 'referendum':
             content = <Referendum election={this.state.election}
-                referendums={this.state.referendum}
+                referendum={this.state.referendum[this.state.currentReferendum]}
                 updateVote={this.updateReferendumVote} vote={this.state.referendumVote}/>
             break;
         }
