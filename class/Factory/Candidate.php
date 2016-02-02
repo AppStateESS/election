@@ -95,7 +95,7 @@ class Candidate extends Base
         $filetype = $file['type'];
         $size = $file['size'];
 
-        if (!in_array($filetype, array('image/png', 'image/jpg', 'image/jpeg'))) {
+        if (!in_array($filetype, array('image/png', 'image/jpg', 'image/jpeg', 'image/gif'))) {
             throw new \Exception('Bad file type. Expecting image.');
         }
 
