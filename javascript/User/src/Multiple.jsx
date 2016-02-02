@@ -9,8 +9,8 @@ var Multiple = React.createClass({
     },
 
     render: function() {
-        console.log(this.props.ballot);
-        return <MultipleBallot multipleId={this.props.ballot.id} {...this.props.ballot}
+        return <MultipleBallot multipleId={this.props.ballot.id}
+            {...this.props.ballot}
             updateVote={this.props.updateVote} vote={this.props.vote}/>;
     }
 });
@@ -19,7 +19,7 @@ var MultipleBallot = React.createClass({
     getInitialState: function() {
         return {
             selectedRows : [],
-            remaining : 0
+            totalSelected : 0
         };
     },
 
@@ -37,26 +37,33 @@ var MultipleBallot = React.createClass({
     select : function(candidateId) {
         var selectedRows = this.state.selectedRows;
         var found = $.inArray(candidateId, selectedRows);
-        var remaining = this.state.remaining;
+        var totalSelected = this.state.totalSelected;
+        var totalSeats = this.props.seatNumber * 1;
 
         if (found === -1) {
-            remaining++;
-            selectedRows.push(candidateId);
+            if (totalSelected !== totalSeats) {
+                totalSelected++;
+                selectedRows.push(candidateId);
+            }
         } else {
-            if (remaining > 0) {
-                remaining--;
+            if (totalSelected > 0) {
+                totalSelected--;
             }
             selectedRows.splice(found,1);
         }
 
         this.setState({
             selectedRows : selectedRows,
-            remaining : remaining
+            totalSelected : totalSelected
         });
     },
 
+    saveVotes : function() {
+        this.props.updateVote(this.state.selectedRows);
+    },
 
     render: function() {
+        var seatNumber = this.props.seatNumber * 1;
         var candidates = this.props.candidates.map(function(value){
             if ($.inArray(value.id, this.state.selectedRows) !== -1) {
                 var selected = true;
@@ -69,16 +76,23 @@ var MultipleBallot = React.createClass({
             );
         }.bind(this));
 
+        var button = null;
+        if (this.state.totalSelected == seatNumber) {
+            button = <button className="pull-right btn btn-success" onClick={this.saveVotes}>Continue <i className="fa fa-arrow-right"></i></button>;
+        }
+
         return (
             <div className="multiple-ticket-vote">
                 <h2>{this.props.title}</h2>
-                <div className="remaining-seats alert alert-success">You have selected {this.state.remaining} of the allowed {this.props.seatNumber} seats.</div>
+                <div className="remaining-seats alert alert-success">
+                    {button}You have selected {this.state.totalSelected} of the allowed {this.props.seatNumber} seats.
+                </div>
                 <ul className="list-group">
                     {candidates}
                 </ul>
                 <hr />
                 <div className="text-right">
-                    <SkipButton title={this.props.title} />
+                    <SkipButton title={this.props.title} handleClick={this.saveVotes} />
                 </div>
             </div>
         );
@@ -110,14 +124,17 @@ var MultipleCandidate = React.createClass({
             var _className = 'list-group-item pointer';
             var icon = null;
         }
+
+        var picture = <img className="img-circle" src='mod/election/img/no-picture.gif'/>
+
+        if (this.props.picture.length > 0) {
+            picture = <img className="img-circle" src={this.props.picture}/>;
+        }
+
         return (
             <li className={_className} onClick={this.props.select}>
                 {icon}
-                {this.props.picture.length > 0 ? (
-                    <img className="img-circle" src={this.props.picture}/>
-                ) : (
-                    <div className="no-picture text-muted"><i className="fa fa-user fa-5x"></i><br />No picture</div>
-                )}
+                {picture}
                 {this.props.firstName} {this.props.lastName}
             </li>
         );
