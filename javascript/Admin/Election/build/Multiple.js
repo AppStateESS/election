@@ -288,7 +288,8 @@ var MultipleListRow = React.createClass({
         );
 
         if (this.props.isOpen) {
-            var body = React.createElement(Candidates, { type: 'multiple', multipleId: this.props.multipleId, candidates: this.state.candidates, reload: this.load });
+            var body = React.createElement(Candidates, { type: 'multiple', multipleId: this.props.multipleId,
+                candidates: this.state.candidates, reload: this.load });
             var arrow = React.createElement('i', { className: 'fa fa-chevron-up' });
         } else {
             var body = null;
