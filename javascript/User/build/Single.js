@@ -67,15 +67,6 @@ var SingleBallot = React.createClass({
     }
 });
 
-var AbstainButton = props => React.createElement(
-    "div",
-    { className: "btn btn-warning btn-lg", onClick: props.handleClick },
-    "Abstain from ",
-    props.title,
-    " ",
-    React.createElement("i", { className: "fa fa-arrow-right" })
-);
-
 var SingleBallotTicket = React.createClass({
     displayName: "SingleBallotTicket",
 
