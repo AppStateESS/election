@@ -6,10 +6,15 @@ var Referendum = React.createClass({
 
     getDefaultProps: function() {
         return {
+            election : {},
+            updateVote : null,
+            vote : [],
+            referendum : {}
         };
     },
 
     render: function() {
+        console.log(this.props.referendum);
         return (
             <div>
                 Referendum
