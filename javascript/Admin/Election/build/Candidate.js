@@ -50,7 +50,8 @@ var Candidates = React.createClass({
                 return React.createElement(
                     'div',
                     { key: value.id, className: 'col-sm-4 col-xs-6 pad-bottom' },
-                    React.createElement(CandidateForm, _extends({}, this.props, value, { candidateId: value.id, reload: this.load, reset: this.setCurrentForm.bind(null, 0) }))
+                    React.createElement(CandidateForm, _extends({}, this.props, value, { candidateId: value.id, reload: this.load,
+                        reset: this.setCurrentForm.bind(null, 0) }))
                 );
             } else {
                 return React.createElement(CandidateProfile, _extends({ key: value.id }, value, {
@@ -172,7 +173,8 @@ var CandidateForm = React.createClass({
             firstName: '',
             lastName: '',
             title: '',
-            picture: null
+            picture: null,
+            useTitle: true
         };
     },
 
@@ -253,7 +255,9 @@ var CandidateForm = React.createClass({
             'div',
             { className: 'candidate-form text-center' },
             React.createElement(Photo, { photo: this.state.photo, update: this.updatePhoto, picture: this.state.picture }),
-            React.createElement(CandidateInfo, _extends({ updateFirstName: this.updateFirstName, updateLastName: this.updateLastName, updateTitle: this.updateTitle }, this.state)),
+            React.createElement(CandidateInfo, _extends({ updateFirstName: this.updateFirstName, updateLastName: this.updateLastName,
+                updateTitle: this.updateTitle }, this.state, {
+                useTitle: this.props.type == 'ticket' })),
             React.createElement(
                 'div',
                 { className: 'pad-top' },
@@ -283,11 +287,18 @@ var CandidateInfo = React.createClass({
         return {
             firstName: null,
             lastName: null,
-            title: null
+            title: null,
+            useTitle: true
         };
     },
 
     render: function () {
+        var title = null;
+        if (this.props.useTitle) {
+            title = React.createElement('input', { type: 'text', className: 'form-control', name: 'title', value: this.props.title, placeholder: 'Position title',
+                onChange: this.props.updateTitle, value: this.props.title });
+        }
+
         return React.createElement(
             'div',
             null,
@@ -295,8 +306,7 @@ var CandidateInfo = React.createClass({
                 onChange: this.props.updateFirstName, value: this.props.firstName }),
             React.createElement('input', { type: 'text', className: 'form-control', name: 'lastName', value: this.props.lastName, placeholder: 'Last name',
                 onChange: this.props.updateLastName, value: this.props.lastName }),
-            React.createElement('input', { type: 'text', className: 'form-control', name: 'title', value: this.props.title, placeholder: 'Position title',
-                onChange: this.props.updateTitle, value: this.props.title })
+            title
         );
     }
 

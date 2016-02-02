@@ -46,7 +46,8 @@ var Candidates = React.createClass({
             if (value.id === this.state.currentForm) {
                 return (
                     <div key={value.id} className="col-sm-4 col-xs-6 pad-bottom">
-                        <CandidateForm {...this.props} {...value} candidateId={value.id} reload={this.load} reset={this.setCurrentForm.bind(null, 0)}/>
+                        <CandidateForm {...this.props} {...value} candidateId={value.id} reload={this.load}
+                            reset={this.setCurrentForm.bind(null, 0)}/>
                     </div>
                 );
             } else {
@@ -138,7 +139,8 @@ var CandidateForm = React.createClass({
             firstName : '',
             lastName: '',
             title : '',
-            picture : null
+            picture : null,
+            useTitle : true
         };
     },
 
@@ -218,7 +220,9 @@ var CandidateForm = React.createClass({
         return (
             <div className="candidate-form text-center">
                 <Photo photo={this.state.photo} update={this.updatePhoto} picture={this.state.picture}/>
-                <CandidateInfo updateFirstName={this.updateFirstName} updateLastName={this.updateLastName} updateTitle={this.updateTitle} {...this.state}/>
+                <CandidateInfo updateFirstName={this.updateFirstName} updateLastName={this.updateLastName}
+                    updateTitle={this.updateTitle} {...this.state}
+                    useTitle={this.props.type == 'ticket'}/>
                 <div className="pad-top">
                     <button className="btn btn-success btn-sm" title="Save candidate" onClick={this.save} disabled={disabledButton}><i className="fa fa-save"></i> Save</button>
                     &nbsp;
@@ -236,19 +240,27 @@ var CandidateInfo = React.createClass({
         return {
             firstName : null,
             lastName : null,
-            title : null
+            title : null,
+            useTitle : true
         };
     },
 
     render: function() {
+        var title = null;
+        if (this.props.useTitle) {
+            title = (
+                <input type="text" className="form-control" name="title" value={this.props.title} placeholder="Position title"
+                    onChange={this.props.updateTitle} value={this.props.title}/>
+            );
+        }
+
         return (
             <div>
                 <input type="text" className="form-control" name="firstName" value={this.props.firstName} placeholder="First name"
                     onChange={this.props.updateFirstName} value={this.props.firstName}/>
                 <input type="text" className="form-control" name="lastName" value={this.props.lastName} placeholder="Last name"
                     onChange={this.props.updateLastName} value={this.props.lastName}/>
-                <input type="text" className="form-control" name="title" value={this.props.title} placeholder="Position title"
-                    onChange={this.props.updateTitle} value={this.props.title}/>
+                {title}
             </div>
         );
     }
