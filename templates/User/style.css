@@ -42,4 +42,25 @@
 .remaining-seats {
     font-size : 1.2em;
     font-weight : bold;
+    position : fixed;
+    top : 0px;
+    width : 85%;
+    margin : 0 auto;
+    z-index : 10;
+}
+
+
+.single-ticket-vote .no-picture {
+    width : 150px;
+    height : 200px;
+    text-align : center;
+    padding-top : 40%;
+    border : 1px solid #e3e3e3;
+}
+
+.multiple-ticket-vote .no-picture {
+    width : 100px;
+    height : 100px;
+    margin-right : 2em;
+    text-align : center;
 }

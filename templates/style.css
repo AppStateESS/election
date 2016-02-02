@@ -34,14 +34,6 @@ textarea.form-control {
     min-height : 140px;
 }
 
-.no-picture {
-    width : 150px;
-    height : 200px;
-    text-align : center;
-    padding-top : 40%;
-    border : 1px solid #e3e3e3;
-}
-
 .expand-enter {
     opacity : 0.01;
     max-height: 0px;

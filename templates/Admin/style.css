@@ -82,3 +82,11 @@
     font-size : 1.3em;
     font-weight : bold;
 }
+
+.no-picture {
+    width : 150px;
+    height : 200px;
+    text-align : center;
+    padding-top : 40%;
+    border : 1px solid #e3e3e3;
+}
