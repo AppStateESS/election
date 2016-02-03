@@ -58,6 +58,10 @@ class Election extends Base
         return file_get_contents($filename);
     }
 
+    /**
+     * Get the current election
+     * @return Array|boolean Returns array of the current election if one exists, otherwise returns false
+     */
     public static function getCurrent()
     {
         $db = \Database::getDB();
@@ -65,8 +69,8 @@ class Election extends Base
         $now = time();
         $tbl->addFieldConditional('startDate', $now, '<=');
         $tbl->addFieldConditional('endDate', $now, '>=');
-        $election = $db->selectOneRow();
-        return $election;
+
+        return $db->selectOneRow();
     }
 
     /**
