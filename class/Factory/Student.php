@@ -25,8 +25,8 @@ class Student extends Base
     }
 
     /**
-     *  \/\/\ \___/ /\/\/      
-     *       \     /           
+     *  \/\/\ \___/ /\/\/
+     *       \     /
      *       /_   _\         A A A
      *      // \ / \\        | | |
      *     / \o/ \o/ \       `-+-'
@@ -40,7 +40,7 @@ class Student extends Base
     {
         return 666;
     }
-    
+
     public static function hasVoted($electionId)
     {
         $db = \Database::getDB();
@@ -50,4 +50,21 @@ class Student extends Base
         return (bool)$result;
     }
 
+    public static function getStudentByUsername($username)
+    {
+        //TODO sanity checking on username format
+
+        $provider = StudentProviderFactory::getProvider();
+
+        return $provider->getStudent($username);
+    }
+
+    public static function getStudentByBannerId($bannerId)
+    {
+        // TODO sanity checking on banner ID format
+
+        $provider = StudentProviderFactory::getProvider();
+
+        return $provider->getStudent($bannerId);
+    }
 }

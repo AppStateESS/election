@@ -9,14 +9,37 @@ namespace election\Resource;
  */
 class Student
 {
-    protected $bannerId;
-    protected $firstName;
-    protected $lastName;
+    const LEVEL_UNDERGRAD = 'U';
+
+    private $bannerId;
+    private $username;
+    private $firstName;
+    private $lastName;
+    private $emailAddress;
+
+    private $studentType;
+    private $isTransfer;
+    private $studentLevel;
+
+    private $collegeCode;
+    private $collegeDesc;
+    private $creditHoursEnrolled;
 
     public function __construct()
     {
-        $this->bannerId = new \Variable\Integer(null, 'bannerId');
-        $this->firstName = new \Variable\String(null, 'firstName');
-        $this->lastName = new \Variable\String(null, 'lastName');
+
+    }
+
+    /**
+     * Returns true if the student is currently eligible to vote.
+     * @return boolean
+     */
+    public function isEligibleToVote()
+    {
+        if($this->creditHoursEnrolled >= 1 && $this->studentType == Student::LEVEL_UNDERGRAD){
+            return true;
+        }
+
+        return false;
     }
 }
