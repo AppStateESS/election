@@ -73,15 +73,15 @@ var Election = React.createClass({
         });
     },
 
-    updateSingleVote: function (ticketId) {
+    updateSingleVote: function (ticket) {
         var stage = this.state.stage;
         var current = this.state.currentSingle;
         var nextSingle = current + 1;
         var singleVote = this.state.singleVote;
         var currentVote = singleVote[current];
         currentVote = {
-            singleId: this.state.single[this.state.currentSingle].id,
-            ticketId: ticketId
+            single: this.state.single[this.state.currentSingle],
+            ticket: ticket
         };
         singleVote[current] = currentVote;
 
@@ -103,9 +103,10 @@ var Election = React.createClass({
         var currentVote = multipleVote[current];
 
         currentVote = {
-            multipleId: this.state.multiple[this.state.currentMultiple].id,
+            multipleId: this.state.multiple[current].id,
             chairs: chairs
         };
+
         multipleVote[current] = currentVote;
         if (typeof this.state.multiple[nextMultiple] === 'undefined') {
             stage = 'referendum';
@@ -115,6 +116,31 @@ var Election = React.createClass({
             stage: stage,
             multipleVote: multipleVote,
             currentMultiple: nextMultiple
+        });
+    },
+
+    updateReferendumVote: function (vote) {
+        var stage = this.state.stage;
+        var current = this.state.currentReferendum;
+        var nextReferendum = current + 1;
+        var referendumVote = this.state.referendumVote;
+        var currentVote = referendumVote[current];
+
+        currentVote = {
+            referendumId: this.state.referendum[current].id,
+            choice: vote
+        };
+
+        referendumVote[current] = currentVote;
+
+        if (typeof this.state.multiple[nextReferendum] === 'undefined') {
+            stage = 'review';
+        }
+
+        this.setState({
+            stage: stage,
+            referendumVote: referendumVote,
+            currentReferendum: nextReferendum
         });
     },
 
@@ -146,6 +172,16 @@ var Election = React.createClass({
                 content = React.createElement(Referendum, { election: this.state.election,
                     referendum: this.state.referendum[this.state.currentReferendum],
                     updateVote: this.updateReferendumVote, vote: this.state.referendumVote });
+                break;
+
+            case 'review':
+                content = React.createElement(Review, { election: this.state.election,
+                    single: this.state.single,
+                    multiple: this.state.multiple,
+                    referendum: this.state.referendum,
+                    singleVote: this.state.singleVote,
+                    multipleVote: this.state.multipleVote,
+                    referendumVote: this.state.referendumVote });
                 break;
         }
 
