@@ -16,6 +16,7 @@ class Election extends \election\Controller\Base
         $script[] = '<script type="text/javascript">var defaultPicture = \'' . PHPWS_SOURCE_HTTP . 'mod/election/img/no-picture.gif\';</script>';
         if (ELECTION_REACT_DEV) {
             $script[] = \election\Factory\React::development('Mixin/', 'Mixin.js');
+            $script[] = \election\Factory\React::development('User/', 'Review.js');
             $script[] = \election\Factory\React::development('User/', 'Referendum.js');
             $script[] = \election\Factory\React::development('User/', 'Multiple.js');
             $script[] = \election\Factory\React::development('User/', 'Single.js');
