@@ -18,3 +18,5 @@ define('ELECTION_MAX_CANDIDATE_HEIGHT', 200);
 
 // If true, tickets displayed randomly. False, alphabetically.
 define('ELECTION_RANDOMIZE_TICKETS', true);
+
+define('ELECTION_LOGIN_DIRECTORY', 'secure/');
