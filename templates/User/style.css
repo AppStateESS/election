@@ -49,7 +49,6 @@
     z-index : 10;
 }
 
-
 .single-ticket-vote .no-picture {
     width : 150px;
     height : 200px;
@@ -63,4 +62,20 @@
     height : 100px;
     margin-right : 2em;
     text-align : center;
+}
+
+.election-welcome {
+    background-size:100% auto;
+    width : 100%;
+    background-repeat : no-repeat;
+}
+
+.election-welcome .button-container {
+    padding-top : 15%;
+    padding-bottom : 15%;
+    text-align : center;
+    background-color : rgba(255,255,255,0.5);
+}
+.election-welcome .button-container a.btn {
+    font-size : 1.6em;
 }
