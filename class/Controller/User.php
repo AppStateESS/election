@@ -60,6 +60,24 @@ class User extends \Http\Controller
         $content = $template->get();
         \Layout::plug($content, 'NAV_LINKS');
     }
+    
+    public static function welcomeScreen()
+    {
+        \Layout::addStyle('election', 'User/style.css');
+        $template = new \Template;
+        $template->setModuleTemplate('election', 'User/welcome.html');
+        if (!\Current_User::isLogged()) {
+            $template->add('color', 'primary');
+            $template->add('label', '<i class="fa fa-check-square-o"></i> Sign in to Vote');
+            $template->add('url', ELECTION_LOGIN_DIRECTORY);
+        } else {
+            $template->add('color', 'success');
+            $template->add('label', '<i class="fa fa-check-square-o"></i> Get started voting!');
+            $template->add('url', 'election/');
+        }
+        $template->add('image', PHPWS_SOURCE_HTTP . 'mod/election/img/background1.jpg');
+        \Layout::add($template->get());
+    }
 
 
 }
