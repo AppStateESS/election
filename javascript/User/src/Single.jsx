@@ -29,7 +29,7 @@ var SingleBallot = React.createClass({
     render: function() {
         var tickets = this.props.tickets.map(function(value){
             return (<SingleBallotTicket key={value.id} {...value}
-                updateVote={this.props.updateVote.bind(null, value.id)}/>);
+                updateVote={this.props.updateVote.bind(null, value)}/>);
         }.bind(this));
         return (
             <div className="single-ticket-vote">
@@ -38,7 +38,7 @@ var SingleBallot = React.createClass({
                 {tickets}
                 <hr />
                 <div className="text-right">
-                    <AbstainButton title={this.props.title} handleClick={this.props.updateVote.bind(null, 0)} />
+                    <AbstainButton title={this.props.title} handleClick={this.props.updateVote.bind(null, null)} />
                 </div>
             </div>
         );
