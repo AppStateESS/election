@@ -222,7 +222,7 @@ var SingleListRow = React.createClass({
         if (confirm('Are you sure you want to delete this ballot?')) {
             $.post('election/Admin/Single', {
                 command: 'delete',
-                ballotId: this.props.id
+                singleId: this.props.id
             }, null, 'json').done(function (data) {
                 this.props.reload();
             }.bind(this));

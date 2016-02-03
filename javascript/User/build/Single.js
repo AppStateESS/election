@@ -35,7 +35,7 @@ var SingleBallot = React.createClass({
     render: function () {
         var tickets = this.props.tickets.map(function (value) {
             return React.createElement(SingleBallotTicket, _extends({ key: value.id }, value, {
-                updateVote: this.props.updateVote.bind(null, value.id) }));
+                updateVote: this.props.updateVote.bind(null, value) }));
         }.bind(this));
         return React.createElement(
             "div",
@@ -61,7 +61,7 @@ var SingleBallot = React.createClass({
             React.createElement(
                 "div",
                 { className: "text-right" },
-                React.createElement(AbstainButton, { title: this.props.title, handleClick: this.props.updateVote.bind(null, 0) })
+                React.createElement(AbstainButton, { title: this.props.title, handleClick: this.props.updateVote.bind(null, null) })
             )
         );
     }
