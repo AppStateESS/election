@@ -16,15 +16,6 @@ class Module extends \Module implements \SettingDefaults
         $this->setProperName('Election');
     }
 
-    public function beforeRun(\Request $request, \Controller $controller)
-    {
-        $define_file = PHPWS_SOURCE_DIR . 'mod/election/conf/defines.php';
-        if (!is_file($define_file)) {
-            exit('Election requires a copy of conf/defines.php to be created.');
-        }
-        require_once $define_file;
-    }
-
     public function getController(\Request $request)
     {
         \Current_User::requireLogin();
@@ -42,11 +33,23 @@ class Module extends \Module implements \SettingDefaults
     {
         
     }
-
+    
+    public function init()
+    {
+        $define_file = PHPWS_SOURCE_DIR . 'mod/election/conf/defines.php';
+        if (!is_file($define_file)) {
+            exit('Election requires a copy of conf/defines.php to be created.');
+        }
+        require_once $define_file;
+    }
+    
     public function runTime(\Request $request)
     {
         if (\Current_User::isLogged()) {
             \election\Controller\User::loadNavBar();
+        }
+        if (\PHPWS_Core::atHome()) {
+            \election\Controller\User::welcomeScreen($this);
         }
     }
 
