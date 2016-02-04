@@ -41,6 +41,12 @@ class Student extends Base
         return 666;
     }
 
+    /**
+     * Determines whether a student has voted in given election
+     *
+     * @param   int $electionId The id of the election to check for votes in
+     * @return  bool True if the student has voted in the given election, false otherwise
+     */
     public static function hasVoted($electionId)
     {
         $db = \Database::getDB();
