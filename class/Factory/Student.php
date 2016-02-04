@@ -45,13 +45,23 @@ class Student extends Base
      * Determines whether a student has voted in given election
      *
      * @param   int $electionId The id of the election to check for votes in
+     * @param   int $bannerId The banner ID of the student to check for votes from
      * @return  bool True if the student has voted in the given election, false otherwise
      */
-    public static function hasVoted($electionId)
+    public static function hasVoted($electionId, $bannerId)
     {
+        if(!isset($electionId) || $electionId == ''){
+            throw new \InvalidArgumentException('Missing election id.');
+        }
+
+        if(!isset($bannerId) || $bannerId == ''){
+            throw new \InvalidArgumentException('Missing banner ID.');
+        }
+
         $db = \Database::getDB();
         $vote = $db->addTable('elect_vote_complete');
-        $vote->addFieldConditional('bannerId', self::getBannerId());
+        $vote->addFieldConditional('electionId', $electionId);
+        $vote->addFieldConditional('bannerId', $bannerId);
         $result = $db->selectOneRow();
         return (bool)$result;
     }
