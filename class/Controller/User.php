@@ -25,15 +25,19 @@ class User extends \Http\Controller
     {
         $command = $request->shiftCommand();
 
-        // Check for an open Election
+        // Get the current election
         $election = \election\Factory\Election::getCurrent();
 
+        // If there's no current election, redirect to friendly error message
         if($election === false){
             $command = 'NoOpenElections';
         }
 
-        // Check to see if this student has already voted
-        // TODO
+        // If there's an election going on, check to see if this student has already voted in it
+        // TODO: Get the BannerID from shibboleth
+        if($election !== false && \election\Factory\Student::hasVoted($election['id'], 900325006)){
+            $command = 'AlreadyVoted';
+        }
 
         // Default command name is 'Election'
         if (empty($command)) {
