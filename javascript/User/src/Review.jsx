@@ -4,14 +4,31 @@ var Review = React.createClass({
             election : {},
             singleVote : [],
             multipleVote : [],
-            referendumVote : []
+            referendumVote : [],
+            resetStage : null
         };
     },
 
     render: function() {
         return (
             <div>
-                <SingleResult vote={this.props.singleVote}/>;
+                <h2>Review</h2>
+                <div className="review-warning">
+                    <p>You're almost done</p>
+                    <p>Since you may only vote once, let's review your selections.</p>
+                </div>
+                <div className="text-center">
+                    <button className="btn btn-lg btn-block btn-success" onClick={this.props.finalVote}>Place my Vote</button>
+                </div>
+                <div>&nbsp;</div>
+                <div className="vote-results">
+                    <SingleResult vote={this.props.singleVote} resetStage={this.props.resetStage}/>
+                    <MultipleResult vote={this.props.multipleVote} resetStage={this.props.resetStage}/>
+                    <ReferendumResult vote={this.props.referendumVote} resetStage={this.props.resetStage}/>
+                </div>
+                <div className="text-center">
+                    <button className="btn btn-lg btn-block btn-success" onClick={this.props.finalVote}>Place my Vote</button>
+                </div>
             </div>
         );
     }
@@ -21,14 +38,15 @@ var Review = React.createClass({
 var SingleResult = React.createClass({
     getDefaultProps: function() {
         return {
-            vote : []
+            vote : [],
+            resetStage : null
         };
     },
 
     render: function() {
         var rows = this.props.vote.map(function(value, key){
-            return <SingleResultRow key={key} {...value}/>;
-        });
+            return <SingleResultRow key={key} {...value} resetStage={this.props.resetStage}/>;
+        }.bind(this));
 
         return (
             <div>
@@ -36,37 +54,53 @@ var SingleResult = React.createClass({
             </div>
         );
     }
-
 });
 
 var SingleResultRow = React.createClass({
     getDefaultProps: function() {
         return {
             vote : {},
+            resetStage : null,
+            single : {},
+            ticket : {}
         };
     },
 
     render: function() {
         var heading = (
-            <div>
-                <button className="btn btn-default pull-right">
-                    <i className="fa fa-pencil"></i> Edit
-                </button>
-                <h3>{this.props.single.title}</h3>
+            <div className="row">
+                <div className="col-xs-10">
+                    <h3>{this.props.single.title}</h3>
+                </div>
+                <div className="col-xs-2">
+                    <button className="btn btn-block btn-default"
+                        onClick={this.props.resetStage.bind(null, 'single')}>
+                        <i className="fa fa-pencil"></i> Edit
+                    </button>
+                </div>
             </div>
         );
 
-        var candidates = this.props.ticket.candidates.map(function(value, key) {
-            return (
-                <div className="pull-left pad-right" key={key}>
-                    <SingleCandidate {...value}/>
-                </div>
-            );
-        });
+        if (this.props.ticket) {
+            var icon = <i className="fa fa-check-circle text-success fa-5x pull-right"></i>;
+            var title = <h4>{this.props.ticket.title}</h4>;
+            var candidates = this.props.ticket.candidates.map(function(value, key) {
+                return (
+                    <div className="pull-left pad-right" key={key}>
+                        <SingleCandidate {...value}/>
+                    </div>
+                );
+            });
+        } else {
+            var icon = null;
+            var title = <h4>No ticket chosen</h4>;
+            var candidates = <p>Abstained</p>;
+        }
 
         var body = (
             <div>
-                <h4>{this.props.ticket.title}</h4>
+                {icon}
+                {title}
                 <div>
                     {candidates}
                 </div>
@@ -80,26 +114,177 @@ var SingleResultRow = React.createClass({
 var MultipleResult = React.createClass({
     getDefaultProps: function() {
         return {
-            multiple : {},
-            candidates : []
+            vote : []
         };
     },
 
     render: function() {
-        var candidates = this.props.ticket.candidates.map(function(value, key) {
-            return (
-                <div className="pull-left pad-right" key={key}>
-                    <MultipleCandidate {...value}/>
-                </div>
-            );
+        var multiples = this.props.vote.map(function(vote, key) {
+            return <MultipleResultRow {...vote} key={key}/>;
         });
 
-        return (
+        var heading = (
+            <div className="row">
+                <div className="col-xs-10">
+                    <h3>Senate Seats</h3>
+                </div>
+                <div className="col-xs-2">
+                    <button className="btn btn-default btn-block">
+                        <i className="fa fa-pencil"></i> Edit
+                    </button>
+                </div>
+            </div>
+        );
+
+        var body = (
+            <div>
+                {multiples}
+            </div>
+        );
+
+        return (<Panel heading={heading} body={body} />);
+    }
+});
+
+var MultipleResultRow = React.createClass({
+    getDefaultProps: function() {
+        return {
+            chairs : [],
+            multiple : {}
+        };
+    },
+
+    render: function() {
+        var heading = (
             <div>
                 <h4>{this.props.multiple.title}</h4>
+            </div>
+        );
+        if (this.props.chairs.length === 0) {
+            var candidates = <div><h4>No candidates chosen.</h4><p>Abstained.</p></div>;
+        } else {
+            var candidateListing = this.props.multiple.candidates.map(function(candidate, key){
+                if ($.inArray(candidate.id, this.props.chairs) !== -1) {
+                    return <MultipleCandidateRow {...candidate} key={key}/>;
+                }
+            }.bind(this));
+            var candidates = (
                 <ul className="list-group">
-                    {candidates}
+                    {candidateListing}
                 </ul>
+            );
+        }
+
+        var body = (
+            <div className="multiple-ticket-vote">
+                {candidates}
+            </div>
+        );
+        return <Panel heading={heading} body={body}/>;
+    }
+
+});
+
+var MultipleCandidateRow = React.createClass({
+    getDefaultProps: function() {
+        return {
+            firstName : '',
+            lastName : '',
+            picture : ''
+        };
+    },
+
+    render: function() {
+        var icon = <i className="pull-right text-success fa fa-check-circle fa-2x"></i>;
+
+        var picture = <img className="img-circle" src='mod/election/img/no-picture.gif'/>
+
+        if (this.props.picture.length > 0) {
+            picture = <img className="img-circle" src={this.props.picture}/>;
+        }
+
+        return (
+            <li className="list-group-item" onClick={this.props.select}>
+                {icon}
+                {picture}
+                {this.props.firstName} {this.props.lastName}
+            </li>
+        );
+    }
+
+});
+
+var ReferendumResult = React.createClass({
+    getDefaultProps: function() {
+        return {
+            vote : []
+        };
+    },
+
+    getInitialState: function() {
+        return {
+        };
+    },
+
+    render: function() {
+        var rows = this.props.vote.map(function(value, key){
+            return <ReferendumResultRow key={key} {...value}/>;
+        });
+
+        var heading = (
+            <div className="row">
+                <div className="col-xs-10">
+                    <h3>Referenda</h3>
+                </div>
+                <div className="col-xs-2">
+                    <button className="btn btn-block btn-default">
+                        <i className="fa fa-pencil"></i> Edit
+                    </button>
+                </div>
+            </div>
+        );
+
+        var body = (
+            <div>
+                {rows}
+            </div>
+        );
+
+        return <Panel heading={heading} body={body} />;
+    }
+});
+
+var ReferendumResultRow = React.createClass({
+    getDefaultProps: function() {
+        return {
+        };
+    },
+
+    getInitialState: function() {
+        return {
+        };
+    },
+
+    render: function() {
+        var voted = '';
+        switch (this.props.choice) {
+            case true:
+            voted = <span className="text-success"><i className="fa fa-check-circle"></i> Yes</span>;
+            break;
+
+            case false:
+            voted = <span className="text-danger"><i className="fa fa-times-circle"></i> No</span>;
+            break;
+
+            case null:
+            voted = <span className="text-primary"><i className="fa fa-question-circle"></i> Abstained</span>;
+            break;
+        }
+
+        return (
+            <div className="row referendum-result">
+                <div className="col-sm-8">{this.props.referendum.title}</div>
+                <div className="col-sm-4">{voted}</div>
             </div>
         );
     }

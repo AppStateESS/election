@@ -8,7 +8,8 @@ var Review = React.createClass({
             election: {},
             singleVote: [],
             multipleVote: [],
-            referendumVote: []
+            referendumVote: [],
+            resetStage: null
         };
     },
 
@@ -16,8 +17,55 @@ var Review = React.createClass({
         return React.createElement(
             "div",
             null,
-            React.createElement(SingleResult, { vote: this.props.singleVote }),
-            ";"
+            React.createElement(
+                "h2",
+                null,
+                "Review"
+            ),
+            React.createElement(
+                "div",
+                { className: "review-warning" },
+                React.createElement(
+                    "p",
+                    null,
+                    "You're almost done"
+                ),
+                React.createElement(
+                    "p",
+                    null,
+                    "Since you may only vote once, let's review your selections."
+                )
+            ),
+            React.createElement(
+                "div",
+                { className: "text-center" },
+                React.createElement(
+                    "button",
+                    { className: "btn btn-lg btn-block btn-success", onClick: this.props.finalVote },
+                    "Place my Vote"
+                )
+            ),
+            React.createElement(
+                "div",
+                null,
+                " "
+            ),
+            React.createElement(
+                "div",
+                { className: "vote-results" },
+                React.createElement(SingleResult, { vote: this.props.singleVote, resetStage: this.props.resetStage }),
+                React.createElement(MultipleResult, { vote: this.props.multipleVote, resetStage: this.props.resetStage }),
+                React.createElement(ReferendumResult, { vote: this.props.referendumVote, resetStage: this.props.resetStage })
+            ),
+            React.createElement(
+                "div",
+                { className: "text-center" },
+                React.createElement(
+                    "button",
+                    { className: "btn btn-lg btn-block btn-success", onClick: this.props.finalVote },
+                    "Place my Vote"
+                )
+            )
         );
     }
 
@@ -28,14 +76,15 @@ var SingleResult = React.createClass({
 
     getDefaultProps: function () {
         return {
-            vote: []
+            vote: [],
+            resetStage: null
         };
     },
 
     render: function () {
         var rows = this.props.vote.map(function (value, key) {
-            return React.createElement(SingleResultRow, _extends({ key: key }, value));
-        });
+            return React.createElement(SingleResultRow, _extends({ key: key }, value, { resetStage: this.props.resetStage }));
+        }.bind(this));
 
         return React.createElement(
             "div",
@@ -43,7 +92,6 @@ var SingleResult = React.createClass({
             rows
         );
     }
-
 });
 
 var SingleResultRow = React.createClass({
@@ -51,43 +99,72 @@ var SingleResultRow = React.createClass({
 
     getDefaultProps: function () {
         return {
-            vote: {}
+            vote: {},
+            resetStage: null,
+            single: {},
+            ticket: {}
         };
     },
 
     render: function () {
         var heading = React.createElement(
             "div",
-            null,
+            { className: "row" },
             React.createElement(
-                "button",
-                { className: "btn btn-default pull-right" },
-                React.createElement("i", { className: "fa fa-pencil" }),
-                " Edit"
+                "div",
+                { className: "col-xs-10" },
+                React.createElement(
+                    "h3",
+                    null,
+                    this.props.single.title
+                )
             ),
             React.createElement(
-                "h3",
-                null,
-                this.props.single.title
+                "div",
+                { className: "col-xs-2" },
+                React.createElement(
+                    "button",
+                    { className: "btn btn-block btn-default",
+                        onClick: this.props.resetStage.bind(null, 'single') },
+                    React.createElement("i", { className: "fa fa-pencil" }),
+                    " Edit"
+                )
             )
         );
 
-        var candidates = this.props.ticket.candidates.map(function (value, key) {
-            return React.createElement(
-                "div",
-                { className: "pull-left pad-right", key: key },
-                React.createElement(SingleCandidate, value)
+        if (this.props.ticket) {
+            var icon = React.createElement("i", { className: "fa fa-check-circle text-success fa-5x pull-right" });
+            var title = React.createElement(
+                "h4",
+                null,
+                this.props.ticket.title
             );
-        });
+            var candidates = this.props.ticket.candidates.map(function (value, key) {
+                return React.createElement(
+                    "div",
+                    { className: "pull-left pad-right", key: key },
+                    React.createElement(SingleCandidate, value)
+                );
+            });
+        } else {
+            var icon = null;
+            var title = React.createElement(
+                "h4",
+                null,
+                "No ticket chosen"
+            );
+            var candidates = React.createElement(
+                "p",
+                null,
+                "Abstained"
+            );
+        }
 
         var body = React.createElement(
             "div",
             null,
-            React.createElement(
-                "h4",
-                null,
-                this.props.ticket.title
-            ),
+            icon,
+            title,
             React.createElement(
                 "div",
                 null,
@@ -104,32 +181,246 @@ var MultipleResult = React.createClass({
 
     getDefaultProps: function () {
         return {
-            multiple: {},
-            candidates: []
+            vote: []
         };
     },
 
     render: function () {
-        var candidates = this.props.ticket.candidates.map(function (value, key) {
-            return React.createElement(
-                "div",
-                { className: "pull-left pad-right", key: key },
-                React.createElement(MultipleCandidate, value)
-            );
+        var multiples = this.props.vote.map(function (vote, key) {
+            return React.createElement(MultipleResultRow, _extends({}, vote, { key: key }));
         });
 
-        return React.createElement(
+        var heading = React.createElement(
+            "div",
+            { className: "row" },
+            React.createElement(
+                "div",
+                { className: "col-xs-10" },
+                React.createElement(
+                    "h3",
+                    null,
+                    "Senate Seats"
+                )
+            ),
+            React.createElement(
+                "div",
+                { className: "col-xs-2" },
+                React.createElement(
+                    "button",
+                    { className: "btn btn-default btn-block" },
+                    React.createElement("i", { className: "fa fa-pencil" }),
+                    " Edit"
+                )
+            )
+        );
+
+        var body = React.createElement(
+            "div",
+            null,
+            multiples
+        );
+
+        return React.createElement(Panel, { heading: heading, body: body });
+    }
+});
+
+var MultipleResultRow = React.createClass({
+    displayName: "MultipleResultRow",
+
+    getDefaultProps: function () {
+        return {
+            chairs: [],
+            multiple: {}
+        };
+    },
+
+    render: function () {
+        var heading = React.createElement(
             "div",
             null,
             React.createElement(
                 "h4",
                 null,
                 this.props.multiple.title
-            ),
-            React.createElement(
+            )
+        );
+        if (this.props.chairs.length === 0) {
+            var candidates = React.createElement(
+                "div",
+                null,
+                React.createElement(
+                    "h4",
+                    null,
+                    "No candidates chosen."
+                ),
+                React.createElement(
+                    "p",
+                    null,
+                    "Abstained."
+                )
+            );
+        } else {
+            var candidateListing = this.props.multiple.candidates.map(function (candidate, key) {
+                if ($.inArray(candidate.id, this.props.chairs) !== -1) {
+                    return React.createElement(MultipleCandidateRow, _extends({}, candidate, { key: key }));
+                }
+            }.bind(this));
+            var candidates = React.createElement(
                 "ul",
                 { className: "list-group" },
-                candidates
+                candidateListing
+            );
+        }
+
+        var body = React.createElement(
+            "div",
+            { className: "multiple-ticket-vote" },
+            candidates
+        );
+        return React.createElement(Panel, { heading: heading, body: body });
+    }
+
+});
+
+var MultipleCandidateRow = React.createClass({
+    displayName: "MultipleCandidateRow",
+
+    getDefaultProps: function () {
+        return {
+            firstName: '',
+            lastName: '',
+            picture: ''
+        };
+    },
+
+    render: function () {
+        var icon = React.createElement("i", { className: "pull-right text-success fa fa-check-circle fa-2x" });
+
+        var picture = React.createElement("img", { className: "img-circle", src: "mod/election/img/no-picture.gif" });
+
+        if (this.props.picture.length > 0) {
+            picture = React.createElement("img", { className: "img-circle", src: this.props.picture });
+        }
+
+        return React.createElement(
+            "li",
+            { className: "list-group-item", onClick: this.props.select },
+            icon,
+            picture,
+            this.props.firstName,
+            " ",
+            this.props.lastName
+        );
+    }
+
+});
+
+var ReferendumResult = React.createClass({
+    displayName: "ReferendumResult",
+
+    getDefaultProps: function () {
+        return {
+            vote: []
+        };
+    },
+
+    getInitialState: function () {
+        return {};
+    },
+
+    render: function () {
+        var rows = this.props.vote.map(function (value, key) {
+            return React.createElement(ReferendumResultRow, _extends({ key: key }, value));
+        });
+
+        var heading = React.createElement(
+            "div",
+            { className: "row" },
+            React.createElement(
+                "div",
+                { className: "col-xs-10" },
+                React.createElement(
+                    "h3",
+                    null,
+                    "Referenda"
+                )
+            ),
+            React.createElement(
+                "div",
+                { className: "col-xs-2" },
+                React.createElement(
+                    "button",
+                    { className: "btn btn-block btn-default" },
+                    React.createElement("i", { className: "fa fa-pencil" }),
+                    " Edit"
+                )
+            )
+        );
+
+        var body = React.createElement(
+            "div",
+            null,
+            rows
+        );
+
+        return React.createElement(Panel, { heading: heading, body: body });
+    }
+});
+
+var ReferendumResultRow = React.createClass({
+    displayName: "ReferendumResultRow",
+
+    getDefaultProps: function () {
+        return {};
+    },
+
+    getInitialState: function () {
+        return {};
+    },
+
+    render: function () {
+        var voted = '';
+        switch (this.props.choice) {
+            case true:
+                voted = React.createElement(
+                    "span",
+                    { className: "text-success" },
+                    React.createElement("i", { className: "fa fa-check-circle" }),
+                    " Yes"
+                );
+                break;
+
+            case false:
+                voted = React.createElement(
+                    "span",
+                    { className: "text-danger" },
+                    React.createElement("i", { className: "fa fa-times-circle" }),
+                    " No"
+                );
+                break;
+
+            case null:
+                voted = React.createElement(
+                    "span",
+                    { className: "text-primary" },
+                    React.createElement("i", { className: "fa fa-question-circle" }),
+                    " Abstained"
+                );
+                break;
+        }
+
+        return React.createElement(
+            "div",
+            { className: "row referendum-result" },
+            React.createElement(
+                "div",
+                { className: "col-sm-8" },
+                this.props.referendum.title
+            ),
+            React.createElement(
+                "div",
+                { className: "col-sm-4" },
+                voted
             )
         );
     }
