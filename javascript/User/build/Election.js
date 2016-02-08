@@ -77,33 +77,34 @@ var Election = React.createClass({
     getSingleKey: function (id) {
         var found = 0;
         $.each(this.state.single, function (index, value) {
-            console.log('compare ' + id + ' to ' + value.id);
             if (id === value.id) {
                 found = index;
             }
         });
-        console.log('found is ' + found);
         return found;
     },
 
     getMultipleKey: function (id) {
+        var found = 0;
         $.each(this.state.multiple, function (index, value) {
             if (id === value.id) {
-                return index;
+                found = index;
             }
         });
+        return found;
     },
 
     getReferendumKey: function (id) {
+        var found = 0;
         $.each(this.state.referendum, function (index, value) {
             if (id === value.id) {
-                return index;
+                found = index;
             }
         });
+        return found;
     },
 
     setCurrentSingle: function (id) {
-        console.log('seting single to ' + id);
         this.setState({
             currentSingle: id
         });
@@ -178,7 +179,10 @@ var Election = React.createClass({
         };
 
         multipleVote[current] = currentVote;
-        if (typeof this.state.multiple[nextMultiple] === 'undefined') {
+
+        if (this.state.backToReview) {
+            stage = 'review';
+        } else if (typeof this.state.multiple[nextMultiple] === 'undefined') {
             stage = 'referendum';
         }
 
@@ -203,7 +207,9 @@ var Election = React.createClass({
 
         referendumVote[current] = currentVote;
 
-        if (typeof this.state.multiple[nextReferendum] === 'undefined') {
+        if (this.state.backToReview) {
+            stage = 'review';
+        } else if (typeof this.state.multiple[nextReferendum] === 'undefined') {
             stage = 'review';
         }
 
@@ -224,7 +230,7 @@ var Election = React.createClass({
             review = React.createElement(
                 'button',
                 { className: 'btn btn-lg btn-block btn-info', onClick: this.setStage.bind(null, 'review') },
-                'Click when finished reviewing choices'
+                'Return to review without saving'
             );
         }
 

@@ -114,14 +114,15 @@ var SingleResultRow = React.createClass({
 var MultipleResult = React.createClass({
     getDefaultProps: function() {
         return {
-            vote : []
+            vote : [],
+            resetStage : null
         };
     },
 
     render: function() {
         var multiples = this.props.vote.map(function(vote, key) {
-            return <MultipleResultRow {...vote} key={key}/>;
-        });
+            return <MultipleResultRow {...vote} key={key} resetStage={this.props.resetStage}/>;
+        }.bind(this));
 
         var heading = (
             <h3>Senate Seats</h3>
@@ -141,7 +142,8 @@ var MultipleResultRow = React.createClass({
     getDefaultProps: function() {
         return {
             chairs : [],
-            multiple : {}
+            multiple : {},
+            resetStage : null
         };
     },
 
@@ -152,7 +154,8 @@ var MultipleResultRow = React.createClass({
                     <h4>{this.props.multiple.title}</h4>
                 </div>
                 <div className="col-xs-2">
-                    <button className="btn btn-default btn-block">
+                    <button className="btn btn-default btn-block"
+                        onClick={this.props.resetStage.bind(null, 'multiple')}>
                         <i className="fa fa-pencil"></i> Edit
                     </button>
                 </div>
@@ -215,7 +218,8 @@ var MultipleCandidateRow = React.createClass({
 var ReferendumResult = React.createClass({
     getDefaultProps: function() {
         return {
-            vote : []
+            vote : [],
+            resetStage : null
         };
     },
 
@@ -226,8 +230,8 @@ var ReferendumResult = React.createClass({
 
     render: function() {
         var rows = this.props.vote.map(function(value, key){
-            return <ReferendumResultRow key={key} {...value}/>;
-        });
+            return <ReferendumResultRow key={key} {...value} resetStage={this.props.resetStage}/>;
+        }.bind(this));
 
         var heading = (<h3>Referenda</h3>);
 
@@ -273,7 +277,8 @@ var ReferendumResultRow = React.createClass({
                 <div className="col-sm-6">{this.props.referendum.title}</div>
                 <div className="col-sm-3">{voted}</div>
                 <div className="col-sm-3">
-                    <button className="btn btn-block btn-default">
+                    <button className="btn btn-block btn-default"
+                        onClick={this.props.resetStage.bind(null, 'referendum')}>
                         <i className="fa fa-pencil"></i> Edit
                     </button>
                 </div>

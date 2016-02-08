@@ -181,14 +181,15 @@ var MultipleResult = React.createClass({
 
     getDefaultProps: function () {
         return {
-            vote: []
+            vote: [],
+            resetStage: null
         };
     },
 
     render: function () {
         var multiples = this.props.vote.map(function (vote, key) {
-            return React.createElement(MultipleResultRow, _extends({}, vote, { key: key }));
-        });
+            return React.createElement(MultipleResultRow, _extends({}, vote, { key: key, resetStage: this.props.resetStage }));
+        }.bind(this));
 
         var heading = React.createElement(
             "h3",
@@ -212,7 +213,8 @@ var MultipleResultRow = React.createClass({
     getDefaultProps: function () {
         return {
             chairs: [],
-            multiple: {}
+            multiple: {},
+            resetStage: null
         };
     },
 
@@ -234,7 +236,8 @@ var MultipleResultRow = React.createClass({
                 { className: "col-xs-2" },
                 React.createElement(
                     "button",
-                    { className: "btn btn-default btn-block" },
+                    { className: "btn btn-default btn-block",
+                        onClick: this.props.resetStage.bind(null, 'multiple') },
                     React.createElement("i", { className: "fa fa-pencil" }),
                     " Edit"
                 )
@@ -316,7 +319,8 @@ var ReferendumResult = React.createClass({
 
     getDefaultProps: function () {
         return {
-            vote: []
+            vote: [],
+            resetStage: null
         };
     },
 
@@ -326,8 +330,8 @@ var ReferendumResult = React.createClass({
 
     render: function () {
         var rows = this.props.vote.map(function (value, key) {
-            return React.createElement(ReferendumResultRow, _extends({ key: key }, value));
-        });
+            return React.createElement(ReferendumResultRow, _extends({ key: key }, value, { resetStage: this.props.resetStage }));
+        }.bind(this));
 
         var heading = React.createElement(
             "h3",
@@ -405,7 +409,8 @@ var ReferendumResultRow = React.createClass({
                 { className: "col-sm-3" },
                 React.createElement(
                     "button",
-                    { className: "btn btn-block btn-default" },
+                    { className: "btn btn-block btn-default",
+                        onClick: this.props.resetStage.bind(null, 'referendum') },
                     React.createElement("i", { className: "fa fa-pencil" }),
                     " Edit"
                 )
