@@ -60,6 +60,9 @@ var Panel = React.createClass({
 });
 
 var BreakIt = function (text) {
+    if (typeof text === 'undefined') {
+        throw 'BreakIt text parameter is undefined';
+    }
     var broken = text.split("\n").map(function (item, i) {
         return React.createElement(
             'span',
