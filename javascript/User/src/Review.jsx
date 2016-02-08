@@ -45,7 +45,7 @@ var SingleResult = React.createClass({
 
     render: function() {
         var rows = this.props.vote.map(function(value, key){
-            return <SingleResultRow key={key} {...value} resetStage={this.props.resetStage}/>;
+            return <SingleResultRow key={key} {...value} resetStage={this.props.resetStage.bind(null, 'single', value.single.id)}/>;
         }.bind(this));
 
         return (
@@ -124,16 +124,7 @@ var MultipleResult = React.createClass({
         });
 
         var heading = (
-            <div className="row">
-                <div className="col-xs-10">
-                    <h3>Senate Seats</h3>
-                </div>
-                <div className="col-xs-2">
-                    <button className="btn btn-default btn-block">
-                        <i className="fa fa-pencil"></i> Edit
-                    </button>
-                </div>
-            </div>
+            <h3>Senate Seats</h3>
         );
 
         var body = (
@@ -156,8 +147,15 @@ var MultipleResultRow = React.createClass({
 
     render: function() {
         var heading = (
-            <div>
-                <h4>{this.props.multiple.title}</h4>
+            <div className="row">
+                <div className="col-xs-10">
+                    <h4>{this.props.multiple.title}</h4>
+                </div>
+                <div className="col-xs-2">
+                    <button className="btn btn-default btn-block">
+                        <i className="fa fa-pencil"></i> Edit
+                    </button>
+                </div>
             </div>
         );
         if (this.props.chairs.length === 0) {
@@ -231,18 +229,7 @@ var ReferendumResult = React.createClass({
             return <ReferendumResultRow key={key} {...value}/>;
         });
 
-        var heading = (
-            <div className="row">
-                <div className="col-xs-10">
-                    <h3>Referenda</h3>
-                </div>
-                <div className="col-xs-2">
-                    <button className="btn btn-block btn-default">
-                        <i className="fa fa-pencil"></i> Edit
-                    </button>
-                </div>
-            </div>
-        );
+        var heading = (<h3>Referenda</h3>);
 
         var body = (
             <div>
@@ -283,8 +270,13 @@ var ReferendumResultRow = React.createClass({
 
         return (
             <div className="row referendum-result">
-                <div className="col-sm-8">{this.props.referendum.title}</div>
-                <div className="col-sm-4">{voted}</div>
+                <div className="col-sm-6">{this.props.referendum.title}</div>
+                <div className="col-sm-3">{voted}</div>
+                <div className="col-sm-3">
+                    <button className="btn btn-block btn-default">
+                        <i className="fa fa-pencil"></i> Edit
+                    </button>
+                </div>
             </div>
         );
     }

@@ -19,7 +19,8 @@ var Election = React.createClass({
             multipleVote: [],
             referendumVote: [],
             student: {},
-            unqualified: []
+            unqualified: [],
+            backToReview: false
         };
     },
 
@@ -73,12 +74,70 @@ var Election = React.createClass({
         });
     },
 
-    resetStage: function (stage) {
+    getSingleKey: function (id) {
+        var found = 0;
+        $.each(this.state.single, function (index, value) {
+            console.log('compare ' + id + ' to ' + value.id);
+            if (id === value.id) {
+                found = index;
+            }
+        });
+        console.log('found is ' + found);
+        return found;
+    },
+
+    getMultipleKey: function (id) {
+        $.each(this.state.multiple, function (index, value) {
+            if (id === value.id) {
+                return index;
+            }
+        });
+    },
+
+    getReferendumKey: function (id) {
+        $.each(this.state.referendum, function (index, value) {
+            if (id === value.id) {
+                return index;
+            }
+        });
+    },
+
+    setCurrentSingle: function (id) {
+        console.log('seting single to ' + id);
         this.setState({
-            stage: stage,
-            currentSingle: 0,
-            currentMultiple: 0,
-            currentReferendum: 0
+            currentSingle: id
+        });
+    },
+
+    setCurrentMultiple: function (id) {
+        this.setState({
+            currentMultiple: id
+        });
+    },
+
+    setCurrentReferendum: function (id) {
+        this.setState({
+            currentReferendum: id
+        });
+    },
+
+    resetStage: function (stage, id) {
+        switch (stage) {
+            case 'single':
+                this.setCurrentSingle(this.getSingleKey(id));
+                break;
+
+            case 'multiple':
+                this.setCurrentMultiple(this.getMultipleKey(id));
+                break;
+
+            case 'referendum':
+                this.setCurrentReferendum(this.getReferendumKey(id));
+                break;
+        }
+        this.setState({
+            backToReview: true,
+            stage: stage
         });
     },
 
@@ -94,7 +153,9 @@ var Election = React.createClass({
         };
         singleVote[current] = currentVote;
 
-        if (typeof this.state.single[nextSingle] === 'undefined') {
+        if (this.state.backToReview) {
+            stage = 'review';
+        } else if (typeof this.state.single[nextSingle] === 'undefined') {
             stage = 'multiple';
         }
         this.setState({
@@ -157,6 +218,16 @@ var Election = React.createClass({
 
     render: function () {
         var content = null;
+        var review = null;
+
+        if (this.state.backToReview) {
+            review = React.createElement(
+                'button',
+                { className: 'btn btn-lg btn-block btn-info', onClick: this.setStage.bind(null, 'review') },
+                'Click when finished reviewing choices'
+            );
+        }
+
         switch (this.state.stage) {
             case 'empty':
                 content = React.createElement(Empty, null);
@@ -186,6 +257,7 @@ var Election = React.createClass({
                 break;
 
             case 'review':
+                review = null;
                 content = React.createElement(Review, { election: this.state.election,
                     single: this.state.single,
                     multiple: this.state.multiple,
@@ -215,6 +287,7 @@ var Election = React.createClass({
             'div',
             null,
             countdown,
+            review,
             content
         );
     }

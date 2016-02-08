@@ -83,7 +83,7 @@ var SingleResult = React.createClass({
 
     render: function () {
         var rows = this.props.vote.map(function (value, key) {
-            return React.createElement(SingleResultRow, _extends({ key: key }, value, { resetStage: this.props.resetStage }));
+            return React.createElement(SingleResultRow, _extends({ key: key }, value, { resetStage: this.props.resetStage.bind(null, 'single', value.single.id) }));
         }.bind(this));
 
         return React.createElement(
@@ -191,27 +191,9 @@ var MultipleResult = React.createClass({
         });
 
         var heading = React.createElement(
-            "div",
-            { className: "row" },
-            React.createElement(
-                "div",
-                { className: "col-xs-10" },
-                React.createElement(
-                    "h3",
-                    null,
-                    "Senate Seats"
-                )
-            ),
-            React.createElement(
-                "div",
-                { className: "col-xs-2" },
-                React.createElement(
-                    "button",
-                    { className: "btn btn-default btn-block" },
-                    React.createElement("i", { className: "fa fa-pencil" }),
-                    " Edit"
-                )
-            )
+            "h3",
+            null,
+            "Senate Seats"
         );
 
         var body = React.createElement(
@@ -237,11 +219,25 @@ var MultipleResultRow = React.createClass({
     render: function () {
         var heading = React.createElement(
             "div",
-            null,
+            { className: "row" },
             React.createElement(
-                "h4",
-                null,
-                this.props.multiple.title
+                "div",
+                { className: "col-xs-10" },
+                React.createElement(
+                    "h4",
+                    null,
+                    this.props.multiple.title
+                )
+            ),
+            React.createElement(
+                "div",
+                { className: "col-xs-2" },
+                React.createElement(
+                    "button",
+                    { className: "btn btn-default btn-block" },
+                    React.createElement("i", { className: "fa fa-pencil" }),
+                    " Edit"
+                )
             )
         );
         if (this.props.chairs.length === 0) {
@@ -334,27 +330,9 @@ var ReferendumResult = React.createClass({
         });
 
         var heading = React.createElement(
-            "div",
-            { className: "row" },
-            React.createElement(
-                "div",
-                { className: "col-xs-10" },
-                React.createElement(
-                    "h3",
-                    null,
-                    "Referenda"
-                )
-            ),
-            React.createElement(
-                "div",
-                { className: "col-xs-2" },
-                React.createElement(
-                    "button",
-                    { className: "btn btn-block btn-default" },
-                    React.createElement("i", { className: "fa fa-pencil" }),
-                    " Edit"
-                )
-            )
+            "h3",
+            null,
+            "Referenda"
         );
 
         var body = React.createElement(
@@ -414,13 +392,23 @@ var ReferendumResultRow = React.createClass({
             { className: "row referendum-result" },
             React.createElement(
                 "div",
-                { className: "col-sm-8" },
+                { className: "col-sm-6" },
                 this.props.referendum.title
             ),
             React.createElement(
                 "div",
-                { className: "col-sm-4" },
+                { className: "col-sm-3" },
                 voted
+            ),
+            React.createElement(
+                "div",
+                { className: "col-sm-3" },
+                React.createElement(
+                    "button",
+                    { className: "btn btn-block btn-default" },
+                    React.createElement("i", { className: "fa fa-pencil" }),
+                    " Edit"
+                )
             )
         );
     }
