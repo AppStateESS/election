@@ -61,7 +61,7 @@ EOF;
         $student_id = \election\Factory\Student::getBannerId();
         $election = Factory::getCurrent();
         if (!empty($election)) {
-            $hasVoted = \election\Factory\Student::hasVoted($election['id']);
+            $hasVoted = \election\Factory\Student::hasVoted($election['id'], $student_id);
             // delete this
             //$hasVoted = true;
             if (!$hasVoted) {
