@@ -72,6 +72,15 @@ var Election = React.createClass({
         });
     },
 
+    resetStage : function(stage) {
+        this.setState({
+            stage : stage,
+            currentSingle : 0,
+            currentMultiple : 0,
+            currentReferendum : 0
+        });
+    },
+
     updateSingleVote : function(ticket) {
         var stage = this.state.stage;
         var current = this.state.currentSingle;
@@ -102,7 +111,7 @@ var Election = React.createClass({
         var currentVote = multipleVote[current];
 
         currentVote = {
-            multipleId : this.state.multiple[current].id,
+            multiple : this.state.multiple[current],
             chairs : chairs
         };
 
@@ -126,7 +135,7 @@ var Election = React.createClass({
         var currentVote = referendumVote[current];
 
         currentVote = {
-            referendumId : this.state.referendum[current].id,
+            referendum : this.state.referendum[current],
             choice : vote
         };
 
@@ -141,6 +150,10 @@ var Election = React.createClass({
             referendumVote : referendumVote,
             currentReferendum : nextReferendum
         });
+    },
+
+    finalVote : function() {
+
     },
 
     render: function() {
@@ -180,7 +193,9 @@ var Election = React.createClass({
                 referendum={this.state.referendum}
                 singleVote={this.state.singleVote}
                 multipleVote={this.state.multipleVote}
-                referendumVote={this.state.referendumVote}/>
+                referendumVote={this.state.referendumVote}
+                finalVote={this.finalVote}
+                resetStage={this.resetStage}/>
             break;
         }
 
