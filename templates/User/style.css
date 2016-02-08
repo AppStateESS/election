@@ -79,3 +79,12 @@
 .election-welcome .button-container a.btn {
     font-size : 1.6em;
 }
+
+.referendum-result {
+    font-size : 1.3em;
+}
+
+.review-warning p {
+    font-size : 1.2em;
+    font-weight : bold;
+}
