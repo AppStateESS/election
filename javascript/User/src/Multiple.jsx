@@ -76,9 +76,10 @@ var MultipleBallot = React.createClass({
             );
         }.bind(this));
 
-        var button = null;
-        if (this.state.totalSelected == seatNumber) {
-            button = <button className="pull-right btn btn-success" onClick={this.saveVotes}>Continue <i className="fa fa-arrow-right"></i></button>;
+        if (this.state.totalSelected > 0 ) {
+            var button = <button className="pull-right btn btn-success" onClick={this.saveVotes}>Continue <i className="fa fa-arrow-right"></i></button>;
+        } else {
+            var button = <button className="pull-right btn btn-warning" onClick={this.saveVotes}>Abstain from {this.props.title} <i className="fa fa-arrow-right"></i></button>;
         }
 
         return (
@@ -92,7 +93,7 @@ var MultipleBallot = React.createClass({
                 </ul>
                 <hr />
                 <div className="text-right">
-                    <SkipButton title={this.props.title} handleClick={this.saveVotes} />
+                    {button}
                 </div>
             </div>
         );
@@ -141,10 +142,3 @@ var MultipleCandidate = React.createClass({
     }
 
 });
-
-
-var SkipButton = (props) => (
-    <div className="btn btn-success btn-lg" onClick={props.handleClick}>
-        Continue <i className="fa fa-arrow-right"></i>
-    </div>
-);

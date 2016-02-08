@@ -80,12 +80,20 @@ var MultipleBallot = React.createClass({
                 selected: selected, select: this.select.bind(null, value.id) }));
         }.bind(this));
 
-        var button = null;
-        if (this.state.totalSelected == seatNumber) {
-            button = React.createElement(
+        if (this.state.totalSelected > 0) {
+            var button = React.createElement(
                 "button",
                 { className: "pull-right btn btn-success", onClick: this.saveVotes },
                 "Continue ",
+                React.createElement("i", { className: "fa fa-arrow-right" })
+            );
+        } else {
+            var button = React.createElement(
+                "button",
+                { className: "pull-right btn btn-warning", onClick: this.saveVotes },
+                "Abstain from ",
+                this.props.title,
+                " ",
                 React.createElement("i", { className: "fa fa-arrow-right" })
             );
         }
@@ -117,7 +125,7 @@ var MultipleBallot = React.createClass({
             React.createElement(
                 "div",
                 { className: "text-right" },
-                React.createElement(SkipButton, { title: this.props.title, handleClick: this.saveVotes })
+                button
             )
         );
     }
@@ -168,10 +176,3 @@ var MultipleCandidate = React.createClass({
     }
 
 });
-
-var SkipButton = props => React.createElement(
-    "div",
-    { className: "btn btn-success btn-lg", onClick: props.handleClick },
-    "Continue ",
-    React.createElement("i", { className: "fa fa-arrow-right" })
-);
