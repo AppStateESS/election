@@ -16,7 +16,6 @@ var Election = React.createClass({
             singleVote : [],
             multipleVote : [],
             referendumVote : [],
-            student : {},
             unqualified : [],
             backToReview : false
         };
@@ -45,17 +44,14 @@ var Election = React.createClass({
 
                 /* If there are no single-type elections, then skip to multiple type */
                 if (singleLength === 0) {
-                    console.log('got in here 1');
                     stage = 'multiple';
                 }
                 /* If there's no single and no multiple types, skip to referendum */
                 if (singleLength === 0 && multipleLength === 0) {
-                    console.log('got in here 2');
                     stage = 'referendum';
                 }
                 /* If there are no elections at all, show the empty message */
                 if (singleLength === 0 && multipleLength === 0 && referendumLength === 0) {
-                    console.log('got in here 3');
                     stage = 'empty';
                 }
                 var ballotCount = singleLength + multipleLength;
@@ -208,7 +204,7 @@ var Election = React.createClass({
 
         currentVote = {
             referendum : this.state.referendum[current],
-            choice : vote
+            answer : vote
         };
 
         referendumVote[current] = currentVote;
@@ -228,7 +224,47 @@ var Election = React.createClass({
     },
 
     finalVote : function() {
+        var singleResult = [];
+        $.each(this.state.singleVote, function(index, value){
+            singleResult.push({
+                singleId : value.single.id,
+                ticketId : value.ticket.id
+            });
+        });
 
+        var multipleResult = [];
+        $.each(this.state.multipleVote, function(index, value){
+            multipleResult.push({
+                multipleId : value.multiple.id,
+                chairs : value.chairs
+            });
+        });
+
+        var referendumResult = [];
+        $.each(this.state.referendumVote, function(index, value){
+            referendumResult.push({
+                referendumId : value.referendum.id,
+                answer : value.answer
+            });
+        });
+
+        $.post('election/User/Vote', {
+            command : 'save',
+            electionId : this.state.election.id,
+            single : singleResult,
+            multiple : multipleResult,
+            referendum : referendumResult
+        }, null, 'json')
+            .done(function(data){
+                if (data.success === true) {
+                    this.setStage('finished');
+                } else {
+                    this.setStage('failure');
+                }
+            }.bind(this))
+            .fail(function(data){
+                this.setStage('failure');
+            }.bind(this));
     },
 
     render: function() {
@@ -267,6 +303,10 @@ var Election = React.createClass({
                 updateVote={this.updateReferendumVote} vote={this.state.referendumVote}/>
             break;
 
+            case 'failure':
+                content = <Failure />;
+            break;
+
             case 'review':
             review = null;
             content = <Review election={this.state.election}
@@ -283,13 +323,10 @@ var Election = React.createClass({
 
         var countdown = null;
 
-        if (this.state.singleVote.length === 0 &&
-        this.state.multipleVote.length === 0 &&
-        this.state.referendumVote.length === 0) {
-            countdown = (<Countdown ballotCount={this.state.ballotCount}
-                referendumCount={this.state.referendumCount}/>);
-        } else {
-            countdown = <div>Alternate countdown</div>;
+        if (this.state.stage === 'single' && this.state.singleVote.length === 0
+            && this.state.multipleVote.length === 0
+            && this.state.referendumVote.length === 0) {
+            countdown = (<Countdown ballotCount={this.state.ballotCount} referendumCount={this.state.referendumCount}/>);
         }
 
         return (
@@ -380,6 +417,18 @@ var Countdown = React.createClass({
         return (
             <div className="alert alert-info">
                 There {isAre} currently {ballots} {and} {referendum} for you to vote on. We'll review all your selections later, before your votes are submitted.
+            </div>
+        );
+    }
+
+});
+
+var Failure = React.createClass({
+    render: function() {
+        return (
+            <div>
+                <h2>Sorry</h2>
+                <p>Your vote failed to register. Please try again or report the problem.</p>
             </div>
         );
     }
