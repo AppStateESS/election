@@ -9,19 +9,14 @@ namespace election\Factory;
 class Student extends Base
 {
 
-    public static function getSingleHash($singleId)
+    /**
+     * Creates a hash using the student banner id and the passed value
+     * @param integer $id
+     * @return string
+     */
+    public static function getVoteHash($salt)
     {
-        return md5(self::getBannerId() . $singleId);
-    }
-
-    public static function getMultipleHash($multipleId)
-    {
-        return md5(self::getBannerId() . $multipleId);
-    }
-
-    public static function getReferendumHash($referendumId)
-    {
-        return md5(self::getBannerId() . $referendumId);
+        return md5(self::getBannerId() . $salt);
     }
 
     /**
