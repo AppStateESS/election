@@ -57,7 +57,10 @@ class Vote extends Base
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_multi_chair_vote');
+        
         foreach ($multiple_result as $vote) {
+            $multiple = Multiple::build($vote['multipleId'], new \election\Resource\Multiple());
+            $seatNumber = $multiple->getSeatNumber();
             $voter_hash = Student::getVoteHash($vote['multipleId']);
             // Remove previous votes on this hash. We do this because we can't use the 
             // unique index to prevent duplicates.
@@ -68,9 +71,15 @@ class Vote extends Base
             $tbl->addValue('voterHash', $voter_hash);
             $tbl->addValue('electionId', $election_id);
             $tbl->addValue('multipleId', $vote['multipleId']);
+            $count = 0;
             foreach ($vote['chairs'] as $candidateId) {
+                // security against over voting.
+                if ($count >= $seatNumber) {
+                    break;
+                }
                 $tbl->addValue('candidateId', $candidateId);
                 $tbl->insert();
+                $count++;
             }
             $tbl->resetValues();
         }
