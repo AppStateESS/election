@@ -362,7 +362,7 @@ var ReferendumResultRow = React.createClass({
 
     render: function () {
         var voted = '';
-        switch (this.props.choice) {
+        switch (this.props.answer) {
             case true:
                 voted = React.createElement(
                     "span",
