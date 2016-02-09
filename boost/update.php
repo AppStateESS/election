@@ -42,6 +42,16 @@ function election_update(&$content, $version)
             $candidate = $db->addTable('elect_candidate');
             $title_column = new \Database\Datatype\Varchar($candidate, 'title');
             $title_column->add();
+            
+        case version_compare($version, '1.0.4', '<'):
+            $db = \Database::getDB();
+            $db->exec('ALTER TABLE elect_single_chair_vote add unique singlevote (voterHash, electionId, singleId)');
+            $db->exec('ALTER TABLE elect_multi_chair_vote add unique multivote (voterHash, electionId, multipleId, candidateId);');
+            $db->exec('ALTER TABLE elect_referendum_vote add unique refvote (voterHash, electionId, referendumId);');
+            $db->exec('ALTER TABLE elect_vote_complete add unique finalvote (bannerId, electionId);');
+            $tbl = $db->addTable('elect_referendum_vote');
+            $newdt = new \Database\Datatype\Varchar($tbl, 'answer', 10);
+            $tbl->alter($tbl->getDataType('answer'), $newdt);
     }
     
     return true;
