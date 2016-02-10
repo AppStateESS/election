@@ -66,6 +66,10 @@ var MultipleBallot = React.createClass({
 
     saveVotes: function () {
         this.props.updateVote(this.state.selectedRows);
+        this.setState({
+            selectedRows: [],
+            totalSelected: 0
+        });
     },
 
     render: function () {
