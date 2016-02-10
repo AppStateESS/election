@@ -69,6 +69,7 @@ class Election extends Base
         $now = time();
         $tbl->addFieldConditional('startDate', $now, '<=');
         $tbl->addFieldConditional('endDate', $now, '>=');
+        $tbl->addFieldConditional('active', 1);
 
         return $db->selectOneRow();
     }
