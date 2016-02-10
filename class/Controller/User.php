@@ -35,7 +35,7 @@ class User extends \Http\Controller
 
         // If there's an election going on, check to see if this student has already voted in it
         // TODO: Get the BannerID from shibboleth
-        if($election !== false && \election\Factory\Student::hasVoted($election['id'], 900325006)){
+        if($election !== false && \election\Factory\Student::hasVoted($election['id'], \election\Factory\Student::getBannerId())){
             $command = 'AlreadyVoted';
         }
 
