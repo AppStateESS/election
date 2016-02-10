@@ -45,9 +45,11 @@ class Election extends Base
         if (empty($result)) {
             return $result;
         }
+        $now = time();
         foreach ($result as $key => &$val) {
             $val['startDateFormatted'] = date(ELECTION_DATETIME_FORMAT, $val['startDate']);
             $val['endDateFormatted'] = date(ELECTION_DATETIME_FORMAT, $val['endDate']);
+            $val['past'] = $now > $val['endDate'];
         }
         return $result;
     }
