@@ -59,6 +59,7 @@ class Vote extends Base
         $tbl = $db->addTable('elect_multi_chair_vote');
         
         foreach ($multiple_result as $vote) {
+            $voted = array();
             $multiple = Multiple::build($vote['multipleId'], new \election\Resource\Multiple());
             $seatNumber = $multiple->getSeatNumber();
             $voter_hash = Student::getVoteHash($vote['multipleId']);
@@ -77,6 +78,12 @@ class Vote extends Base
                 if ($count >= $seatNumber) {
                     break;
                 }
+                // extra security against multiples votes for same candidate
+                // unique index on database will prevent this as well.
+                if (in_array($candidateId, $voted)) {
+                    continue;
+                }
+                $voted[] = $candidateId;
                 $tbl->addValue('candidateId', $candidateId);
                 $tbl->insert();
                 $count++;
