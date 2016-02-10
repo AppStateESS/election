@@ -332,8 +332,13 @@ var ElectionList = React.createClass({
         });
     },
 
+    componentDidMount: function() {
+        this.initialOpen = false;
+    },
+
     componentDidUpdate: function(prevProps, prevState) {
-        if (this.state.openElection === 0 && this.props.elections) {
+        if (this.initialOpen === false && this.state.openElection === 0 && this.props.elections) {
+            this.initialOpen = true;
             this.setState({
                 openElection : this.props.elections[0].id
             });
@@ -387,7 +392,8 @@ var ElectionRow = React.createClass({
             isOpen : true,
             openElection : null,
             title : '',
-            edit : null
+            edit : null,
+            past : false
         };
     },
 
@@ -396,7 +402,7 @@ var ElectionRow = React.createClass({
     },
 
     deleteElection : function() {
-        if (confirm('Are you sure you want to delete this election?')) {
+        if (prompt('Type "DELETE" if you want to remove this election') === 'DELETE') {
             $.post('election/Admin/Election', {
             	command : 'delete',
                 electionId : this.props.electionId
@@ -411,6 +417,11 @@ var ElectionRow = React.createClass({
     render: function() {
         var title = <h3>{this.props.title}</h3>;
         var date = <h4>{this.props.startDateFormatted} - {this.props.endDateFormatted}</h4>;
+        if (this.props.past) {
+            var button = <button className="btn btn-block btn-success" onClick={this.props.edit}><i className="fa fa-envelope"></i> Results</button>;
+        } else {
+            var button = <button className="btn btn-block btn-success" onClick={this.props.edit}><i className="fa fa-edit"></i> Edit election</button>;
+        }
 
         var heading = (
             <div className="row">
@@ -419,7 +430,7 @@ var ElectionRow = React.createClass({
                     {date}
                 </div>
                 <div className="col-sm-3">
-                    <button className="btn btn-block btn-success" onClick={this.props.edit}><i className="fa fa-edit"></i> Edit election</button>
+                    {button}
                     <button className="btn btn-block btn-danger" onClick={this.deleteElection}><i className="fa fa-trash-o"></i> Delete election</button>
                 </div>
             </div>

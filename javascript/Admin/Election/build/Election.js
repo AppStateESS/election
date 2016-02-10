@@ -362,8 +362,13 @@ var ElectionList = React.createClass({
         });
     },
 
+    componentDidMount: function () {
+        this.initialOpen = false;
+    },
+
     componentDidUpdate: function (prevProps, prevState) {
-        if (this.state.openElection === 0 && this.props.elections) {
+        if (this.initialOpen === false && this.state.openElection === 0 && this.props.elections) {
+            this.initialOpen = true;
             this.setState({
                 openElection: this.props.elections[0].id
             });
@@ -422,7 +427,8 @@ var ElectionRow = React.createClass({
             isOpen: true,
             openElection: null,
             title: '',
-            edit: null
+            edit: null,
+            past: false
         };
     },
 
@@ -431,7 +437,7 @@ var ElectionRow = React.createClass({
     },
 
     deleteElection: function () {
-        if (confirm('Are you sure you want to delete this election?')) {
+        if (prompt('Type "DELETE" if you want to remove this election') === 'DELETE') {
             $.post('election/Admin/Election', {
                 command: 'delete',
                 electionId: this.props.electionId
@@ -454,6 +460,21 @@ var ElectionRow = React.createClass({
             ' - ',
             this.props.endDateFormatted
         );
+        if (this.props.past) {
+            var button = React.createElement(
+                'button',
+                { className: 'btn btn-block btn-success', onClick: this.props.edit },
+                React.createElement('i', { className: 'fa fa-envelope' }),
+                ' Results'
+            );
+        } else {
+            var button = React.createElement(
+                'button',
+                { className: 'btn btn-block btn-success', onClick: this.props.edit },
+                React.createElement('i', { className: 'fa fa-edit' }),
+                ' Edit election'
+            );
+        }
 
         var heading = React.createElement(
             'div',
@@ -467,12 +488,7 @@ var ElectionRow = React.createClass({
             React.createElement(
                 'div',
                 { className: 'col-sm-3' },
-                React.createElement(
-                    'button',
-                    { className: 'btn btn-block btn-success', onClick: this.props.edit },
-                    React.createElement('i', { className: 'fa fa-edit' }),
-                    ' Edit election'
-                ),
+                button,
                 React.createElement(
                     'button',
                     { className: 'btn btn-block btn-danger', onClick: this.deleteElection },
