@@ -34,7 +34,7 @@ var SingleBallot = React.createClass({
         return (
             <div className="single-ticket-vote">
                 <h1>{this.props.title}</h1>
-                <p className="warning">Vote for <strong>ONE</strong> ticket. We'll review your decision at the end.</p>
+                <p className="warning">Vote for <strong>ONE</strong> ticket. We&#39;ll review your decision at the end.</p>
                 {tickets}
                 <hr />
                 <div className="text-right">
