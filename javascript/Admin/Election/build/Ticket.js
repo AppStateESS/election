@@ -276,7 +276,12 @@ var TicketForm = React.createClass({
                     { className: 'col-sm-10' },
                     React.createElement('textarea', { ref: 'platform', className: 'form-control', onFocus: this.resetBorder,
                         placeholder: 'Ticket\'s election statement', onChange: this.changePlatform,
-                        value: this.state.platform })
+                        value: this.state.platform, maxLength: 500 }),
+                    React.createElement(
+                        'span',
+                        null,
+                        '500 character limit'
+                    )
                 )
             ),
             React.createElement('hr', null),

@@ -235,7 +235,8 @@ var TicketForm = React.createClass({
                     <div className="col-sm-10">
                         <textarea ref="platform" className="form-control" onFocus={this.resetBorder}
                             placeholder="Ticket's election statement" onChange={this.changePlatform}
-                            value={this.state.platform}/>
+                            value={this.state.platform} maxLength={500}/>
+                        <span>500 character limit</span>
                     </div>
                 </div>
                 <hr />
