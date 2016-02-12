@@ -25,131 +25,66 @@ var sortCategoryTypes = function() {
 };
 
 var Election = React.createClass({
+    mixins : [DateMixin],
+
     getInitialState: function() {
         return {
-            formId : -1,
-            elections : []
+            editTitle : false,
+            showDateForm : false,
+            title : '',
+            startDate : '',
+            endDate : '',
+            unixStart : 0,
+            unixEnd : 0,
+            past : false
         };
     },
 
     componentDidMount: function() {
         this.load();
-    },
-
-    load: function() {
-        $.getJSON('election/Admin/Election', {
-        	command : 'list'
-        }).done(function(data){
-        	this.setState({
-                elections : data
-            });
-        }.bind(this));
-    },
-
-    showForm : function() {
-        this.setState({
-            formId : 0
-        });
-    },
-
-    hideForm : function() {
-        this.setState({
-            formId : -1
-        });
-    },
-
-    render: function() {
-        var form = null;
-        var sharedFunc = {hideForm : this.hideForm, load : this.load};
-        if (this.state.formId === 0) {
-            form = <ElectionForm electionId={0} {...sharedFunc} />;
-        }
-
-        return (
-            <div>
-                <CreateElectionButton handleClick={this.showForm}/>
-                {form}
-                <ElectionList elections={this.state.elections} hideForm={this.hideForm} load={this.load}/>
-            </div>
-        );
-    }
-});
-
-var CreateElectionButton = (props) => (
-    <button className="btn btn-lg btn-primary" onClick={props.handleClick}>
-        <i className="fa fa-calendar-check-o"></i> Create new election</button>
-);
-
-var ElectionForm = React.createClass({
-    getInitialState: function() {
-        return {
-            title : '',
-            startDate : '',
-            endDate : '',
-            unixStart : 0,
-            unixEnd : 0
-        };
-    },
-
-    getDefaultProps: function() {
-        return {
-            electionId : 0,
-            title: '',
-            startDate : '',
-            endDate : '',
-            hideForm : null
-        };
-    },
-
-    componentWillMount: function() {
-        if (this.props.electionId) {
-            this.copyPropsToState();
-        }
-    },
-
-    componentDidMount: function() {
         this.initStartDate();
         this.initEndDate();
     },
 
-    copyPropsToState: function() {
+    componentDidUpdate: function(prevProps, prevState) {
+        if (this.state.showDateForm) {
+            this.initStartDate();
+            this.initEndDate();
+        }
+    },
+
+    load: function() {
+        // electionId loaded higher in script
+        $.getJSON('election/Admin/Election', {
+        	command : 'getElection',
+            electionId : electionId
+        }).done(function(data){
+            this.setState({
+                id : electionId,
+                title : data.title,
+                startDate : data.startDateFormatted,
+                endDate: data.endDateFormatted,
+                unixStart : data.startDate,
+                unixEnd : data.endDate,
+                editTitle : false,
+                showDateForm : false,
+            });
+        }.bind(this));
+    },
+
+    editTitle : function()
+    {
         this.setState({
-            title : this.props.title,
-            startDate : this.props.startDateFormatted,
-            endDate : this.props.endDateFormatted,
-            unixStart : this.props.startDate,
-            unixEnd : this.props.endDate
+            editTitle : true
         });
     },
 
-    initStartDate : function() {
-        $('#start-date').datetimepicker({
-            minDate: 0,
-            value : this.state.startDate,
-            format : dateFormat,
-            onChangeDateTime : function(ct, i) {
-                this.updateStartDate(this.refs.startDate.value);
-            }.bind(this)
+    cancelUpdate : function()
+    {
+        this.setState({
+            editTitle : false,
+            title : this.state.title
         });
-    },
-
-    initEndDate : function() {
-        $('#end-date').datetimepicker({
-            minDate:0,
-            format : dateFormat,
-            value : this.state.endDate,
-            onChangeDateTime : function(ct, i) {
-                this.updateEndDate(this.refs.endDate.value);
-            }.bind(this)
-        });
-    },
-
-    changeStartDate: function(e) {
-        this.updateStartDate(e.target.value);
-    },
-
-    changeEndDate: function(e) {
-        this.updateEndDate(e.target.value);
     },
 
     updateTitle : function(e) {
@@ -158,90 +93,48 @@ var ElectionForm = React.createClass({
         });
     },
 
-    updateStartDate : function(start) {
-        var dateObj = new Date(start);
-        var unix = dateObj.getTime() / 1000;
+    saveTitle : function() {
+        if (this.state.title.length > 0) {
+            $.post('election/Admin/Election', {
+                command : 'saveTitle',
+                title : this.state.title,
+                electionId : electionId
+            }, null, 'json')
+                .done(function(data){
+                    this.load();
+                }.bind(this));
+        }
+    },
+
+    showDateForm: function() {
         this.setState({
-            startDate : start,
-            unixStart : unix
+            showDateForm : true
         });
     },
 
-    updateEndDate : function(end) {
-        var dateObj = new Date(end);
-        var unix = dateObj.getTime() / 1000;
+    hideDateForm : function() {
         this.setState({
-            endDate : end,
-            unixEnd : unix
+            showDateForm : false
         });
     },
 
-    showStartCalendar : function() {
-        $('#start-date').datetimepicker('show');
-    },
-
-    showEndCalendar : function() {
-        $('#end-date').datetimepicker('show');
-    },
-
-    resetBorder : function(node) {
-        $(node.target).removeAttr('style');
-    },
-
-    checkForErrors : function() {
-        var error = false;
-        if (this.state.title.length === 0) {
-            $(this.refs.electionTitle).css('borderColor', 'red').attr('placeholder', 'Please enter a title');
-            error = true;
-        }
-
-        if (this.state.startDate.length === 0) {
-            $(this.refs.startDate).css('borderColor', 'red').attr('placeholder', 'Please enter a start date');
-            error = true;
-        } else if (this.state.unixStart > this.state.unixEnd) {
-            $(this.refs.endDate).css('borderColor', 'red').attr('placeholder', 'End date must be greater').val('');
-            this.setState({
-                endDate : '',
-                unixEnd : 0
-            });
-            error = true;
-        }
-
-        if (this.state.endDate.length === 0) {
-            $(this.refs.endDate).css('borderColor', 'red').attr('placeholder', 'Please enter a end date');
-            error = true;
-        }
-
-        return error;
-    },
-
-    checkForConflict : function() {
-        return $.getJSON('election/Admin/Election', {
-            command: 'checkConflict',
-            startDate: this.state.unixStart,
-            endDate: this.state.unixEnd,
-            electionId : this.props.electionId
-        });
-    },
-
-    save : function() {
-        var error = this.checkForErrors();
+    saveDates : function() {
+        var error = this.hasDateErrors();
         if (error === false) {
             var conflict = this.checkForConflict();
             conflict.done(function(data){
                 if (data.conflict === false) {
                     $.post('election/Admin/Election', {
-                        command : 'save',
-                        electionId : this.props.electionId,
-                        title : this.state.title,
+                        command : 'saveDates',
+                        electionId : this.state.id,
                         startDate : this.state.unixStart,
                         endDate: this.state.unixEnd
                     }, null, 'json')
                     .done(function(data){
-                        this.props.load();
+                        this.load();
                     }.bind(this))
                     .always(function(){
-                        this.props.hideForm();
+                        this.hideDateForm();
                     }.bind(this));
                 } else {
                     $(this.refs.startDate).css('borderColor', 'red').attr('placeholder', 'Date conflict');
@@ -258,204 +151,80 @@ var ElectionForm = React.createClass({
     },
 
     render: function() {
-        var title = (
-            <input ref="electionTitle" type="text" className="form-control" defaultValue={this.props.title}
-            id="election-title" onFocus={this.resetBorder} onChange={this.updateTitle} placeholder='Title (e.g. Fall 2016 Election)' />
-        );
-        var date =(
-            <div className="row pad-top">
-                <div className="col-sm-6">
-                    <div className="input-group">
-                        <input placeholder="Voting start date and time" ref="startDate" type="text" className="form-control datepicker" id="start-date"
-                            onFocus={this.resetBorder} onChange={this.changeStartDate} value={this.state.startDate}/>
-                        <div className="input-group-addon">
-                            <i className="fa fa-calendar" onClick={this.showStartCalendar}></i>
+        var electionTitle = <h3 className="election-title" title="Click to change title" onClick={this.editTitle}>{this.state.title}</h3>;
+        var save = null;
+
+        if (this.state.editTitle) {
+            electionTitle = (
+            <div className="input-group">
+                <input type="text" className="form-control election-title" placeholder="Election title" value={this.state.title} onChange={this.updateTitle}/>
+                <span className="input-group-btn">
+                    <button className="btn btn-success" title="Update title" disabled={this.state.title.length === 0 ? true : false} onClick={this.saveTitle}><i className="fa fa-save"></i></button>
+                    <button className="btn btn-danger" title="Cancel update" onClick={this.cancelUpdate}><i className="fa fa-times"></i></button>
+                </span>
+            </div>
+            );
+        }
+
+        if (!this.state.past) {
+            if (this.state.showDateForm) {
+                var date = (
+                    <div className="row date-change pad-top">
+                        <div className="col-sm-5">
+                            <div className="input-group">
+                                <input placeholder="Voting start date and time" ref="startDate" type="text" className="form-control datepicker" id="start-date"
+                                    onFocus={this.resetBorder} onChange={this.changeStartDate} value={this.state.startDate}/>
+                                <div className="input-group-addon">
+                                    <i className="fa fa-calendar" onClick={this.showStartCalendar}></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-sm-5">
+                            <div className="input-group">
+                                <input placeholder="Voting deadline" ref="endDate" type="text" className="form-control datepicker" id="end-date"
+                                     onFocus={this.resetBorder} onChange={this.changeEndDate} value={this.state.endDate}/>
+                                <div className="input-group-addon">
+                                    <i className="fa fa-calendar" onClick={this.showEndCalendar}></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-sm-2">
+                            <button className="btn btn-success btn-sm" onClick={this.saveDates}><i className="fa fa-edit"></i></button>&nbsp;
+                            <button className="btn btn-danger btn-sm" onClick={this.hideDateForm}><i className="fa fa-times"></i></button>
                         </div>
                     </div>
-                </div>
-                <div className="col-sm-6">
-                    <div className="input-group">
-                        <input placeholder="Voting deadline" ref="endDate" type="text" className="form-control datepicker" id="end-date"
-                             onFocus={this.resetBorder} onChange={this.changeEndDate} value={this.state.endDate}/>
-                        <div className="input-group-addon">
-                            <i className="fa fa-calendar" onClick={this.showEndCalendar}></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-        var buttons = (
-            <div>
-                <button className="btn btn-primary btn-block" onClick={this.save}><i className="fa fa-save"></i> Save election</button>
-                <button className="btn btn-danger btn-block" onClick={this.props.hideForm}><i className="fa fa-times"></i> Cancel</button>
-            </div>
-        );
-
-        var heading = (
-            <div className="row">
-                <div className="col-sm-9">
-                    {title}
-                    {date}
-                </div>
-                <div className="col-sm-3">
-                    {buttons}
-                </div>
-            </div>
-        );
-
-        return (
-            <Panel type="info" heading={heading} />
-        );
-    }
-
-});
-
-var ElectionList = React.createClass({
-    getInitialState: function() {
-        return {
-            currentEdit : 0,
-            openElection : 0
-        };
-    },
-
-    getDefaultProps: function() {
-        return {
-            elections : [],
-            hideForm : null
-        };
-    },
-
-    editRow : function(electionId) {
-        this.props.hideForm();
-        this.setState({
-            currentEdit : electionId
-        });
-    },
-
-    componentDidMount: function() {
-        this.initialOpen = false;
-    },
-
-    componentDidUpdate: function(prevProps, prevState) {
-        if (this.initialOpen === false && this.state.openElection === 0 && this.props.elections) {
-            this.initialOpen = true;
-            this.setState({
-                openElection : this.props.elections[0].id
-            });
-        }
-    },
-
-    openElection: function(electionId)
-    {
-        if (electionId === this.state.openElection) {
-            electionId = 0;
-        }
-        this.setState({
-            openElection : electionId
-        });
-    },
-
-    render: function() {
-        var electionListing = <h3>No elections found</h3>;
-
-        if (this.props.elections.length > 0) {
-            var shared = {
-                load : this.props.load,
-                electionId : 0
-            };
-            electionListing = this.props.elections.map(function(value){
-                shared.electionId = value.id;
-                if (value.id === this.state.currentEdit) {
-                    return <ElectionForm key={value.id} {...value}
-                         hideForm={this.editRow.bind(null, 0)} {...shared}/>
-                } else {
-                    return <ElectionRow key={value.id} isOpen={this.state.openElection === value.id}
-                        openElection={this.openElection} {...value} {...shared}
-                        edit={this.editRow.bind(this, value.id)}/>
-                }
-            }.bind(this));
-        }
-
-        return (
-            <div className="pad-top">
-                {electionListing}
-            </div>
-        );
-    }
-
-});
-
-var ElectionRow = React.createClass({
-    getDefaultProps: function() {
-        return {
-            electionId : 0,
-            isOpen : true,
-            openElection : null,
-            title : '',
-            edit : null,
-            past : false
-        };
-    },
-
-    toggleExpand: function() {
-        this.props.openElection(this.props.electionId);
-    },
-
-    deleteElection : function() {
-        if (prompt('Type "DELETE" if you want to remove this election') === 'DELETE') {
-            $.post('election/Admin/Election', {
-            	command : 'delete',
-                electionId : this.props.electionId
-            }, null, 'json')
-            	.done(function(data){
-            		this.props.load();
-            	}.bind(this));
-
-        }
-    },
-
-    render: function() {
-        var title = <h3>{this.props.title}</h3>;
-        var date = <h4>{this.props.startDateFormatted} - {this.props.endDateFormatted}</h4>;
-        if (this.props.past) {
-            var button = <button className="btn btn-block btn-success" onClick={this.props.edit}><i className="fa fa-envelope"></i> Results</button>;
+                );
+            } else {
+                var date = (
+                    <h4 onClick={this.showDateForm} title="Click to change dates"><span className="date-edit">{this.state.startDate}</span>&nbsp;-&nbsp;<span className="date-edit">{this.state.endDate}</span></h4>
+                );
+            }
         } else {
-            var button = <button className="btn btn-block btn-success" onClick={this.props.edit}><i className="fa fa-edit"></i> Edit election</button>;
+            var date = (
+                <h4 className="date-view">{this.state.startDate} - {this.state.endDate}</h4>
+            );
         }
 
-        var heading = (
-            <div className="row">
-                <div className="col-sm-9">
-                    {title}
-                    {date}
-                </div>
-                <div className="col-sm-3">
-                    {button}
-                    <button className="btn btn-block btn-danger" onClick={this.deleteElection}><i className="fa fa-trash-o"></i> Delete election</button>
-                </div>
-            </div>
-        );
 
-        if (this.props.isOpen) {
-            var body = (
-                <div>
-                    <SingleBallot electionId={this.props.electionId}/>
-                    <MultipleBallot electionId={this.props.electionId}/>
-                    <Referendum electionId={this.props.electionId}/>
+        var details = <div className="text-center pad-top"><i className="fa fa-spinner fa-spin fa-5x"></i></div>;
+        if (this.state.id) {
+            details = (
+                <div className="pad-top">
+                    <SingleBallot electionId={this.state.id}/>
+                    <MultipleBallot electionId={this.state.id}/>
+                    <Referendum electionId={this.state.id}/>
                 </div>
             );
-            var arrow = <i className="fa fa-chevron-up"></i>;
-        } else {
-            var body = null;
-            var arrow = <i className="fa fa-chevron-down"></i>;
         }
 
-        var footer = (<div className="text-center pointer">{arrow}</div>);
-
-        return (<Panel type="primary" heading={heading}
-             body={body} footer={footer}
-             footerClick={this.toggleExpand}
-             headerClick={this.toggleExpand}/>
+        return (
+            <div>
+                {electionTitle}
+                {date}
+                <div>
+                    {details}
+                </div>
+            </div>
         );
     }
 });

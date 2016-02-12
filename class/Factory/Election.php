@@ -47,9 +47,7 @@ class Election extends Base
         }
         $now = time();
         foreach ($result as $key => &$val) {
-            $val['startDateFormatted'] = date(ELECTION_DATETIME_FORMAT, $val['startDate']);
-            $val['endDateFormatted'] = date(ELECTION_DATETIME_FORMAT, $val['endDate']);
-            $val['past'] = $now > $val['endDate'];
+            self::plugExtraValues($val);
         }
         return $result;
     }
@@ -58,6 +56,14 @@ class Election extends Base
     {
         $filename = PHPWS_SOURCE_DIR . 'mod/election/electionTypes.json';
         return file_get_contents($filename);
+    }
+
+    public static function plugExtraValues(&$val)
+    {
+        $now = time();
+        $val['startDateFormatted'] = date(ELECTION_DATETIME_FORMAT, $val['startDate']);
+        $val['endDateFormatted'] = date(ELECTION_DATETIME_FORMAT, $val['endDate']);
+        $val['past'] = $now > $val['endDate'];
     }
 
     /**
@@ -105,7 +111,7 @@ class Election extends Base
 
         $db->addConditional($c12);
         $result = $db->selectOneRow();
-        return array('conflict'=>(bool)$result);
+        return array('conflict' => (bool) $result);
     }
 
 }

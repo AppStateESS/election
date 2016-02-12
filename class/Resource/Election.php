@@ -72,5 +72,10 @@ class Election extends Base
     {
         return $this->endDate->get();
     }
+    
+    public function isPast()
+    {
+        return (time() > $this->getEndDate());
+    }
 
 }

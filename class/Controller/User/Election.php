@@ -36,7 +36,7 @@ EOF;
         $view = new \View\HtmlView($content);
         return $view;
     }
-
+    
     protected function getJsonView($data, \Request $request)
     {
         if (!$request->isVar('command')) {
@@ -57,7 +57,7 @@ EOF;
     private function getVotingData()
     {
         $unqualified = array('Fake election One', 'Fake election two', 'Fake election three');
-        
+
         $student_id = \election\Factory\Student::getBannerId();
         $election = Factory::getCurrent();
         if (!empty($election)) {
