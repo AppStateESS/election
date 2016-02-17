@@ -45,7 +45,7 @@ class Single extends Ballot
      * @param type $addCandidates
      * @return array
      */
-    public static function getListWithTickets($electionId, $addCandidates = true)
+    public static function getListWithTickets($electionId, $addCandidates = true, $randomize=ELECTION_RANDOMIZE_TICKETS)
     {
         $singleList = self::getList($electionId);
         if (empty($singleList)) {
@@ -55,9 +55,9 @@ class Single extends Ballot
         foreach ($singleList as $key => &$value) {
             $tickets = null;
             if ($addCandidates) {
-                $tickets = Ticket::getListWithCandidates($value['id'], ELECTION_RANDOMIZE_TICKETS);
+                $tickets = Ticket::getListWithCandidates($value['id'], $randomize);
             } else {
-                $tickets = Ticket::getList($value['id'], ELECTION_RANDOMIZE_TICKETS);
+                $tickets = Ticket::getList($value['id'], $randomize);
             }
             if (empty($tickets)) {
                 unset($singleList[$key]);
