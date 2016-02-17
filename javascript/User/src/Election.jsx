@@ -209,7 +209,6 @@ var Election = React.createClass({
 
         referendumVote[current] = currentVote;
 
-
         if (this.state.backToReview) {
             stage = 'review';
         } else if (typeof this.state.referendum[nextReferendum] === 'undefined') {
@@ -226,10 +225,13 @@ var Election = React.createClass({
     finalVote : function() {
         var singleResult = [];
         $.each(this.state.singleVote, function(index, value){
-            singleResult.push({
-                singleId : value.single.id,
-                ticketId : value.ticket.id
-            });
+            if (value.single && typeof value.single.id !== 'undefined' &&
+                value.ticket && typeof value.ticket.id !== 'undefined') {
+                singleResult.push({
+                    singleId : value.single.id,
+                    ticketId : value.ticket.id
+                });
+            }
         });
 
         var multipleResult = [];
@@ -247,7 +249,6 @@ var Election = React.createClass({
                 answer : value.answer
             });
         });
-
         $.post('election/User/Vote', {
             command : 'save',
             electionId : this.state.election.id,
@@ -257,9 +258,15 @@ var Election = React.createClass({
         }, null, 'json')
             .done(function(data){
                 if (data.success === true) {
-                    this.setStage('finished');
+                    this.setState({
+                        backToReview : false,
+                        stage : 'finished'
+                    });
                 } else {
-                    this.setStage('failure');
+                    this.setState({
+                        backToReview : false,
+                        stage : 'failure'
+                    });
                 }
             }.bind(this))
             .fail(function(data){
@@ -355,9 +362,14 @@ var Finished = React.createClass({
 
     render: function() {
         return (
-            <div>
-                <h2>{this.props.election.title}</h2>
-                <p>Thank you for voting! Watch SGA for results.</p>
+            <div className="row">
+                <div className="col-sm-6 col-sm-offset-3">
+                    <div className="well text-center">
+                        <h2>{this.props.election.title}</h2>
+                        <h3>Thank you for voting! Watch SGA for results.</h3>
+                        <a href="./index.php?module=users&action=user&command=logout" className="btn btn-lg btn-primary">Sign out</a>
+                    </div>
+                </div>
             </div>
         );
     }
