@@ -189,7 +189,7 @@ var Election = React.createClass({
                             </div>
                         </div>
                         <div className="col-sm-2">
-                            <button className="btn btn-success btn-sm" onClick={this.saveDates}><i className="fa fa-edit"></i></button>&nbsp;
+                            <button className="btn btn-success btn-sm" onClick={this.saveDates}><i className="fa fa-save"></i></button>&nbsp;
                             <button className="btn btn-danger btn-sm" onClick={this.hideDateForm}><i className="fa fa-times"></i></button>
                         </div>
                     </div>

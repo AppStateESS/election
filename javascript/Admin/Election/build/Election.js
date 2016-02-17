@@ -218,7 +218,7 @@ var Election = React.createClass({
                         React.createElement(
                             'button',
                             { className: 'btn btn-success btn-sm', onClick: this.saveDates },
-                            React.createElement('i', { className: 'fa fa-edit' })
+                            React.createElement('i', { className: 'fa fa-save' })
                         ),
                         ' ',
                         React.createElement(
