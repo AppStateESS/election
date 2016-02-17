@@ -18,6 +18,6 @@ function election_uninstall(&$content)
     $db->buildTable('elect_single')->drop(true);
     $db->buildTable('elect_single_chair_vote')->drop(true);
     $db->buildTable('elect_ticket')->drop(true);
-    $db->buildTable('elect_voter')->drop(true);
+    $db->buildTable('elect_vote_complete')->drop(true);
     return true;
 }
