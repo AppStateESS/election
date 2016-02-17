@@ -14,20 +14,20 @@ var Referendum = React.createClass({
         var footer = (
             <div className="row">
                 <div className="col-sm-4">
-                    <button className="btn btn-block btn-lg btn-success"
-                        onClick={this.props.updateVote.bind(null, true)}>
+                    <button className="btn btn-block btn-lg btn-default"
+                        onClick={this.props.updateVote.bind(null, 'yes')}>
                         <i className="fa fa-check"></i> Yes
                     </button>
                 </div>
                 <div className="col-sm-4">
-                    <button className="btn btn-block btn-lg btn-danger"
-                        onClick={this.props.updateVote.bind(null, false)}>
+                    <button className="btn btn-block btn-lg btn-default"
+                        onClick={this.props.updateVote.bind(null, 'no')}>
                         <i className="fa fa-times"></i> No
                     </button>
                 </div>
                 <div className="col-sm-4">
-                    <button className="btn btn-block btn-lg btn-warning"
-                        onClick={this.props.updateVote.bind(null, null)}>
+                    <button className="btn btn-block btn-lg btn-default"
+                        onClick={this.props.updateVote.bind(null, 'abstain')}>
                         Abstain
                     </button>
                 </div>

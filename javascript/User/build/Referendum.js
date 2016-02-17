@@ -25,8 +25,8 @@ var Referendum = React.createClass({
                 { className: "col-sm-4" },
                 React.createElement(
                     "button",
-                    { className: "btn btn-block btn-lg btn-success",
-                        onClick: this.props.updateVote.bind(null, true) },
+                    { className: "btn btn-block btn-lg btn-default",
+                        onClick: this.props.updateVote.bind(null, 'yes') },
                     React.createElement("i", { className: "fa fa-check" }),
                     " Yes"
                 )
@@ -36,8 +36,8 @@ var Referendum = React.createClass({
                 { className: "col-sm-4" },
                 React.createElement(
                     "button",
-                    { className: "btn btn-block btn-lg btn-danger",
-                        onClick: this.props.updateVote.bind(null, false) },
+                    { className: "btn btn-block btn-lg btn-default",
+                        onClick: this.props.updateVote.bind(null, 'no') },
                     React.createElement("i", { className: "fa fa-times" }),
                     " No"
                 )
@@ -47,8 +47,8 @@ var Referendum = React.createClass({
                 { className: "col-sm-4" },
                 React.createElement(
                     "button",
-                    { className: "btn btn-block btn-lg btn-warning",
-                        onClick: this.props.updateVote.bind(null, null) },
+                    { className: "btn btn-block btn-lg btn-default",
+                        onClick: this.props.updateVote.bind(null, 'abstain') },
                     "Abstain"
                 )
             )
