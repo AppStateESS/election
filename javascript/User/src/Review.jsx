@@ -254,16 +254,16 @@ var ReferendumResultRow = React.createClass({
     render: function() {
         var voted = '';
         switch (this.props.answer) {
-            case true:
+            case 'yes':
             voted = <span className="text-success"><i className="fa fa-check-circle"></i> Yes</span>;
             break;
 
-            case false:
+            case 'no':
             voted = <span className="text-danger"><i className="fa fa-times-circle"></i> No</span>;
             break;
 
-            case null:
-            voted = <span className="text-primary"><i className="fa fa-question-circle"></i> Abstained</span>;
+            case 'abstain':
+            voted = <span className="text-primary"><i className="fa fa-question-circle"></i> Abstain</span>;
             break;
         }
 

@@ -359,7 +359,7 @@ var ReferendumResultRow = React.createClass({
     render: function () {
         var voted = '';
         switch (this.props.answer) {
-            case true:
+            case 'yes':
                 voted = React.createElement(
                     "span",
                     { className: "text-success" },
@@ -368,7 +368,7 @@ var ReferendumResultRow = React.createClass({
                 );
                 break;
 
-            case false:
+            case 'no':
                 voted = React.createElement(
                     "span",
                     { className: "text-danger" },
@@ -377,12 +377,12 @@ var ReferendumResultRow = React.createClass({
                 );
                 break;
 
-            case null:
+            case 'abstain':
                 voted = React.createElement(
                     "span",
                     { className: "text-primary" },
                     React.createElement("i", { className: "fa fa-question-circle" }),
-                    " Abstained"
+                    " Abstain"
                 );
                 break;
         }
