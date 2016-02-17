@@ -212,7 +212,7 @@ var Election = React.createClass({
 
         if (this.state.backToReview) {
             stage = 'review';
-        } else if (typeof this.state.multiple[nextReferendum] === 'undefined') {
+        } else if (typeof this.state.referendum[nextReferendum] === 'undefined') {
             stage = 'review';
         }
 
