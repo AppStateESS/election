@@ -1,9 +1,4 @@
 var Referendum = React.createClass({
-    getInitialState: function() {
-        return {
-        };
-    },
-
     getDefaultProps: function() {
         return {
             election : {},
