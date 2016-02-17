@@ -50,21 +50,4 @@ class Referendum extends Base
         }
         return $result;
     }
-    
-    /**
-     * Returns an answer response (yes, no, abstain) based on the answer parameter
-     * @param mixed $answer
-     */
-    public static function getAnswer($answer)
-    {
-        if ($answer == 'true' || $answer === true) {
-            return 'yes';
-        } elseif ($answer == 'false' || $answer === false) {
-            return 'no';
-        } elseif (is_null($answer) || $answer === 'null') {
-            return 'abstain';
-        } else {
-            throw new \Expection('Unknown answer');
-        }
-    }
 }
