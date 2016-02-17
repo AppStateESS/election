@@ -1,0 +1,11 @@
+.table .candidate-name, .table .ticket-title, .table .referendum {
+    font-size : 1.4em;
+    font-weight : bold;
+    vertical-align : middle;
+}
+
+.table .vote {
+    font-size : 1.5em;
+    font-weight : bold;
+    vertical-align : middle;
+}

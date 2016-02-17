@@ -34,9 +34,16 @@ class Report extends \election\Controller\Base
     
     public function showResults($electionId)
     {
+        \Layout::addStyle('election', 'Admin/Report/style.css');
         $singleResults = Factory::getSingleResults($electionId);
         $multipleResults = Factory::getMultipleResults($electionId);
         $referendumResults = Factory::getReferendumResults($electionId);
-        return $singleResults;
+        
+        $template = new \Template;
+        $template->add('single', $singleResults);
+        $template->add('multiple', $multipleResults);
+        $template->add('referendum', $referendumResults);
+        $template->setModuleTemplate('election', 'Admin/Report/Results.html');
+        return $template->get();
     }
 }

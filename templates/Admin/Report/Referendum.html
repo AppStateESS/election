@@ -1,0 +1,11 @@
+<h2>Referendum results</h2>
+<table class="table table-striped">
+<?php foreach ($referendums as $ref):?>
+<tr class="referendum">
+    <td><?php echo $ref['title']?></td>
+    <td>Yes <span class="badge"><?php echo $ref['yes']?></span></td>
+    <td>No <span class="badge"><?php echo $ref['no']?></span></td>
+    <td>Abstain <span class="badge"><?php echo $ref['abstain']?></span></td>
+</tr>
+<?php endforeach; ?>
+</table>

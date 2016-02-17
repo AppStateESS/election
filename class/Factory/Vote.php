@@ -57,7 +57,7 @@ class Vote extends Base
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_multi_chair_vote');
-        
+
         foreach ($multiple_result as $vote) {
             $voted = array();
             $multiple = Multiple::build($vote['multipleId'], new \election\Resource\Multiple());
@@ -98,7 +98,7 @@ class Vote extends Base
         $tbl = $db->addTable('elect_referendum_vote');
         foreach ($referendum_result as $vote) {
             $voter_hash = Student::getVoteHash($vote['referendumId']);
-            
+
             $tbl->addValue('voterHash', $voter_hash);
             $tbl->addValue('electionId', $election_id);
             $tbl->addValue('referendumId', $vote['referendumId']);
@@ -117,8 +117,9 @@ class Vote extends Base
         $tbl->addValue('bannerId', $banner_id);
         $db->insert();
     }
-    
-    public static function getSingleVotes($electionId) {
+
+    public static function getSingleVotes($electionId)
+    {
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_single_chair_vote');
         $tbl->addFieldConditional('electionId', $electionId);
@@ -128,10 +129,10 @@ class Vote extends Base
         $db->setGroupBy(array($single, $ticket));
         $result = $db->select();
         return $result;
-        
     }
-    
-    public static function getMultipleVotes($electionId) {
+
+    public static function getMultipleVotes($electionId)
+    {
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_multi_chair_vote');
         $tbl->addFieldConditional('electionId', $electionId);
@@ -139,6 +140,19 @@ class Vote extends Base
         $candidate = $tbl->addField('candidateId');
         $tbl->addField(new \Database\Expression('count(electionId)', 'votes'));
         $db->setGroupBy(array($multiple, $candidate));
+        $result = $db->select();
+        return $result;
+    }
+
+    public static function getReferendumVotes($electionId)
+    {
+        $db = \Database::getDB();
+        $tbl = $db->addTable('elect_referendum_vote');
+        $tbl->addFieldConditional('electionId', $electionId);
+        $referendum = $tbl->addField('referendumId');
+        $answer = $tbl->addField('answer');
+        $tbl->addField(new \Database\Expression('count(electionId)', 'votes'));
+        $db->setGroupBy(array($referendum, $answer));
         $result = $db->select();
         return $result;
     }
