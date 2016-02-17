@@ -74,7 +74,7 @@ var SingleResultRow = React.createClass({
                 </div>
                 <div className="col-xs-2">
                     <button className="btn btn-block btn-default"
-                        onClick={this.props.resetStage.bind(null, 'single')}>
+                        onClick={this.props.resetStage.bind(null, 'single', this.props.single.id)}>
                         <i className="fa fa-pencil"></i> Edit
                     </button>
                 </div>
@@ -155,7 +155,7 @@ var MultipleResultRow = React.createClass({
                 </div>
                 <div className="col-xs-2">
                     <button className="btn btn-default btn-block"
-                        onClick={this.props.resetStage.bind(null, 'multiple')}>
+                        onClick={this.props.resetStage.bind(null, 'multiple', this.props.multiple.id)}>
                         <i className="fa fa-pencil"></i> Edit
                     </button>
                 </div>
@@ -251,11 +251,6 @@ var ReferendumResultRow = React.createClass({
         };
     },
 
-    getInitialState: function() {
-        return {
-        };
-    },
-
     render: function() {
         var voted = '';
         switch (this.props.answer) {
@@ -278,7 +273,7 @@ var ReferendumResultRow = React.createClass({
                 <div className="col-sm-3">{voted}</div>
                 <div className="col-sm-3">
                     <button className="btn btn-block btn-default"
-                        onClick={this.props.resetStage.bind(null, 'referendum')}>
+                        onClick={this.props.resetStage.bind(null, 'referendum', this.props.referendum.id)}>
                         <i className="fa fa-pencil"></i> Edit
                     </button>
                 </div>

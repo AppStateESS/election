@@ -125,7 +125,7 @@ var SingleResultRow = React.createClass({
                 React.createElement(
                     "button",
                     { className: "btn btn-block btn-default",
-                        onClick: this.props.resetStage.bind(null, 'single') },
+                        onClick: this.props.resetStage.bind(null, 'single', this.props.single.id) },
                     React.createElement("i", { className: "fa fa-pencil" }),
                     " Edit"
                 )
@@ -237,7 +237,7 @@ var MultipleResultRow = React.createClass({
                 React.createElement(
                     "button",
                     { className: "btn btn-default btn-block",
-                        onClick: this.props.resetStage.bind(null, 'multiple') },
+                        onClick: this.props.resetStage.bind(null, 'multiple', this.props.multiple.id) },
                     React.createElement("i", { className: "fa fa-pencil" }),
                     " Edit"
                 )
@@ -356,10 +356,6 @@ var ReferendumResultRow = React.createClass({
         return {};
     },
 
-    getInitialState: function () {
-        return {};
-    },
-
     render: function () {
         var voted = '';
         switch (this.props.answer) {
@@ -410,7 +406,7 @@ var ReferendumResultRow = React.createClass({
                 React.createElement(
                     "button",
                     { className: "btn btn-block btn-default",
-                        onClick: this.props.resetStage.bind(null, 'referendum') },
+                        onClick: this.props.resetStage.bind(null, 'referendum', this.props.referendum.id) },
                     React.createElement("i", { className: "fa fa-pencil" }),
                     " Edit"
                 )
