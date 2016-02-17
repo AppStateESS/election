@@ -23,8 +23,11 @@ class Candidate extends Base
         } else {
             throw new \Exception('Unknown candidate type');
         }
+        
+        $ticket_id = $candidate->getTicketId();
+        $multiple_id = $candidate->getMultipleId();
 
-        if (empty($candidate->getTicketId()) && empty($candidate->getMultipleId())) {
+        if ($ticket_id === 0 && $multiple_id === 0) {
             throw new \Exception('Missing candidate foreign key');
         }
 
