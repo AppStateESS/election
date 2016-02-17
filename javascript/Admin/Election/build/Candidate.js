@@ -179,7 +179,6 @@ var CandidateForm = React.createClass({
     },
 
     componentWillMount: function () {
-        console.log(this.props);
         if (this.props.candidateId > 0) {
             this.setState({
                 firstName: this.props.firstName,
