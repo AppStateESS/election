@@ -18,7 +18,7 @@ CREATE TABLE elect_referendum_vote (
   voterHash varchar(255) NOT NULL,
   electionId INT NOT NULL,
   referendumId INT NOT NULL,
-  answer smallint not null
+  answer varchar(10) not null
 );
 ALTER TABLE elect_referendum_vote add unique refvote (voterHash, electionId, referendumId);
 
