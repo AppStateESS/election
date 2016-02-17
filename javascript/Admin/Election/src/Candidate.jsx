@@ -145,6 +145,7 @@ var CandidateForm = React.createClass({
     },
 
     componentWillMount: function() {
+        console.log(this.props);
         if (this.props.candidateId > 0) {
             this.setState({
                 firstName : this.props.firstName,
@@ -187,7 +188,9 @@ var CandidateForm = React.createClass({
         $.each(this.state.photo, function(key, value) {
             data.append(key, value);
         });
-        if (this.props.ticketId) {
+
+
+        if (this.props.ticketId > 0) {
             data.append('ticketId', this.props.ticketId);
         } else {
             data.append('multipleId', this.props.multipleId);

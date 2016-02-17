@@ -27,7 +27,7 @@ class Candidate extends Base
         $ticket_id = $candidate->getTicketId();
         $multiple_id = $candidate->getMultipleId();
 
-        if ($ticket_id === 0 && $multiple_id === 0) {
+        if ((int)$ticket_id === 0 && (int)$multiple_id === 0) {
             throw new \Exception('Missing candidate foreign key');
         }
 
@@ -37,6 +37,7 @@ class Candidate extends Base
 
         if (!empty($_FILES)) {
             $picture = self::savePicture($_FILES[0], $candidate);
+            self::deletePicture($candidate);
             $candidate->setPicture($picture);
         }
         self::saveResource($candidate);
@@ -67,6 +68,7 @@ class Candidate extends Base
         return $result;
     }
 
+    
     public static function getCandidateList($multipleId = 0, $active_only = true)
     {
         if (empty($multipleId)) {
@@ -91,6 +93,15 @@ class Candidate extends Base
         return $result;
     }
 
+    
+    public static function deletePicture(\election\Resource\Candidate $candidate)
+    {
+        $image_name = $candidate->getPicture();
+        $image_directory = self::getImageDirectory();
+        
+        unlink($image_directory . $image_name);
+    }
+    
     private static function savePicture(array $file, \election\Resource\Candidate $candidate)
     {
         $filename = $file['name'];
