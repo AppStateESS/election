@@ -226,10 +226,12 @@ var Election = React.createClass({
     finalVote: function () {
         var singleResult = [];
         $.each(this.state.singleVote, function (index, value) {
-            singleResult.push({
-                singleId: value.single.id,
-                ticketId: value.ticket.id
-            });
+            if (value.single && typeof value.single.id !== 'undefined' && value.ticket && typeof value.ticket.id !== 'undefined') {
+                singleResult.push({
+                    singleId: value.single.id,
+                    ticketId: value.ticket.id
+                });
+            }
         });
 
         var multipleResult = [];
@@ -247,7 +249,6 @@ var Election = React.createClass({
                 answer: value.answer
             });
         });
-
         $.post('election/User/Vote', {
             command: 'save',
             electionId: this.state.election.id,
@@ -256,9 +257,15 @@ var Election = React.createClass({
             referendum: referendumResult
         }, null, 'json').done(function (data) {
             if (data.success === true) {
-                this.setStage('finished');
+                this.setState({
+                    backToReview: false,
+                    stage: 'finished'
+                });
             } else {
-                this.setStage('failure');
+                this.setState({
+                    backToReview: false,
+                    stage: 'failure'
+                });
             }
         }.bind(this)).fail(function (data) {
             this.setStage('failure');
@@ -362,16 +369,29 @@ var Finished = React.createClass({
     render: function () {
         return React.createElement(
             'div',
-            null,
+            { className: 'row' },
             React.createElement(
-                'h2',
-                null,
-                this.props.election.title
-            ),
-            React.createElement(
-                'p',
-                null,
-                'Thank you for voting! Watch SGA for results.'
+                'div',
+                { className: 'col-sm-6 col-sm-offset-3' },
+                React.createElement(
+                    'div',
+                    { className: 'well text-center' },
+                    React.createElement(
+                        'h2',
+                        null,
+                        this.props.election.title
+                    ),
+                    React.createElement(
+                        'h3',
+                        null,
+                        'Thank you for voting! Watch SGA for results.'
+                    ),
+                    React.createElement(
+                        'a',
+                        { href: './index.php?module=users&action=user&command=logout', className: 'btn btn-lg btn-primary' },
+                        'Sign out'
+                    )
+                )
             )
         );
     }
