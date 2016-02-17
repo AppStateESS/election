@@ -71,7 +71,7 @@ var ElectionRow = React.createClass({
     render: function() {
         if (this.props.past) {
             var href = 'election/Admin/Report/?electionId=' + this.props.id;
-            var buttons = <a href={href} className="btn btn-primary"><i className="fa fa-envelope"></i> Report</a>
+            var buttons = <a href={href} className="btn btn-info"><i className="fa fa-envelope"></i> Report</a>
         } else {
             var href = 'election/Admin/?command=edit&electionId=' + this.props.id;
             var buttons = <a href={href} className="btn btn-primary"><i className="fa fa-edit"></i> Edit</a>;

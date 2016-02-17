@@ -88,7 +88,7 @@ var ElectionRow = React.createClass({
             var href = 'election/Admin/Report/?electionId=' + this.props.id;
             var buttons = React.createElement(
                 'a',
-                { href: href, className: 'btn btn-primary' },
+                { href: href, className: 'btn btn-info' },
                 React.createElement('i', { className: 'fa fa-envelope' }),
                 ' Report'
             );
