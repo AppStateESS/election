@@ -117,5 +117,30 @@ class Vote extends Base
         $tbl->addValue('bannerId', $banner_id);
         $db->insert();
     }
+    
+    public static function getSingleVotes($electionId) {
+        $db = \Database::getDB();
+        $tbl = $db->addTable('elect_single_chair_vote');
+        $tbl->addFieldConditional('electionId', $electionId);
+        $single = $tbl->addField('singleId');
+        $ticket = $tbl->addField('ticketId');
+        $tbl->addField(new \Database\Expression('count(electionId)', 'votes'));
+        $db->setGroupBy(array($single, $ticket));
+        $result = $db->select();
+        return $result;
+        
+    }
+    
+    public static function getMultipleVotes($electionId) {
+        $db = \Database::getDB();
+        $tbl = $db->addTable('elect_multi_chair_vote');
+        $tbl->addFieldConditional('electionId', $electionId);
+        $multiple = $tbl->addField('multipleId');
+        $candidate = $tbl->addField('candidateId');
+        $tbl->addField(new \Database\Expression('count(electionId)', 'votes'));
+        $db->setGroupBy(array($multiple, $candidate));
+        $result = $db->select();
+        return $result;
+    }
 
 }
