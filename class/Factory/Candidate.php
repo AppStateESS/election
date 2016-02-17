@@ -37,7 +37,9 @@ class Candidate extends Base
 
         if (!empty($_FILES)) {
             $picture = self::savePicture($_FILES[0], $candidate);
-            self::deletePicture($candidate);
+            if ($candidate->getId()) {
+                self::deletePicture($candidate);
+            }
             $candidate->setPicture($picture);
         }
         self::saveResource($candidate);
