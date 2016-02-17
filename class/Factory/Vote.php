@@ -24,16 +24,25 @@ class Vote extends Base
             throw new \Exception('Election id does not match current election');
         }
 
-        $single_result = $request->getVar('single');
-        $multiple_result = $request->getVar('multiple');
-        $referendum_result = $request->getVar('referendum');
-
         // need to start a transaction here
         $db = \Database::getDB();
         $db->begin(true);
-        self::saveSingleResult($election_id, $single_result);
-        self::saveMultipleResult($election_id, $multiple_result);
-        self::saveReferendumResult($election_id, $referendum_result);
+        
+        if ($request->isVar('single')) {
+            $single_result = $request->getVar('single');
+            self::saveSingleResult($election_id, $single_result);
+        }
+        
+        if ($request->isVar('multiple')) {
+            $multiple_result = $request->getVar('multiple');
+            self::saveMultipleResult($election_id, $multiple_result);
+        }
+        
+        if ($request->isVar('referendum')) {
+            $referendum_result = $request->getVar('referendum');
+            self::saveReferendumResult($election_id, $referendum_result);
+        }
+
         self::complete($election_id);
         $db->commit();
     }
@@ -57,8 +66,11 @@ class Vote extends Base
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_multi_chair_vote');
-
         foreach ($multiple_result as $vote) {
+            // the abstained from everything
+            if (!isset($vote['chairs'])) {
+                continue;
+            }
             $voted = array();
             $multiple = Multiple::build($vote['multipleId'], new \election\Resource\Multiple());
             $seatNumber = $multiple->getSeatNumber();
@@ -96,13 +108,14 @@ class Vote extends Base
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_referendum_vote');
+        
         foreach ($referendum_result as $vote) {
             $voter_hash = Student::getVoteHash($vote['referendumId']);
 
             $tbl->addValue('voterHash', $voter_hash);
             $tbl->addValue('electionId', $election_id);
             $tbl->addValue('referendumId', $vote['referendumId']);
-            $tbl->addValue('answer', Referendum::getAnswer($vote['answer']));
+            $tbl->addValue('answer', $vote['answer']);
             $tbl->insert();
             $tbl->resetValues();
         }
