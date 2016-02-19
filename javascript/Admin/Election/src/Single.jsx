@@ -7,7 +7,8 @@ var SingleBallot = React.createClass({
         return {
             singleList : [],
             itemCount : 0,
-            panelOpen : false
+            showForm : false,
+            panelOpen : true
         };
     },
 
@@ -39,16 +40,43 @@ var SingleBallot = React.createClass({
         });
     },
 
+    showForm : function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.setState({
+            panelOpen : true,
+            showForm : true
+        });
+    },
+
+    hideForm : function() {
+        this.setState({
+            showForm : false
+        });
+    },
+
     render: function() {
         var heading = (
-            <div>
-                <h4>Single chair - {this.state.itemCount} ballot{this.state.itemCount !== 1 ? 's' : null}</h4>
+            <div className="row">
+                <div className="col-sm-9">
+                    <h4>Single chair - {this.state.itemCount} ballot{this.state.itemCount !== 1 ? 's' : null}</h4>
+                </div>
+                <div className="col-sm-3">
+                    <button className="btn btn-block btn-primary" onClick={this.showForm}>
+                        <i className="fa fa-plus"></i> Add new ballot</button>
+                </div>
             </div>
         );
         if (this.state.panelOpen) {
+            var form  = null;
+            if (this.state.showForm) {
+                form = <SingleBallotForm electionId={this.props.electionId} reload={this.load} hideForm={this.hideForm}/>;
+            }
             var body = (
                 <div>
-                    <SingleList electionId={this.props.electionId} reload={this.load} listing={this.state.singleList}/>
+                    {form}
+                    <SingleList electionId={this.props.electionId} reload={this.load} hideForm={this.hideForm} listing={this.state.singleList}/>
                 </div>
             );
             var arrow = <i className="fa fa-chevron-up"></i>;
@@ -84,12 +112,7 @@ var SingleList = React.createClass({
     },
 
     setCurrentEdit : function(singleId) {
-        this.setState({
-            currentEdit : singleId
-        });
-    },
-
-    editRow : function(singleId) {
+        this.props.hideForm();
         this.setState({
             currentEdit : singleId
         });
@@ -103,6 +126,9 @@ var SingleList = React.createClass({
         this.setState({
             openSingle : singleId
         });
+    },
+
+    componentDidUpdate: function(prevProps, prevState) {
     },
 
     render: function() {
@@ -126,20 +152,13 @@ var SingleList = React.createClass({
             } else {
                 return <SingleListRow key={value.id} {...value}
                         isOpen={this.state.openSingle === value.id}
-                        singleId={value.id} edit={this.editRow.bind(null, value.id)}
+                        singleId={value.id} edit={this.setCurrentEdit.bind(null, value.id)}
                         {...shared}/>
             }
         }.bind(this));
 
-        var form = (<button className="btn btn-primary" onClick={this.editRow.bind(null, 0)}>
-            <i className="fa fa-plus"></i> Add new ballot</button>);
-        if (this.state.currentEdit === 0) {
-            form = <SingleBallotForm {...shared}/>;
-        }
-
         return (
             <div>
-                {form}
                 <div className="pad-top">
                     {singleList}
                 </div>
