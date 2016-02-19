@@ -2,6 +2,9 @@
 
 namespace election\Factory;
 
+require_once PHPWS_SOURCE_DIR . 'mod/election/vendor/autoload.php';
+
+use election\Resource\Student;
 use Guzzle\Http\Client;
 
 /**
@@ -16,9 +19,6 @@ class BannerStudentProvider extends StudentProvider {
 
     private $client;
 
-    // Campus: main campus, distance ed
-    const MAIN_CAMPUS = 'Main Campus';
-
     // Student level: grad, undergrad
     const UNDERGRAD = 'U';
     const GRADUATE  = 'G';
@@ -31,8 +31,12 @@ class BannerStudentProvider extends StudentProvider {
         // Get the REST API URL from the module's settings
         $apiUrl = \PHPWS_Settings::get('election', 'studentDataApiUrl');
 
+        if(is_null($apiUrl)){
+            throw new \InvalidArgumentException('Student data API url is not configured.');
+        }
+
         // If the URL doesn't end with a trailing slash, then add one
-        if($substr($apiUrl, -1) != '/'){
+        if(substr($apiUrl, -1) != '/'){
             $apiUrl .= '/';
         }
 
@@ -50,17 +54,18 @@ class BannerStudentProvider extends StudentProvider {
             throw new \InvalidArgumentException('Missing student ID.');
         }
 
-        $json = $response->sendRequest($studentId);
+        $json = $this->sendRequest($studentId);
+        var_dump($json);
 
         // Check for error response like ['Message'] = 'An error has occurred.';
         // TODO
 
         // Log the request
-        $this->logRequest('getStudent', 'success', $params);
+        $this->logRequest('getStudent', 'success', array($studentId));
 
         // Create the Student object and plugin the values
-        $student = new Student();
-        $this->plugValues($student, $response);
+        $student = new \election\Resource\Student();
+        $this->plugValues($student, $json);
 
         return $student;
     }
@@ -79,53 +84,51 @@ class BannerStudentProvider extends StudentProvider {
      * Plugs the SOAP values into Student object.
      *
      * @param Student $student
-     * @param stdClass $data
+     * @param Array $data
      */
-    protected function plugValues(&$student, \stdClass $data)
+    protected function plugValues(&$student, Array $data)
     {
         /**********************
          * Basic Demographics *
          **********************/
-        $student->setStudentId($data->banner_id);
-        $student->setUsername($data->user_name);
+        $student->setBannerId($data['ID']);
+        $student->setUsername($data['userName']);
 
-        $student->setFirstName($data->first_name);
-        $student->setLastName($data->last_name);
+        $student->setFirstName($data['firstName']);
+        $student->setLastName($data['lastName']);
 
         /*****************
          * Academic Info *
          *****************/
 
-        // Campus
-        if($data->campus == BannerStudentProvider::MAIN_CAMPUS) {
-            // If campus is 'Main Campus', then we know it's a main campus student
-            $student->setCampus(Student::MAIN_CAMPUS);
-        } else if ($data->campus != '') {
-            // If the campus is set, but is not 'Main Campus', then we know it's some other campus name (e.g. "Catawba EdD EdLead")
-            // We're not going to check for every possible campus name; as long as there's *something* there, we'll assume it's distance ed
-            $student->setCampus(Student::DISTANCE_ED);
-        } else {
-            // If the campus isn't set, then throw an exception
-            //throw new \InvalidArgumentException("Unrecognized campus ({$data->campus}) for {$data->banner_id}.");
-        }
-
         // Level (grad vs undergrad)
-        if($data->level == self::UNDERGRAD) {
+        if($data['studentLevel'] == self::UNDERGRAD) {
             $student->setLevel(Student::UNDERGRAD);
-        } else if ($data->level == self::GRADUATE) {
+        } else if ($data['studentLevel'] == self::GRADUATE) {
             $student->setLevel(Student::GRADUATE);
-        } else if ($data->level == self::GRADUATE2) {
+        } else if ($data['studentLevel'] == self::GRADUATE2) {
             $student->setLevel(Student::GRADUATE2);
-        } else if ($data->level == self::DOCTORAL) {
+        } else if ($data['studentLevel'] == self::DOCTORAL) {
             $student->setLevel(Student::DOCTORAL);
-        } else if ($data->level == self::POSTDOC) {
+        } else if ($data['studentLevel'] == self::POSTDOC) {
             $student->setLevel(Student::POSTDOC);
         } else {
-            throw new \InvalidArgumentException("Unrecognized student level ({$data->level}) for {$data->banner_id}.");
+            throw new \InvalidArgumentException("Unrecognized student level ({$data['studentLevel']}) for {$data->banner_id}.");
         }
 
         // Credit Hours
-        $student->setCreditHours($data->creditHours);
+        $student->setCreditHours($data['creditHoursEnrolled']);
+
+        // Type
+        $student->setStudentType($data['studentType']);
+
+        // Classification
+        //TODO Check the API's actual format and possible values for this field
+        $student->setClass($data['classification']);
+
+        // College
+        $student->setCollegeCode($data['collegeCode']);
+        $student->setCollegeDesc($data['collegeDesc']);
     }
 
     /**

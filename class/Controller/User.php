@@ -33,9 +33,11 @@ class User extends \Http\Controller
             $command = 'NoOpenElections';
         }
 
-        // If there's an election going on, check to see if this student has already voted in it
         // TODO: Get the BannerID from shibboleth
-        if($election !== false && \election\Factory\Student::hasVoted($election['id'], \election\Factory\Student::getBannerId())){
+        $student = \election\Factory\StudentFactory::getStudentByBannerId(900325006);
+
+        // If there's an election going on, check to see if this student has already voted in it
+        if($election !== false && $student->hasVoted($election['id'])){
             $command = 'AlreadyVoted';
         }
 
@@ -64,7 +66,7 @@ class User extends \Http\Controller
         $content = $template->get();
         \Layout::plug($content, 'NAV_LINKS');
     }
-    
+
     public static function welcomeScreen()
     {
         \Layout::addStyle('election', 'User/style.css');

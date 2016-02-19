@@ -25,19 +25,22 @@ class TestStudentProvider extends BannerStudentProvider {
 
     private function getFakeResponse()
     {
-        $obj = new \stdClass();
+        $resp = Array();
 
-        // ID & email
-        $obj->banner_id = '900123456';
-        $obj->user_name = 'jb67803';
-        $obj->email     = 'jb67803@appstate.edu';
+        $resp['ID'] = '900325006';
+        $resp['userName'] = 'jb67803';
+        $resp['firstName'] = 'Jeremy';
+        $resp['lastName'] = 'Booker';
 
-        // Basic demographics
-        $obj->first_name    = 'Jeremy';
-        $obj->last_name     = 'Booker';
-        $obj->preferred_name = 'j-dogg';
+        $resp['studentLevel'] = \election\Resource\Student::UNDERGRAD;
 
-        return $obj;
+        $resp['classification'] = 'Junior'; //TODO Check the API's actual format and possible values for this field
+
+        // TODO Check API's possible values here
+        $resp['collegeCode'] = 'AS';
+        $resp['collegeDesc'] = 'College of Arts & Sciences';
+
+        return json_encode($resp);
     }
 
     private function getFakeErrorResponse()
