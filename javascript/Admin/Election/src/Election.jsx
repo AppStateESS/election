@@ -159,7 +159,10 @@ var Election = React.createClass({
             <div className="input-group">
                 <input type="text" className="form-control election-title" placeholder="Election title" value={this.state.title} onChange={this.updateTitle}/>
                 <span className="input-group-btn">
-                    <button className="btn btn-success" title="Update title" disabled={this.state.title.length === 0 ? true : false} onClick={this.saveTitle}><i className="fa fa-save"></i></button>
+                    <button className="btn btn-success" title="Update title"
+                        disabled={this.state.title.length === 0 ? true : false}
+                        onClick={this.saveTitle}><i className="fa fa-save"></i>
+                    </button>
                     <button className="btn btn-danger" title="Cancel update" onClick={this.cancelUpdate}><i className="fa fa-times"></i></button>
                 </span>
             </div>
