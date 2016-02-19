@@ -55,7 +55,6 @@ class BannerStudentProvider extends StudentProvider {
         }
 
         $json = $this->sendRequest($studentId);
-        var_dump($json);
 
         // Check for error response like ['Message'] = 'An error has occurred.';
         // TODO
