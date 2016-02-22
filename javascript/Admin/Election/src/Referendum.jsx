@@ -3,6 +3,7 @@ var Referendum = React.createClass({
         return {
             referendumList : [],
             itemCount : 0,
+            showForm : false,
             panelOpen : false
         };
     },
@@ -35,15 +36,42 @@ var Referendum = React.createClass({
         });
     },
 
+    showForm : function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.setState({
+            panelOpen : true,
+            showForm : true
+        });
+    },
+
+    hideForm : function() {
+        this.setState({
+            showForm : false
+        });
+    },
+
     render: function() {
         var heading = (
-            <div>
-                <h4>Referendum - {this.state.itemCount} measure{this.state.itemCount !== 1 ? 's' : null}</h4>
+            <div className="row">
+                <div className="col-sm-8">
+                    <h4>Referendum - {this.state.itemCount} measure{this.state.itemCount !== 1 ? 's' : null}</h4>
+                </div>
+                <div className="col-sm-4">
+                    <button className="btn btn-block btn-primary" onClick={this.showForm}>
+                        <i className="fa fa-plus"></i> New referendum</button>
+                </div>
             </div>
         );
         if (this.state.panelOpen) {
+            var form  = null;
+            if (this.state.showForm) {
+                form = <ReferendumForm electionId={this.props.electionId} reload={this.load} hideForm={this.hideForm}/>;
+            }
             var body = (
                 <div>
+                    {form}
                     <ReferendumList electionId={this.props.electionId} reload={this.load}
                         listing={this.state.referendumList}/>
                 </div>
@@ -122,18 +150,9 @@ var ReferendumList = React.createClass({
             }
         }.bind(this));
 
-        var form = (<button className="btn btn-primary" onClick={this.editRow.bind(null, 0)}>
-            <i className="fa fa-plus"></i> Add new referendum</button>);
-        if (this.state.currentEdit === 0) {
-            form = <ReferendumForm {...shared}/>;
-        }
-
         return (
-            <div>
-                {form}
-                <div className="pad-top">
-                    {referendumList}
-                </div>
+            <div className="pad-top">
+                {referendumList}
             </div>
         );
     }

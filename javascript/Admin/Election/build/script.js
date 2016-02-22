@@ -1225,6 +1225,7 @@ var Referendum = React.createClass({
         return {
             referendumList: [],
             itemCount: 0,
+            showForm: false,
             panelOpen: false
         };
     },
@@ -1257,23 +1258,58 @@ var Referendum = React.createClass({
         });
     },
 
+    showForm: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.setState({
+            panelOpen: true,
+            showForm: true
+        });
+    },
+
+    hideForm: function () {
+        this.setState({
+            showForm: false
+        });
+    },
+
     render: function () {
         var heading = React.createElement(
             'div',
-            null,
+            { className: 'row' },
             React.createElement(
-                'h4',
-                null,
-                'Referendum - ',
-                this.state.itemCount,
-                ' measure',
-                this.state.itemCount !== 1 ? 's' : null
+                'div',
+                { className: 'col-sm-8' },
+                React.createElement(
+                    'h4',
+                    null,
+                    'Referendum - ',
+                    this.state.itemCount,
+                    ' measure',
+                    this.state.itemCount !== 1 ? 's' : null
+                )
+            ),
+            React.createElement(
+                'div',
+                { className: 'col-sm-4' },
+                React.createElement(
+                    'button',
+                    { className: 'btn btn-block btn-primary', onClick: this.showForm },
+                    React.createElement('i', { className: 'fa fa-plus' }),
+                    ' New referendum'
+                )
             )
         );
         if (this.state.panelOpen) {
+            var form = null;
+            if (this.state.showForm) {
+                form = React.createElement(ReferendumForm, { electionId: this.props.electionId, reload: this.load, hideForm: this.hideForm });
+            }
             var body = React.createElement(
                 'div',
                 null,
+                form,
                 React.createElement(ReferendumList, { electionId: this.props.electionId, reload: this.load,
                     listing: this.state.referendumList })
             );
@@ -1359,25 +1395,10 @@ var ReferendumList = React.createClass({
             }
         }.bind(this));
 
-        var form = React.createElement(
-            'button',
-            { className: 'btn btn-primary', onClick: this.editRow.bind(null, 0) },
-            React.createElement('i', { className: 'fa fa-plus' }),
-            ' Add new referendum'
-        );
-        if (this.state.currentEdit === 0) {
-            form = React.createElement(ReferendumForm, shared);
-        }
-
         return React.createElement(
             'div',
-            null,
-            form,
-            React.createElement(
-                'div',
-                { className: 'pad-top' },
-                referendumList
-            )
+            { className: 'pad-top' },
+            referendumList
         );
     }
 });
