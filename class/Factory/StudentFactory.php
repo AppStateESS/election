@@ -36,4 +36,8 @@ class StudentFactory extends Base
 
         return $provider->getStudent($bannerId);
     }
+    
+    public static function hasCategory($category, \election\Resource\Student $student) {
+        
+    }
 }
