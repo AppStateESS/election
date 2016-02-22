@@ -37,19 +37,26 @@ class Multiple extends Ballot
     {
         return parent::ballotList($electionId, 'elect_multiple');
     }
-    
+
     public static function getListWithCandidates($electionId)
     {
         $multiple = self::getList($electionId);
         if (empty($multiple)) {
             return array();
         }
-        
+
         foreach ($multiple as &$value) {
             $candidates = Candidate::getCandidateList($value['id']);
             $value['candidates'] = $candidates;
         }
         return $multiple;
+    }
+
+    public static function filter(array $multiple, $student)
+    {
+        foreach ($multiple as $ballot) {
+            $category = $ballot['category'];
+        }
     }
 
 }
