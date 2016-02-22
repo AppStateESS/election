@@ -91,9 +91,9 @@ var SingleBallotTicket = React.createClass({
                         {candidates}
                     </div>
                 </div>
-                <div className="btn btn-primary btn-block btn-lg" onClick={this.props.updateVote}>
+                <button className="btn btn-primary btn-block btn-lg" onClick={this.props.updateVote}>
                     <i className="fa fa-check-square-o"></i> Vote for {this.props.title}
-                </div>
+                </button>
             </div>
         );
 

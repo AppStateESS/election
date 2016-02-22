@@ -136,7 +136,7 @@ var SingleBallotTicket = React.createClass({
                 )
             ),
             React.createElement(
-                "div",
+                "button",
                 { className: "btn btn-primary btn-block btn-lg", onClick: this.props.updateVote },
                 React.createElement("i", { className: "fa fa-check-square-o" }),
                 " Vote for ",
