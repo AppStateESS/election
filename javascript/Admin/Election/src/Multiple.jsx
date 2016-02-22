@@ -7,6 +7,7 @@ var MultipleBallot = React.createClass({
             multipleList : [],
             itemCount : 0,
             panelOpen : false,
+            showForm : false,
             categoryList : []
         };
     },
@@ -39,15 +40,42 @@ var MultipleBallot = React.createClass({
         });
     },
 
+    showForm : function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.setState({
+            panelOpen : true,
+            showForm : true
+        });
+    },
+
+    hideForm : function() {
+        this.setState({
+            showForm : false
+        });
+    },
+
     render: function() {
         var heading = (
-            <div>
-                <h4>Multiple chair - {this.state.itemCount} ballot{this.state.itemCount !== 1 ? 's' : null}</h4>
+            <div className="row">
+                <div className="col-sm-9">
+                    <h4>Multiple chair - {this.state.itemCount} ballot{this.state.itemCount !== 1 ? 's' : null}</h4>
+                </div>
+                <div className="col-sm-3">
+                    <button className="btn btn-block btn-primary" onClick={this.showForm}>
+                        <i className="fa fa-plus"></i> New ballot</button>
+                </div>
             </div>
         );
         if (this.state.panelOpen) {
+            var form  = null;
+            if (this.state.showForm) {
+                form = <MultipleForm electionId={this.props.electionId} reload={this.load} hideForm={this.hideForm}/>;
+            }
             var body = (
                 <div>
+                    {form}
                     <MultipleList electionId={this.props.electionId} reload={this.load} listing={this.state.multipleList}/>
                 </div>
             );
@@ -124,15 +152,8 @@ var MultipleList = React.createClass({
             }
         }.bind(this));
 
-        var form = (<button className="btn btn-primary" onClick={this.editRow.bind(null, 0)}>
-            <i className="fa fa-plus"></i> Add new multiple</button>);
-        if (this.state.currentEdit === 0) {
-            form = <MultipleForm {...shared}/>;
-        }
-
         return (
             <div>
-                {form}
                 <div className="pad-top">
                     {multipleList}
                 </div>

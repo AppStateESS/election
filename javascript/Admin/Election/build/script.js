@@ -665,6 +665,7 @@ var MultipleBallot = React.createClass({
             multipleList: [],
             itemCount: 0,
             panelOpen: false,
+            showForm: false,
             categoryList: []
         };
     },
@@ -697,23 +698,58 @@ var MultipleBallot = React.createClass({
         });
     },
 
+    showForm: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.setState({
+            panelOpen: true,
+            showForm: true
+        });
+    },
+
+    hideForm: function () {
+        this.setState({
+            showForm: false
+        });
+    },
+
     render: function () {
         var heading = React.createElement(
             'div',
-            null,
+            { className: 'row' },
             React.createElement(
-                'h4',
-                null,
-                'Multiple chair - ',
-                this.state.itemCount,
-                ' ballot',
-                this.state.itemCount !== 1 ? 's' : null
+                'div',
+                { className: 'col-sm-9' },
+                React.createElement(
+                    'h4',
+                    null,
+                    'Multiple chair - ',
+                    this.state.itemCount,
+                    ' ballot',
+                    this.state.itemCount !== 1 ? 's' : null
+                )
+            ),
+            React.createElement(
+                'div',
+                { className: 'col-sm-3' },
+                React.createElement(
+                    'button',
+                    { className: 'btn btn-block btn-primary', onClick: this.showForm },
+                    React.createElement('i', { className: 'fa fa-plus' }),
+                    ' New ballot'
+                )
             )
         );
         if (this.state.panelOpen) {
+            var form = null;
+            if (this.state.showForm) {
+                form = React.createElement(MultipleForm, { electionId: this.props.electionId, reload: this.load, hideForm: this.hideForm });
+            }
             var body = React.createElement(
                 'div',
                 null,
+                form,
                 React.createElement(MultipleList, { electionId: this.props.electionId, reload: this.load, listing: this.state.multipleList })
             );
             var arrow = React.createElement('i', { className: 'fa fa-chevron-up' });
@@ -797,20 +833,9 @@ var MultipleList = React.createClass({
             }
         }.bind(this));
 
-        var form = React.createElement(
-            'button',
-            { className: 'btn btn-primary', onClick: this.editRow.bind(null, 0) },
-            React.createElement('i', { className: 'fa fa-plus' }),
-            ' Add new multiple'
-        );
-        if (this.state.currentEdit === 0) {
-            form = React.createElement(MultipleForm, shared);
-        }
-
         return React.createElement(
             'div',
             null,
-            form,
             React.createElement(
                 'div',
                 { className: 'pad-top' },
@@ -1652,7 +1677,7 @@ var SingleBallot = React.createClass({
                     'button',
                     { className: 'btn btn-block btn-primary', onClick: this.showForm },
                     React.createElement('i', { className: 'fa fa-plus' }),
-                    ' Add new ballot'
+                    ' New ballot'
                 )
             )
         );

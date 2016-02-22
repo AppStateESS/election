@@ -64,7 +64,7 @@ var SingleBallot = React.createClass({
                 </div>
                 <div className="col-sm-3">
                     <button className="btn btn-block btn-primary" onClick={this.showForm}>
-                        <i className="fa fa-plus"></i> Add new ballot</button>
+                        <i className="fa fa-plus"></i> New ballot</button>
                 </div>
             </div>
         );
