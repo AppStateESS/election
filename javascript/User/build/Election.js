@@ -72,6 +72,7 @@ var Election = React.createClass({
     },
 
     setStage: function (stage) {
+        window.scrollTo(0, 0);
         this.setState({
             stage: stage
         });
@@ -162,6 +163,7 @@ var Election = React.createClass({
         } else if (typeof this.state.single[nextSingle] === 'undefined') {
             stage = 'multiple';
         }
+        window.scrollTo(0, 0);
         this.setState({
             stage: stage,
             singleVote: singleVote,
@@ -183,6 +185,7 @@ var Election = React.createClass({
 
         multipleVote[current] = currentVote;
 
+        window.scrollTo(0, 0);
         if (this.state.backToReview) {
             stage = 'review';
         } else if (typeof this.state.multiple[nextMultiple] === 'undefined') {
@@ -210,6 +213,7 @@ var Election = React.createClass({
 
         referendumVote[current] = currentVote;
 
+        window.scrollTo(0, 0);
         if (this.state.backToReview) {
             stage = 'review';
         } else if (typeof this.state.referendum[nextReferendum] === 'undefined') {
