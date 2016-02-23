@@ -12,7 +12,7 @@ var Election = React.createClass({
             referendum : [],
             ballotCount : 0,
             referendumCount : 0,
-            stage : 'single',
+            stage : 'loading',
             singleVote : [],
             multipleVote : [],
             referendumVote : [],
@@ -287,6 +287,10 @@ var Election = React.createClass({
         }
 
         switch (this.state.stage) {
+            case 'loading':
+            content = <div className="text-center pad-top"><i className="fa fa-spinner fa-spin fa-5x"></i></div>;
+            break;
+
             case 'empty':
             content = <Empty />;
             break;
