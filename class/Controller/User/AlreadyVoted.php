@@ -14,7 +14,7 @@ class AlreadyVoted extends \election\Controller\User\Base
         \Layout::addStyle('election', 'User/style.css');
 
         // TODO.. Fill this in with an actual template
-        $content = "You've already voted in this election.";
+        $content = "<div class='well'><p><strong>You've already voted in this election.</strong></p>";
 
         $view = new \View\HtmlView($content);
         return $view;
