@@ -5,3 +5,4 @@
 .babelrc
 /conf/defines.php
 /vendor/*
+/composer.phar
