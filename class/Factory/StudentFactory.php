@@ -14,9 +14,10 @@ class StudentFactory extends Base
      * @param integer $id
      * @return string
      */
-    public static function getVoteHash($salt)
+    public static function getVoteHash($salt, $banner_id)
     {
-        return md5(self::getBannerId() . $salt);
+         $provider = StudentProviderFactory::getProvider();
+        return md5($banner_id . $salt);
     }
 
     public static function getStudentByUsername($username)

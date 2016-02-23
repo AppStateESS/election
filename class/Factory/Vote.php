@@ -9,12 +9,11 @@ namespace election\Factory;
 class Vote extends Base
 {
 
-    public static function post(Student $student)
+    public static function post(\election\Resource\Student $student)
     {
         $request = \Server::getCurrentRequest();
 
         // Vote is for the current logged student only. We do not depend on the post.
-        $banner_id = $student->getBannerId();
         $election = Election::getCurrent();
         $election_id = $election['id'];
 
@@ -30,29 +29,29 @@ class Vote extends Base
 
         if ($request->isVar('single')) {
             $single_result = $request->getVar('single');
-            self::saveSingleResult($election_id, $single_result);
+            self::saveSingleResult($election_id, $single_result, $student);
         }
 
         if ($request->isVar('multiple')) {
             $multiple_result = $request->getVar('multiple');
-            self::saveMultipleResult($election_id, $multiple_result);
+            self::saveMultipleResult($election_id, $multiple_result, $student);
         }
 
         if ($request->isVar('referendum')) {
             $referendum_result = $request->getVar('referendum');
-            self::saveReferendumResult($election_id, $referendum_result);
+            self::saveReferendumResult($election_id, $referendum_result, $student);
         }
 
-        self::complete($election_id);
+        self::complete($election_id, $student->getBannerId());
         $db->commit();
     }
 
-    private static function saveSingleResult($election_id, array $single_result)
+    private static function saveSingleResult($election_id, array $single_result, \election\Resource\Student $student)
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_single_chair_vote');
         foreach ($single_result as $vote) {
-            $voter_hash = Student::getVoteHash($vote['singleId']);
+            $voter_hash = StudentFactory::getVoteHash($vote['singleId'], $student->getBannerId());
             $tbl->addValue('voterHash', $voter_hash);
             $tbl->addValue('electionId', $election_id);
             $tbl->addValue('singleId', $vote['singleId']);
@@ -62,7 +61,7 @@ class Vote extends Base
         }
     }
 
-    private static function saveMultipleResult($election_id, $multiple_result)
+    private static function saveMultipleResult($election_id, $multiple_result, \election\Resource\Student $student)
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_multi_chair_vote');
@@ -74,7 +73,7 @@ class Vote extends Base
             $voted = array();
             $multiple = Multiple::build($vote['multipleId'], new \election\Resource\Multiple());
             $seatNumber = $multiple->getSeatNumber();
-            $voter_hash = Student::getVoteHash($vote['multipleId']);
+            $voter_hash = StudentFactory::getVoteHash($vote['multipleId'], $student->getBannerId());
             // Remove previous votes on this hash. We do this because we can't use the
             // unique index to prevent duplicates.
             $tbl->addFieldConditional('voterHash', $voter_hash);
@@ -104,13 +103,13 @@ class Vote extends Base
         }
     }
 
-    private static function saveReferendumResult($election_id, $referendum_result)
+    private static function saveReferendumResult($election_id, $referendum_result, \election\Resource\Student $student)
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_referendum_vote');
 
         foreach ($referendum_result as $vote) {
-            $voter_hash = Student::getVoteHash($vote['referendumId']);
+            $voter_hash = StudentFactory::getVoteHash($vote['referendumId'], $student->getBannerId());
 
             $tbl->addValue('voterHash', $voter_hash);
             $tbl->addValue('electionId', $election_id);
@@ -121,11 +120,10 @@ class Vote extends Base
         }
     }
 
-    private static function complete($election_id)
+    private static function complete($election_id, $banner_id)
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_vote_complete');
-        $banner_id = Student::getBannerId();
         $tbl->addValue('electionId', $election_id);
         $tbl->addValue('bannerId', $banner_id);
         $db->insert();
