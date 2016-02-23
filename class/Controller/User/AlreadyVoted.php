@@ -6,7 +6,7 @@ namespace election\Controller\User;
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Jeremy Booker
  */
-class AlreadyVoted extends \election\Controller\Base
+class AlreadyVoted extends \election\Controller\User
 {
 
     public function getHtmlView($data, \Request $request)

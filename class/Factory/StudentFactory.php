@@ -19,23 +19,6 @@ class StudentFactory extends Base
         return md5(self::getBannerId() . $salt);
     }
 
-    /**
-     *  \/\/\ \___/ /\/\/
-     *       \     /
-     *       /_   _\         A A A
-     *      // \ / \\        | | |
-     *     / \o/ \o/ \       `-+-'
-     *    |     V     |        |
-     *     \ _______ /         |
-     *      \\!!!!!//          |
-     *       \\___//           |
-     *        \___/            |
-     */
-    public static function getBannerId()
-    {
-        return 666;
-    }
-
     public static function getStudentByUsername($username)
     {
         //TODO sanity checking on username format

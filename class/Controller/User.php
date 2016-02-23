@@ -9,6 +9,12 @@ namespace election\Controller;
 class User extends \Http\Controller
 {
 
+    protected $student;
+
+    protected function setStudent(\election\Resource\Student $student){
+        $this->student = $student;
+    }
+
     public function get(\Request $request)
     {
         $command = $this->routeCommand($request);
@@ -33,8 +39,9 @@ class User extends \Http\Controller
             $command = 'NoOpenElections';
         }
 
-        // TODO: Get the BannerID from shibboleth
-        $student = \election\Factory\StudentFactory::getStudentByBannerId(900520503);
+        // TODO: Get the username from shibboleth
+        //$student = StudentFactory::getStudentByUsername(\Current_User::getUsername());
+        $student = \election\Factory\StudentFactory::getStudentByUsername('harrellkm');
 
         // If there's an election going on, check to see if this student has already voted in it
         if($election !== false && $student->hasVoted($election['id'])){
@@ -50,8 +57,11 @@ class User extends \Http\Controller
         if (!class_exists($className)) {
             throw new \Exception('Unknown command: ' . $className);
         }
-        $commandObject = new $className($this->getModule());
-        return $commandObject;
+        $controller = new $className($this->getModule());
+
+        $controller->setStudent($student);
+
+        return $controller;
     }
 
     public static function loadNavBar()

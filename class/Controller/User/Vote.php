@@ -8,7 +8,7 @@ use election\Factory\Vote as Factory;
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Matthew McNaney <mcnaney at gmail dot com>
  */
-class Vote extends \election\Controller\Base
+class Vote extends \election\Controller\User
 {
     public function post(\Request $request)
     {
@@ -19,7 +19,7 @@ class Vote extends \election\Controller\Base
         $command = $request->getVar('command');
         switch ($command) {
             case 'save':
-                Factory::post();
+                Factory::post($this->student);
                 break;
 
             default:

@@ -9,12 +9,12 @@ namespace election\Factory;
 class Vote extends Base
 {
 
-    public static function post()
+    public static function post(Student $student)
     {
         $request = \Server::getCurrentRequest();
 
         // Vote is for the current logged student only. We do not depend on the post.
-        $banner_id = Student::getBannerId();
+        $banner_id = $student->getBannerId();
         $election = Election::getCurrent();
         $election_id = $election['id'];
 
@@ -27,17 +27,17 @@ class Vote extends Base
         // need to start a transaction here
         $db = \Database::getDB();
         $db->begin(true);
-        
+
         if ($request->isVar('single')) {
             $single_result = $request->getVar('single');
             self::saveSingleResult($election_id, $single_result);
         }
-        
+
         if ($request->isVar('multiple')) {
             $multiple_result = $request->getVar('multiple');
             self::saveMultipleResult($election_id, $multiple_result);
         }
-        
+
         if ($request->isVar('referendum')) {
             $referendum_result = $request->getVar('referendum');
             self::saveReferendumResult($election_id, $referendum_result);
@@ -75,7 +75,7 @@ class Vote extends Base
             $multiple = Multiple::build($vote['multipleId'], new \election\Resource\Multiple());
             $seatNumber = $multiple->getSeatNumber();
             $voter_hash = Student::getVoteHash($vote['multipleId']);
-            // Remove previous votes on this hash. We do this because we can't use the 
+            // Remove previous votes on this hash. We do this because we can't use the
             // unique index to prevent duplicates.
             $tbl->addFieldConditional('voterHash', $voter_hash);
             $db->delete();
@@ -108,7 +108,7 @@ class Vote extends Base
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_referendum_vote');
-        
+
         foreach ($referendum_result as $vote) {
             $voter_hash = Student::getVoteHash($vote['referendumId']);
 

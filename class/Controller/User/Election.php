@@ -8,8 +8,15 @@ use election\Factory\Election as Factory;
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Matthew McNaney <mcnaney at gmail dot com>
  */
-class Election extends \election\Controller\Base
+class Election extends \election\Controller\User
 {
+    public function get(\Request $request)
+    {
+        $data = array();
+        $view = $this->getView($data, $request);
+        $response = new \Response($view);
+        return $response;
+    }
 
     public function getHtmlView($data, \Request $request)
     {
@@ -25,6 +32,7 @@ class Election extends \election\Controller\Base
                 break;
         }
         */
+
 
         $script[] = '<script type="text/javascript">var defaultPicture = \'' . PHPWS_SOURCE_HTTP . 'mod/election/img/no-picture.gif\';</script>';
         if (ELECTION_REACT_DEV) {
@@ -55,6 +63,7 @@ EOF;
         if (!$request->isVar('command')) {
             throw new \Exception('Unknown Election command');
         }
+
         $json = array('success' => true);
 
         $command = $request->getVar('command');
@@ -71,16 +80,13 @@ EOF;
     {
         $unqualified = array('Fake election One', 'Fake election two', 'Fake election three');
 
-        $studentProvider = \election\Factory\StudentProviderFactory::getProvider();
-        //$student = $studentProvider->getStudent(\Current_User::getUsername());
-        $student = $studentProvider->getStudent('harrellkm');
         //var_dump($student);
 
-        $student_id = $student->getBannerId();
+        $student_id = $this->student->getBannerId();
 
         $election = Factory::getCurrent();
         if (!empty($election)) {
-            $hasVoted = $student->hasVoted($election['id']);
+            $hasVoted = $this->student->hasVoted($election['id']);
             // delete this
             //$hasVoted = true;
             if (!$hasVoted) {
