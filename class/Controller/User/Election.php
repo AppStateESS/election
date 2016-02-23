@@ -64,8 +64,6 @@ EOF;
             throw new \Exception('Unknown Election command');
         }
 
-        $json = array('success' => true);
-
         $command = $request->getVar('command');
         switch ($command) {
             case 'list':
