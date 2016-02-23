@@ -14,6 +14,21 @@ var Review = React.createClass({
     },
 
     render: function () {
+        var singleResult = null;
+        if (this.props.singleVote.length > 0) {
+            singleResult = React.createElement(SingleResult, { vote: this.props.singleVote, resetStage: this.props.resetStage });
+        }
+
+        var multipleResult = null;
+        if (this.props.multipleVote.length > 0) {
+            multipleResult = React.createElement(MultipleResult, { vote: this.props.multipleVote, resetStage: this.props.resetStage });
+        }
+
+        var referendumResult = null;
+        if (this.props.referendumVote.length > 0) {
+            referendumResult = React.createElement(ReferendumResult, { vote: this.props.referendumVote, resetStage: this.props.resetStage });
+        }
+
         return React.createElement(
             "div",
             null,
@@ -53,9 +68,9 @@ var Review = React.createClass({
             React.createElement(
                 "div",
                 { className: "vote-results" },
-                React.createElement(SingleResult, { vote: this.props.singleVote, resetStage: this.props.resetStage }),
-                React.createElement(MultipleResult, { vote: this.props.multipleVote, resetStage: this.props.resetStage }),
-                React.createElement(ReferendumResult, { vote: this.props.referendumVote, resetStage: this.props.resetStage })
+                singleResult,
+                multipleResult,
+                referendumResult
             ),
             React.createElement(
                 "div",

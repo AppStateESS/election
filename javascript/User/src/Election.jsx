@@ -45,6 +45,8 @@ var Election = React.createClass({
                 /* If there are no single-type elections, then skip to multiple type */
                 if (singleLength === 0) {
                     stage = 'multiple';
+                } else {
+                    stage = 'single';
                 }
                 /* If there's no single and no multiple types, skip to referendum */
                 if (singleLength === 0 && multipleLength === 0) {
@@ -160,7 +162,13 @@ var Election = React.createClass({
         if (this.state.backToReview) {
             stage = 'review';
         } else if (typeof this.state.single[nextSingle] === 'undefined') {
-            stage = 'multiple';
+            if (this.state.multiple.length > 0) {
+                stage = 'multiple';
+            } else if (this.state.referendum.length > 0) {
+                stage = 'referendum';
+            } else {
+                stage = 'review';
+            }
         }
         window.scrollTo(0,0);
         this.setState({

@@ -10,6 +10,21 @@ var Review = React.createClass({
     },
 
     render: function() {
+        var singleResult = null;
+        if (this.props.singleVote.length > 0) {
+            singleResult = <SingleResult vote={this.props.singleVote} resetStage={this.props.resetStage}/>;
+        }
+
+        var multipleResult = null;
+        if (this.props.multipleVote.length > 0) {
+            multipleResult = <MultipleResult vote={this.props.multipleVote} resetStage={this.props.resetStage}/>;
+        }
+
+        var referendumResult = null;
+        if (this.props.referendumVote.length > 0) {
+            referendumResult = <ReferendumResult vote={this.props.referendumVote} resetStage={this.props.resetStage}/>;
+        }
+
         return (
             <div>
                 <h2>Review</h2>
@@ -22,9 +37,9 @@ var Review = React.createClass({
                 </div>
                 <div>&nbsp;</div>
                 <div className="vote-results">
-                    <SingleResult vote={this.props.singleVote} resetStage={this.props.resetStage}/>
-                    <MultipleResult vote={this.props.multipleVote} resetStage={this.props.resetStage}/>
-                    <ReferendumResult vote={this.props.referendumVote} resetStage={this.props.resetStage}/>
+                    {singleResult}
+                    {multipleResult}
+                    {referendumResult}
                 </div>
                 <div className="text-center">
                     <button className="btn btn-lg btn-block btn-success" onClick={this.props.finalVote}>Place my Vote</button>
