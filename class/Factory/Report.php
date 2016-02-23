@@ -27,9 +27,11 @@ class Report extends Base
         foreach ($singles as $ballot) {
             $ballot_row['title'] = $ballot['title'];
             foreach ($ballot['tickets'] as $ticket) {
-                $vote = $sorted_votes[$ticket['singleId']][$ticket['id']];
-                $ticket['votes'] = $vote;
-                $ticket_rows[$vote . '.' . $ticket['id']] = self::ticketTemplate($ticket);
+                if (isset($sorted_votes[$ticket['singleId']][$ticket['id']])) {
+                    $vote = $sorted_votes[$ticket['singleId']][$ticket['id']];
+                    $ticket['votes'] = $vote;
+                    $ticket_rows[$vote . '.' . $ticket['id']] = self::ticketTemplate($ticket);
+                }
             }
             krsort($ticket_rows);
             $ballot_row['tickets'] = implode("\n", $ticket_rows);
@@ -71,13 +73,15 @@ class Report extends Base
             $ballot_row['seats'] = $ballot['seatNumber'];
             $candidates = null;
             foreach ($ballot['candidates'] as $c) {
-                $vote = $sorted_votes[$ballot['id']][$c['id']];
-                $template = new \Template;
-                $template->setModuleTemplate('election', 'Admin/Report/Candidate.html');
-                $template->add('name', $c['firstName'] . ' ' . $c['lastName']);
-                $template->add('vote', $vote);
-                $template->add('picture', $c['picture']);
-                $candidates[$vote . '.' . $c['id']] = $template->get();
+                if (isset($sorted_votes[$ballot['id']][$c['id']])) {
+                    $vote = $sorted_votes[$ballot['id']][$c['id']];
+                    $template = new \Template;
+                    $template->setModuleTemplate('election', 'Admin/Report/Candidate.html');
+                    $template->add('name', $c['firstName'] . ' ' . $c['lastName']);
+                    $template->add('vote', $vote);
+                    $template->add('picture', $c['picture']);
+                    $candidates[$vote . '.' . $c['id']] = $template->get();
+                }
             }
             krsort($candidates);
             $ballot_row['candidates'] = implode("\n", $candidates);
@@ -94,7 +98,7 @@ class Report extends Base
     {
         $referendums = Referendum::getList($electionId);
         $votes = Vote::getReferendumVotes($electionId);
-        
+
         if (empty($referendums)) {
             return null;
         }
@@ -103,16 +107,16 @@ class Report extends Base
             $key = $v['referendumId'];
             $sorted_votes[$key][$v['answer']] = $v['votes'];
         }
-        
+
         foreach ($referendums as $ref) {
             $ref_row['title'] = $ref['title'];
-            $ref_row['yes'] = $sorted_votes[$ref['id']]['yes'];
-            $ref_row['no'] = $sorted_votes[$ref['id']]['no'];
-            $ref_row['abstain'] = $sorted_votes[$ref['id']]['abstain'];
-            
+            $ref_row['yes'] = isset($sorted_votes[$ref['id']]['yes']) ? $sorted_votes[$ref['id']]['yes'] : 0;
+            $ref_row['no'] = isset($sorted_votes[$ref['id']]['no']) ? $sorted_votes[$ref['id']]['no'] : 0;
+            $ref_row['abstain'] = isset($sorted_votes[$ref['id']]['abstain']) ? $sorted_votes[$ref['id']]['abstain'] : 0;
+
             $tpl['referendums'][] = $ref_row;
         }
-        
+
         $template = new \Template;
         $template->setModuleTemplate('election', 'Admin/Report/Referendum.html');
         $template->addVariables($tpl);
