@@ -83,34 +83,10 @@ EOF;
         $student_id = $this->student->getBannerId();
 
         $election = Factory::getCurrent();
-        if (!empty($election)) {
-            $hasVoted = $this->student->hasVoted($election['id']);
-            // delete this
-            //$hasVoted = true;
-            if (!$hasVoted) {
-                $single = \election\Factory\Single::getListWithTickets($election['id']);
-                $multiple = \election\Factory\Multiple::getListWithCandidates($election['id']);
-                $referendum = \election\Factory\Referendum::getList($election['id']);
-                $voting_data = array(
-                    'hasVoted' => false,
-                    'election' => $election,
-                    'single' => $single,
-                    'multiple' => $multiple,
-                    'referendum' => $referendum,
-                    'unqualified' => $unqualified
-                );
-            } else {
-                $voting_data = array(
-                    'hasVoted' => true,
-                    'election' => $election,
-                    'single' => array(),
-                    'multiple' => array(),
-                    'referendum' => array(),
-                    'unqualified' => array()
-                );
-            }
-        } else {
-            $voting_data = array(
+
+        // If there's no election going on, then return empty data
+        if(empty($election)){
+            return array(
                 'hasVoted' => false,
                 'election' => null,
                 'single' => array(),
@@ -119,6 +95,33 @@ EOF;
                 'unqualified' => array()
             );
         }
+
+        // Check if student has voted already
+        $hasVoted = $this->student->hasVoted($election['id']);
+
+        // If already voted, return minimal voting info
+        if($hasVoted){
+            return array(
+                'hasVoted' => true,
+                'election' => $election,
+                'single' => array(),
+                'multiple' => array(),
+                'referendum' => array(),
+                'unqualified' => array());
+        }
+
+        // Assemble the voting data
+        $single = \election\Factory\Single::getListWithTickets($election['id']);
+        $multiple = \election\Factory\Multiple::getListWithCandidates($election['id']);
+        $referendum = \election\Factory\Referendum::getList($election['id']);
+        $voting_data = array(
+            'hasVoted' => false,
+            'election' => $election,
+            'single' => $single,
+            'multiple' => $multiple,
+            'referendum' => $referendum,
+            'unqualified' => $unqualified
+        );
 
         return $voting_data;
     }
