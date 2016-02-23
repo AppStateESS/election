@@ -8,13 +8,6 @@ namespace election\Controller;
  */
 class User extends \Http\Controller
 {
-
-    protected $student;
-
-    protected function setStudent(\election\Resource\Student $student){
-        $this->student = $student;
-    }
-
     public function get(\Request $request)
     {
         $command = $this->routeCommand($request);
@@ -58,9 +51,8 @@ class User extends \Http\Controller
             throw new \Exception('Unknown command: ' . $className);
         }
         $controller = new $className($this->getModule());
-
         $controller->setStudent($student);
-
+        
         return $controller;
     }
 

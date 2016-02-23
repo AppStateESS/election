@@ -8,7 +8,7 @@ use election\Factory\Vote as Factory;
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Matthew McNaney <mcnaney at gmail dot com>
  */
-class Vote extends \election\Controller\User
+class Vote extends \election\Controller\User\Base
 {
     public function post(\Request $request)
     {

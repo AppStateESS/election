@@ -6,7 +6,7 @@ namespace election\Controller\User;
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Jeremy Booker
  */
-class NoOpenElections extends \election\Controller\User
+class NoOpenElections extends \election\Controller\User\Base
 {
 
     public function getHtmlView($data, \Request $request)
