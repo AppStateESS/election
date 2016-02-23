@@ -29,6 +29,8 @@ class Student
     private $collegeDesc;
     private $creditHours;
 
+    private $clubTypes; // Array of club types for voting eligibility
+
     public function __construct()
     {
 
@@ -80,6 +82,10 @@ class Student
         $this->bannerId = $id;
     }
 
+    public function getUsername(){
+        return $this->username;
+    }
+
     public function setUsername($username){
         $this->username = $username;
     }
@@ -116,5 +122,21 @@ class Student
         $this->studentType = $type;
 
         // TODO: set $this->isTransfer
+    }
+
+    public function getClubTypes(){
+        return $this->clubTypes;
+    }
+
+    public function setClubTypes(Array $clubTypes){
+        $this->clubTypes = $clubTypes;
+    }
+
+    public function isMemberOfClubType($type){
+        if(in_array($type, $this->clubTypes)){
+            return true;
+        }
+
+        return false;
     }
 }

@@ -15,6 +15,7 @@ class Election extends \election\Controller\Base
     {
         // NB: This is here so I can test JSON through a normal GET request
         // TODO: remove this before production
+        /*
         $command = $request->getVar('command');
         switch ($command) {
             case 'list':
@@ -23,6 +24,7 @@ class Election extends \election\Controller\Base
                 return $view;
                 break;
         }
+        */
 
         $script[] = '<script type="text/javascript">var defaultPicture = \'' . PHPWS_SOURCE_HTTP . 'mod/election/img/no-picture.gif\';</script>';
         if (ELECTION_REACT_DEV) {
@@ -70,10 +72,9 @@ EOF;
         $unqualified = array('Fake election One', 'Fake election two', 'Fake election three');
 
         $studentProvider = \election\Factory\StudentProviderFactory::getProvider();
-
         //$student = $studentProvider->getStudent(\Current_User::getUsername());
-        $student = $studentProvider->getStudent('jb67803');
-        //var_dump($student);exit;
+        $student = $studentProvider->getStudent('harrellkm');
+        //var_dump($student);
 
         $student_id = $student->getBannerId();
 

@@ -1,3 +1,4 @@
 <?php
 
-$settings = array('studentDataApiUrl' => null);
+$settings = array('studentDataApiUrl' => null,
+                  'studentOrgApiUrl'  => null);

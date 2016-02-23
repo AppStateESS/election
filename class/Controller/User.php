@@ -34,7 +34,7 @@ class User extends \Http\Controller
         }
 
         // TODO: Get the BannerID from shibboleth
-        $student = \election\Factory\StudentFactory::getStudentByBannerId(900325006);
+        $student = \election\Factory\StudentFactory::getStudentByBannerId(900520503);
 
         // If there's an election going on, check to see if this student has already voted in it
         if($election !== false && $student->hasVoted($election['id'])){

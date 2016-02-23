@@ -45,7 +45,7 @@ class BannerStudentProvider extends StudentProvider {
     }
 
     /**
-     * Returns a Student object with hard-coded data
+     * Returns a Student object
      * @return Student
      */
     public function getStudent($studentId)
@@ -65,6 +65,11 @@ class BannerStudentProvider extends StudentProvider {
         // Create the Student object and plugin the values
         $student = new \election\Resource\Student();
         $this->plugValues($student, $json);
+
+        $clubProvider = new ClubCategoriesProvider();
+        $clubTypes = $clubProvider->getCategoryListForStudent($student);
+
+        $student->setClubTypes($clubTypes);
 
         return $student;
     }
