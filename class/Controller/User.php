@@ -33,9 +33,18 @@ class User extends \Http\Controller
         }
 
         // TODO: Get the username from shibboleth
-        //$student = StudentFactory::getStudentByUsername(\Current_User::getUsername());
-        $student = \election\Factory\StudentFactory::getStudentByUsername('harrellkm');
+        //$student = \election\Factory\StudentFactory::getStudentByUsername(\Current_User::getUsername());
 
+        $bannerId = preg_replace('/@appstate.edu/', '', $_SERVER['HTTP_SHIB_CAMPUSPERMANENTID']);
+        $student = \election\Factory\StudentFactory::getStudentByBannerId($bannerId);
+
+        //$student = \election\Factory\StudentFactory::getStudentByUsername('harrellkm');
+	/*
+	$student = new \election\Resource\Student;
+        $username = \Current_User::getUsername();
+        $student->setUsername($username);
+        $student->setBannerId(md5($username));
+	*/
         // If there's an election going on, check to see if this student has already voted in it
         if($election !== false && $student->hasVoted($election['id'])){
             $command = 'AlreadyVoted';
