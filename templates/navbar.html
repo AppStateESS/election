@@ -15,6 +15,11 @@
         <li>
             <a href="./election/Admin"><i class="fa fa-list"></i> Election List</a>
         </li>
+        <?php if (\Current_User::isDeity()): ?>
+        <li>
+            <a href="./election/Admin/Settings"><i class="fa fa-gear"></i> Settings</a>
+        </li>
+        <?php endif; ?>
         <li>
             <a href="index.php?module=controlpanel"><?=$username?></a>
         </li>
