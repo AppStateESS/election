@@ -20,20 +20,6 @@ class Election extends \election\Controller\User\Base
 
     public function getHtmlView($data, \Request $request)
     {
-        // NB: This is here so I can test JSON through a normal GET request
-        // TODO: remove this before production
-        /*
-        $command = $request->getVar('command');
-        switch ($command) {
-            case 'list':
-                $json = self::getVotingData();
-                $view = new \View\JsonView($json);
-                return $view;
-                break;
-        }
-        */
-
-
         $script[] = '<script type="text/javascript">var defaultPicture = \'' . PHPWS_SOURCE_HTTP . 'mod/election/img/no-picture.gif\';</script>';
         if (ELECTION_REACT_DEV) {
             $script[] = \election\Factory\React::development('Mixin/', 'Mixin.js');
