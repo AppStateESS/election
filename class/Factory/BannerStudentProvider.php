@@ -30,6 +30,11 @@ class BannerStudentProvider extends StudentProvider {
     const DOCTORAL  = 'D';
     const POSTDOC   = 'P'; // Guessing at the name here, not sure what 'P' really is
 
+    const FRESHMEN = 'Freshmen';
+    const SOPHOMORE = 'Sophomore';
+    const JUNIOR = 'Junior';
+    const SENIOR = 'Senior';
+
     public function __construct()
     {
         // Get the REST API URL from the module's settings

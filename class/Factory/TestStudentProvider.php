@@ -35,9 +35,9 @@ class TestStudentProvider extends BannerStudentProvider {
         $resp['gradYear'] = '18';
         $resp['major'] = '219A';
         $resp['onCampus'] = false;
-        $resp['studentLevel'] = 'U';
+        $resp['studentLevel'] = BannerStudentProvider::UNDERGRAD;
         $resp['creditHoursEnrolled'] = 14;
-        $resp['classification'] = 'Junior';
+        $resp['classification'] = BannerStudentProvider::JUNIOR;
         $resp['transfer'] = false;
         $resp['studentType'] = 'C';
         $resp['collegeCode'] = 'AS';
