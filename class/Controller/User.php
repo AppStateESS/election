@@ -34,7 +34,8 @@ class User extends \Http\Controller
         }
 
         if (STUDENT_DATA_TEST) {
-            $bannerId = 900325006;
+            // this is plugged in by the test student
+            $bannerId = 1;
         } else {
             $bannerId = preg_replace('/@appstate.edu/', '', $_SERVER['HTTP_SHIB_CAMPUSPERMANENTID']);
         }
