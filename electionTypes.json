@@ -117,20 +117,26 @@
                 {
                     "name": "Interfraternity Council",
                     "type": "ic",
-                    "matchName": "greek",
+                    "matchName": "Greek Life",
                     "matchValue": "IC"
                 },
                 {
                     "name": "Pan-hellenic Council",
                     "type": "phc",
-                    "matchName": "greek",
+                    "matchName": "Greek Life",
                     "matchValue": "PHC"
                 },
                 {
                     "name": "National Pan-hellenic Council",
                     "type": "nphc",
-                    "matchName": "greek",
+                    "matchName": "Greek Life",
                     "matchValue": "NPHC"
+                },
+                {
+                    "name": "Multicultural",
+                    "type": "multi",
+                    "matchName": "Greek Life",
+                    "matchValue": "MULT"
                 }
             ]
         }
