@@ -6,25 +6,25 @@
                 {
                     "name": "Freshmen",
                     "type": "freshmen",
-                    "matchName": "classification",
+                    "matchName": "Class",
                     "matchValue": "Freshman"
                 },
                 {
                     "name": "Sophomore",
                     "type": "sophomore",
-                    "matchName": "classification",
+                    "matchName": "Class",
                     "matchValue": "Sophomore"
                 },
                 {
                     "name": "Junior",
                     "type": "junior",
-                    "matchName": "classification",
+                    "matchName": "Class",
                     "matchValue": "Junior"
                 },
                 {
                     "name": "Senior",
                     "type": "senior",
-                    "matchName": "classification",
+                    "matchName": "Class",
                     "matchValue": "Senior"
                 }
             ]
@@ -35,43 +35,43 @@
                 {
                     "name": "University College",
                     "type": "university-college",
-                    "matchName": "collegeCode",
+                    "matchName": "College",
                     "matchValue": "CG"
                 },
                 {
                     "name": "College of Arts and Sciences",
                     "type": "college-arts-science",
-                    "matchName": "collegeCode",
+                    "matchName": "College",
                     "matchValue": "CAS"
                 },
                 {
                     "name": "College of Business",
                     "type": "college-business",
-                    "matchName": "collegeCode",
+                    "matchName": "College",
                     "matchValue": "CB"
                 },
                 {
                     "name": "College of Education",
                     "type": "college-education",
-                    "matchName": "collegeCode",
+                    "matchName": "College",
                     "matchValue": "CE"
                 },
                 {
                     "name": "College of Fine and Applied Arts",
                     "type": "college-fine-applied-arts",
-                    "matchName": "collegeCode",
+                    "matchName": "College",
                     "matchValue": "CFAA"
                 },
                 {
                     "name": "College of Health Sciences",
                     "type": "college-health-sciences",
-                    "matchName": "collegeCode",
+                    "matchName": "College",
                     "matchValue": "CHS"
                 },
                 {
                     "name": "Hayes School of Music",
                     "type": "music-school",
-                    "matchName": "collegeCode",
+                    "matchName": "College",
                     "matchValue": "CM"
                 }
             ]
@@ -82,31 +82,31 @@
                 {
                     "name": "Honors/Academics",
                     "type": "honors",
-                    "matchName": "club",
+                    "matchName": "Club Affiliation",
                     "matchValue": "HA"
                 },
                 {
                     "name": "Multicultural Affairs",
                     "type": "multicultural",
-                    "matchName": "club",
+                    "matchName": "Club Affiliation",
                     "matchValue": "MA"
                 },
                 {
                     "name": "Sports",
                     "type": "sports",
-                    "matchName": "club",
+                    "matchName": "Club Affiliation",
                     "matchValue": "S"
                 },
                 {
                     "name": "Service Initiatives",
                     "type": "service",
-                    "matchName": "club",
+                    "matchName": "Club Affiliation",
                     "matchValue": "SI"
                 },
                 {
                     "name": "Special Interest Groups",
                     "type": "special-interest",
-                    "matchName": "club",
+                    "matchName": "Club Affiliation",
                     "matchValue": "SIG"
                 }
             ]
