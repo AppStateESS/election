@@ -42,8 +42,7 @@ class TestStudentProvider extends BannerStudentProvider {
         $resp['studentType'] = 'C';
         $resp['collegeCode'] = 'AS';
         $resp['collegeDesc'] = 'College of Arts & Sciences';
-        $resp['collegeCode'] = 'AS';
-        $resp['collegeDesc'] = 'College of Arts & Sciences';
+
         return $resp;
     }
 
