@@ -32,10 +32,11 @@ class Student
     private $collegeDesc;
     private $creditHours;
     private $clubTypes; // Array of club types for voting eligibility
+    private $greekOrgs;
 
     public function __construct()
     {
-        
+
     }
 
     /**
@@ -223,5 +224,10 @@ class Student
     public function setClubTypes(Array $clubTypes)
     {
         $this->clubTypes = $clubTypes;
+    }
+
+    public function setGreekOrgs(Array $greekOrgs)
+    {
+        $this->greekOrgs = $greekOrgs;
     }
 }

@@ -82,7 +82,8 @@ class BannerStudentProvider extends StudentProvider {
         $clubProvider = new ClubCategoriesProvider();
         $clubTypes = $clubProvider->getCategoryListForStudent($student);
 
-        $student->setClubTypes($clubTypes);
+        $student->setClubTypes($clubTypes['clubCategories']);
+        $student->setGreekOrgs($clubTypes['greekOrgs']);
 
         return $student;
     }
