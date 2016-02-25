@@ -62,12 +62,6 @@ EOF;
 
     private function getVotingData()
     {
-        $unqualified = array('Fake election One', 'Fake election two', 'Fake election three');
-
-        //var_dump($student);
-
-        $student_id = $this->student->getBannerId();
-
         $election = Factory::getCurrent();
 
         // If there's no election going on, then return empty data
@@ -99,6 +93,7 @@ EOF;
         // Assemble the voting data
         $single = \election\Factory\Single::getListWithTickets($election['id']);
         $multiple = \election\Factory\Multiple::getListWithCandidates($election['id']);
+        $unqualified = \election\Factory\Multiple::filter($multiple, $this->student);
         $referendum = \election\Factory\Referendum::getList($election['id']);
         $voting_data = array(
             'hasVoted' => false,
