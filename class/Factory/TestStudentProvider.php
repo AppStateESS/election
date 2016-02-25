@@ -19,7 +19,6 @@ class TestStudentProvider extends BannerStudentProvider {
     protected function sendRequest($studentId)
     {
         return $this->getFakeResponse();
-        //return $this->getFakeErrorResponse();
     }
 
 
@@ -27,7 +26,7 @@ class TestStudentProvider extends BannerStudentProvider {
     {
         $resp = Array();
 
-        $resp['ID'] = '906325016';
+        $resp['ID'] = '900123456';
         $resp['userName'] = 'BJooker';
         $resp['firstName'] = 'Beremy';
         $resp['lastName'] = 'Jooker';
