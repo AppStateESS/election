@@ -98,14 +98,14 @@ class Student
     private function getClassCategory()
     {
         switch($this->class){
-            case CLASS_FR:
-                return CLASS_FR;
-            case CLASS_SO:
-                return CLASS_SO;
-            case CLASS_JR:
-                return CLASS_JR;
-            case CLASS_SR:
-                return CLASS_SR;
+            case self::CLASS_FR:
+                return self::CLASS_FR;
+            case self::CLASS_SO:
+                return self::CLASS_SO;
+            case self::CLASS_JR:
+                return self::CLASS_JR;
+            case self::CLASS_SR:
+                return self::CLASS_SR;
             default:
                 return null;
         }
