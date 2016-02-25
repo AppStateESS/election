@@ -65,7 +65,8 @@ var Election = React.createClass({
                     multiple : data.multiple,
                     referendum : data.referendum,
                     ballotCount : ballotCount,
-                    referendumCount : referendumLength
+                    referendumCount : referendumLength,
+                    unqualified : data.unqualified
                 });
             }
 
