@@ -4,14 +4,17 @@ var Multiple = React.createClass({
             election : {},
             updateVote : null,
             vote : [],
-            ballot : {}
+            ballot : {},
+            unqualified : []
         };
     },
 
     render: function() {
         return <MultipleBallot multipleId={this.props.ballot.id}
             {...this.props.ballot}
-            updateVote={this.props.updateVote} vote={this.props.vote}/>;
+            updateVote={this.props.updateVote}
+            vote={this.props.vote}
+            unqualified={this.props.unqualified}/>;
     }
 });
 
@@ -86,6 +89,22 @@ var MultipleBallot = React.createClass({
             var button = <button className="pull-right btn btn-warning" onClick={this.saveVotes}>Abstain from {this.props.title} <i className="fa fa-arrow-right"></i></button>;
         }
 
+        var unqualified = null;
+        if (this.props.unqualified.length > 0) {
+            unqualified = (
+                <div className="">
+                    <hr />
+                    <p>You were not qualified to vote in the following ballots<br />
+                    because of your class, college, or organizational affiliation.</p>
+                    <ul>
+                        {this.props.unqualified.map(function(value, key){
+                            return <li key={key}>{value}</li>;
+                        })}
+                    </ul>
+                </div>
+            );
+        }
+
         return (
             <div className="multiple-ticket-vote">
                 <h2>{this.props.title}</h2>
@@ -99,6 +118,7 @@ var MultipleBallot = React.createClass({
                 <div className="text-right">
                     {button}
                 </div>
+                {unqualified}
             </div>
         );
     }

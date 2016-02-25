@@ -8,14 +8,17 @@ var Multiple = React.createClass({
             election: {},
             updateVote: null,
             vote: [],
-            ballot: {}
+            ballot: {},
+            unqualified: []
         };
     },
 
     render: function () {
         return React.createElement(MultipleBallot, _extends({ multipleId: this.props.ballot.id
         }, this.props.ballot, {
-            updateVote: this.props.updateVote, vote: this.props.vote }));
+            updateVote: this.props.updateVote,
+            vote: this.props.vote,
+            unqualified: this.props.unqualified }));
     }
 });
 
@@ -102,6 +105,33 @@ var MultipleBallot = React.createClass({
             );
         }
 
+        var unqualified = null;
+        if (this.props.unqualified.length > 0) {
+            unqualified = React.createElement(
+                "div",
+                { className: "" },
+                React.createElement("hr", null),
+                React.createElement(
+                    "p",
+                    null,
+                    "You were not qualified to vote in the following ballots",
+                    React.createElement("br", null),
+                    "because of your class, college, or organizational affiliation."
+                ),
+                React.createElement(
+                    "ul",
+                    null,
+                    this.props.unqualified.map(function (value, key) {
+                        return React.createElement(
+                            "li",
+                            { key: key },
+                            value
+                        );
+                    })
+                )
+            );
+        }
+
         return React.createElement(
             "div",
             { className: "multiple-ticket-vote" },
@@ -130,7 +160,8 @@ var MultipleBallot = React.createClass({
                 "div",
                 { className: "text-right" },
                 button
-            )
+            ),
+            unqualified
         );
     }
 });
