@@ -23,24 +23,28 @@ class TestStudentProvider extends BannerStudentProvider {
     }
 
 
-    private function getFakeResponse()
+    protected function getFakeResponse()
     {
         $resp = Array();
 
-        $resp['ID'] = '900325006';
-        $resp['userName'] = 'jb67803';
-        $resp['firstName'] = 'Jeremy';
-        $resp['lastName'] = 'Booker';
+        $resp['ID'] = '906325016';
+        $resp['userName'] = 'BJooker';
+        $resp['firstName'] = 'Beremy';
+        $resp['lastName'] = 'Jooker';
 
-        $resp['studentLevel'] = \election\Resource\Student::UNDERGRAD;
-
-        $resp['classification'] = 'Junior'; //TODO Check the API's actual format and possible values for this field
-
-        // TODO Check API's possible values here
+        $resp['gradYear'] = '18';
+        $resp['major'] = '219A';
+        $resp['onCampus'] = false;
+        $resp['studentLevel'] = 'U';
+        $resp['creditHoursEnrolled'] = 14;
+        $resp['classification'] = 'Junior';
+        $resp['transfer'] = false;
+        $resp['studentType'] = 'C';
         $resp['collegeCode'] = 'AS';
         $resp['collegeDesc'] = 'College of Arts & Sciences';
-
-        return json_encode($resp);
+        $resp['collegeCode'] = 'AS';
+        $resp['collegeDesc'] = 'College of Arts & Sciences';
+        return $resp;
     }
 
     private function getFakeErrorResponse()

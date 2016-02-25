@@ -10,10 +10,10 @@ namespace election\Resource;
 class Student
 {
     const UNDERGRAD = 'ugrad';
-    const GRADUATE  = 'grad';
+    const GRADUATE = 'grad';
     const GRADUATE2 = 'grad2';
-    const DOCTORAL  = 'doctoral';
-    const POSTDOC   = 'postdoc';
+    const DOCTORAL = 'doctoral';
+    const POSTDOC = 'postdoc';
 
     const CLASS_FR = 'Freshmen';
     const CLASS_SO = 'Sophomore';
@@ -24,21 +24,18 @@ class Student
     private $username;
     private $firstName;
     private $lastName;
-
     private $studentType;
     private $isTransfer;
     private $level;
     private $class;
-
     private $collegeCode;
     private $collegeDesc;
     private $creditHours;
-
     private $clubTypes; // Array of club types for voting eligibility
 
     public function __construct()
     {
-
+        
     }
 
     /**
@@ -62,11 +59,11 @@ class Student
      */
     public function hasVoted($electionId)
     {
-        if(!isset($electionId) || $electionId == ''){
+        if (!isset($electionId) || $electionId == '') {
             throw new \InvalidArgumentException('Missing election id.');
         }
 
-        if(!isset($this->bannerId) || $this->bannerId == ''){
+        if (!isset($this->bannerId) || $this->bannerId == '') {
             throw new \InvalidArgumentException('Missing banner ID.');
         }
 
@@ -76,7 +73,7 @@ class Student
         $vote->addFieldConditional('bannerId', $this->bannerId);
         $result = $db->selectOneRow();
 
-        return (bool)$result;
+        return (bool) $result;
     }
 
     /**
@@ -151,57 +148,80 @@ class Student
         return $this->bannerId;
     }
 
-    public function setBannerId($id){
+    public function setBannerId($id)
+    {
         $this->bannerId = $id;
     }
 
-    public function getUsername(){
+    public function getUsername()
+    {
         return $this->username;
     }
 
-    public function setUsername($username){
+    public function setUsername($username)
+    {
         $this->username = $username;
     }
 
-    public function setFirstName($firstName){
+    public function setFirstName($firstName)
+    {
         $this->firstName = $firstName;
     }
 
-    public function setLastName($lastName){
+    public function setLastName($lastName)
+    {
         $this->lastName = $lastName;
     }
 
-    public function setLevel($level){
+    public function setLevel($level)
+    {
         $this->level = $level;
     }
 
-    public function setCreditHours($hours){
+    public function setCreditHours($hours)
+    {
         $this->creditHours = $hours;
     }
 
-    public function setClass($class){
+    public function setClass($class)
+    {
         $this->class = $class;
     }
 
-    public function setCollegeCode($code){
+    public function setCollegeCode($code)
+    {
         $this->collegeCode = $code;
     }
 
-    public function setCollegeDesc($desc){
+    public function setCollegeDesc($desc)
+    {
         $this->collegeDesc = $desc;
     }
 
-    public function setStudentType($type){
+    public function setStudentType($type)
+    {
         $this->studentType = $type;
 
         // TODO: set $this->isTransfer
     }
 
-    public function getClubTypes(){
+    public function setIsTransfer($transfer)
+    {
+        $this->isTransfer = (bool) $transfer;
+    }
+
+    public function getIsTransfer()
+    {
+        return $this->isTransfer;
+    }
+
+    public function getClubTypes()
+    {
         return $this->clubTypes;
     }
 
-    public function setClubTypes(Array $clubTypes){
+    public function setClubTypes(Array $clubTypes)
+    {
         $this->clubTypes = $clubTypes;
     }
 }

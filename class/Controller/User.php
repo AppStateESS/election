@@ -8,6 +8,7 @@ namespace election\Controller;
  */
 class User extends \Http\Controller
 {
+
     public function get(\Request $request)
     {
         $command = $this->routeCommand($request);
@@ -28,15 +29,19 @@ class User extends \Http\Controller
         $election = \election\Factory\Election::getCurrent();
 
         // If there's no current election, redirect to friendly error message
-        if($election === false){
+        if ($election === false) {
             $command = 'NoOpenElections';
         }
 
-        $bannerId = preg_replace('/@appstate.edu/', '', $_SERVER['HTTP_SHIB_CAMPUSPERMANENTID']);
+        if (STUDENT_DATA_TEST) {
+            $bannerId = 900325006;
+        } else {
+            $bannerId = preg_replace('/@appstate.edu/', '', $_SERVER['HTTP_SHIB_CAMPUSPERMANENTID']);
+        }
         $student = \election\Factory\StudentFactory::getStudentByBannerId($bannerId);
 
         // If there's an election going on, check to see if this student has already voted in it
-        if($election !== false && $student->hasVoted($election['id'])){
+        if ($election !== false && $student->hasVoted($election['id'])) {
             $command = 'AlreadyVoted';
         }
 
@@ -51,7 +56,7 @@ class User extends \Http\Controller
         }
         $controller = new $className($this->getModule());
         $controller->setStudent($student);
-        
+
         return $controller;
     }
 
@@ -62,7 +67,7 @@ class User extends \Http\Controller
         $vars['is_admin'] = \Current_User::allow('election');
         $vars['logout_uri'] = $auth->logout_link;
         $vars['username'] = \Current_User::getDisplayName();
-        $template =  new \Template($vars);
+        $template = new \Template($vars);
         $template->setModuleTemplate('election', 'navbar.html');
         $content = $template->get();
         \Layout::plug($content, 'NAV_LINKS');
@@ -85,6 +90,5 @@ class User extends \Http\Controller
         $template->add('image', PHPWS_SOURCE_HTTP . 'mod/election/img/background1.jpg');
         \Layout::add($template->get());
     }
-
 
 }

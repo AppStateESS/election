@@ -2,6 +2,10 @@
 
 namespace election\Factory;
 
+if (!defined('STUDENT_DATA_TEST')) {
+    define('STUDENT_DATA_TEST', false);
+}
+
 /**
  * StudentDataProviderFactory
  *
@@ -18,14 +22,9 @@ class StudentProviderFactory {
      */
     public static function getProvider()
     {
-        /*
         if(STUDENT_DATA_TEST){
             return new TestStudentProvider();
         }
-        */
-
-        // Other data providers could be used here..
-
         
         return new BannerStudentProvider();
     }

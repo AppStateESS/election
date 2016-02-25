@@ -7,6 +7,10 @@ require_once PHPWS_SOURCE_DIR . 'mod/election/vendor/autoload.php';
 use election\Resource\Student;
 use Guzzle\Http\Client;
 
+if (!defined('STUDENT_DATA_TEST')) {
+    define('STUDENT_DATA_TEST', false);
+}
+
 /**
  * BannerStudentProvider
  *
@@ -54,7 +58,11 @@ class BannerStudentProvider extends StudentProvider {
             throw new \InvalidArgumentException('Missing student ID.');
         }
 
-        $json = $this->sendRequest($studentId);
+        if (STUDENT_DATA_TEST) {
+            $json = $this->getFakeResponse();
+        } else {
+            $json = $this->sendRequest($studentId);
+        }
 
         // Check for error response like ['Message'] = 'An error has occurred.';
         // TODO
@@ -108,13 +116,13 @@ class BannerStudentProvider extends StudentProvider {
         // Level (grad vs undergrad)
         if($data['studentLevel'] == self::UNDERGRAD) {
             $student->setLevel(Student::UNDERGRAD);
-        } else if ($data['studentLevel'] == self::GRADUATE) {
+        } elseif ($data['studentLevel'] == self::GRADUATE) {
             $student->setLevel(Student::GRADUATE);
-        } else if ($data['studentLevel'] == self::GRADUATE2) {
+        } elseif ($data['studentLevel'] == self::GRADUATE2) {
             $student->setLevel(Student::GRADUATE2);
-        } else if ($data['studentLevel'] == self::DOCTORAL) {
+        } elseif ($data['studentLevel'] == self::DOCTORAL) {
             $student->setLevel(Student::DOCTORAL);
-        } else if ($data['studentLevel'] == self::POSTDOC) {
+        } elseif ($data['studentLevel'] == self::POSTDOC) {
             $student->setLevel(Student::POSTDOC);
         } else {
             throw new \InvalidArgumentException("Unrecognized student level ({$data['studentLevel']}) for {$data->banner_id}.");

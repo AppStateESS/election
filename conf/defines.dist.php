@@ -20,3 +20,6 @@ define('ELECTION_MAX_CANDIDATE_HEIGHT', 200);
 define('ELECTION_RANDOMIZE_TICKETS', true);
 
 define('ELECTION_LOGIN_DIRECTORY', 'secure/');
+
+// if true, any student who signs in will get the fake account
+define('STUDENT_DATA_TEST', false);
