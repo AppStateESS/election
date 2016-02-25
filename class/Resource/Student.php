@@ -15,6 +15,11 @@ class Student
     const DOCTORAL  = 'doctoral';
     const POSTDOC   = 'postdoc';
 
+    const CLASS_FR = 'Freshmen';
+    const CLASS_SO = 'Sophomore';
+    const CLASS_JR = 'Junior';
+    const CLASS_SR = 'Senior';
+
     private $bannerId;
     private $username;
     private $firstName;
@@ -42,7 +47,7 @@ class Student
      */
     public function isEligibleToVote()
     {
-        if($this->creditHoursEnrolled >= 1 && $this->studentType == Student::LEVEL_UNDERGRAD){
+        if($this->creditHours >= 1 && $this->level == Student::UNDERGRAD){
             return true;
         }
 
@@ -72,6 +77,74 @@ class Student
         $result = $db->selectOneRow();
 
         return (bool)$result;
+    }
+
+    /**
+     * Returns an array of category names this student is eligible to vote in
+     */
+    public function getVotingCategories()
+    {
+        // Get their class category (fresh/soph/jr/sr)
+        $classCategory = $this->getClassCategory();
+
+        // Get the college category
+        $collegeCategory = $this->getCollegeCategory();
+
+        // Get the club & org categories
+        // TODO
+        $clubAffiliation = $this->getClubAffiliation();
+
+        // Put the lists together
+        return array('Class' => $classCategory, 'College' => $collegeCategory, 'Club Affiliation' => $clubAffiliation);
+    }
+
+    private function getClassCategory()
+    {
+        switch($this->class){
+            case CLASS_FR:
+                return CLASS_FR;
+            case CLASS_SO:
+                return CLASS_SO;
+            case CLASS_JR:
+                return CLASS_JR;
+            case CLASS_SR:
+                return CLASS_SR;
+            default:
+                return null;
+        }
+    }
+
+    public function getCollegeCategory()
+    {
+        switch($this->collegeCode){
+            case 'GC': // University College
+                return 'UC';
+            case 'AS': // College of Arts & Sciences
+                return 'CAS';
+            case 'HS': // College of Health Sciences
+                return 'CHS';
+            case 'FA':
+                return 'CFAA';
+            case 'CB':
+                return 'CB';
+            case 'ED':
+                return 'CE';
+            case 'MU':
+                return 'CM';
+        }
+    }
+
+    public function getClubAffiliation()
+    {
+        return null;
+    }
+
+    public function isMemberOfClubType($type){
+        if(in_array($type, $this->clubTypes)){
+            return true;
+        }
+
+        return false;
     }
 
     public function getBannerId(){
@@ -130,13 +203,5 @@ class Student
 
     public function setClubTypes(Array $clubTypes){
         $this->clubTypes = $clubTypes;
-    }
-
-    public function isMemberOfClubType($type){
-        if(in_array($type, $this->clubTypes)){
-            return true;
-        }
-
-        return false;
     }
 }
