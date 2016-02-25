@@ -52,11 +52,51 @@ class Multiple extends Ballot
         return $multiple;
     }
 
-    public static function filter(array $multiple, $student)
+    public static function filter(array &$multiple, $student)
     {
-        foreach ($multiple as $ballot) {
-            $category = $ballot['category'];
+        $unqualified = null;
+        $categoryListByType = self::categoryListingByType();
+        $studentCategories = $student->getVotingCategories();
+        //var_dump($studentCategories);
+        foreach ($multiple as $key => $ballot) {
+            $categoryType = $ballot['category'];
+            if (!isset($categoryListByType[$categoryType])) {
+                throw new \Exception('Bad category type');
+            }
+            $category = $categoryListByType[$categoryType];
+            if (isset($studentCategories[$category->matchName])) {
+                $match = $studentCategories[$category->matchName];
+                if (is_array($match)) {
+                    if (!in_array($category->matchValue, $match)) {
+                        unset($multiple[$key]);
+                        $unqualified[] = $ballot['title'];
+                    }
+                } else {
+                    if ($category->matchValue !== $match) {
+                        unset($multiple[$key]);
+                        $unqualified[] = $ballot['title'];
+                    }
+                }
+            }
         }
+        //reset index
+        $multiple = array_values($multiple);
+        return $unqualified;
+    }
+    
+    private static function categoryListingByType()
+    {
+        $json = Election::getFilterTypes();
+        if (empty($json)) {
+            throw new \Exception('Missing election types');
+        }
+        $types = json_decode($json);
+        foreach ($types->electionTypes as $cat) {
+            foreach ($cat->subcategory as $sub) {
+                $categories[$sub->type] = $sub;
+            }
+        }
+        return $categories;
     }
 
 }
