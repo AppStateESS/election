@@ -9,6 +9,8 @@ namespace election\Controller\User;
 abstract class Base extends \election\Controller\Base
 {
     protected $student;
+    
+    protected $message;
 
     public function setStudent(\election\Resource\Student $student){
         $this->student = $student;

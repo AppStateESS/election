@@ -10,18 +10,6 @@ namespace election\Factory;
  */
 class TestStudentProvider extends BannerStudentProvider {
 
-    /**
-     * Empty constructor to overwrite parent's constructor.
-     */
-    public function __construct() {
-    }
-
-    protected function sendRequest($studentId)
-    {
-        return $this->getFakeResponse();
-    }
-
-
     protected function getFakeResponse()
     {
         $resp = Array();
@@ -51,5 +39,10 @@ class TestStudentProvider extends BannerStudentProvider {
         $obj->banner_id = '900123456';
 
         return $obj;
+    }
+    
+    public function pullStudentId()
+    {
+        return TEST_STUDENT_ID;
     }
 }

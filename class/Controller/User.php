@@ -33,14 +33,16 @@ class User extends \Http\Controller
             $command = 'NoOpenElections';
         }
 
-        if (STUDENT_DATA_TEST) {
-            // this is plugged in by the test student
-            $bannerId = 1;
-        } else {
-            $bannerId = preg_replace('/@appstate.edu/', '', $_SERVER['HTTP_SHIB_CAMPUSPERMANENTID']);
-        }
-        $student = \election\Factory\StudentFactory::getStudentByBannerId($bannerId);
+        $provider = \election\Factory\StudentProviderFactory::getProvider();
+        $studentId = $provider->pullStudentId();
 
+        try {
+            $student = \election\Factory\StudentFactory::getStudentByBannerId($studentId);
+        } catch (\election\Exception\NotAllowed $ex) {
+            $controller = new User\NotAllowed($this->getModule());
+            $controller->setMessage($ex->getMessage());
+            return $controller;
+        }
         // If there's an election going on, check to see if this student has already voted in it
         if ($election !== false && $student->hasVoted($election['id'])) {
             $command = 'AlreadyVoted';

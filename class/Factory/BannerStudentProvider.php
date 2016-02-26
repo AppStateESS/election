@@ -3,7 +3,6 @@
 namespace election\Factory;
 
 require_once PHPWS_SOURCE_DIR . 'mod/election/vendor/autoload.php';
-
 use election\Resource\Student;
 use Guzzle\Http\Client;
 
@@ -19,17 +18,16 @@ if (!defined('STUDENT_DATA_TEST')) {
  * @author Jeremy Booker
  * @package election
  */
-class BannerStudentProvider extends StudentProvider {
-
+class BannerStudentProvider extends StudentProvider
+{
     private $client;
 
     // Student level: grad, undergrad
     const UNDERGRAD = 'U';
-    const GRADUATE  = 'G';
+    const GRADUATE = 'G';
     const GRADUATE2 = 'G2';
-    const DOCTORAL  = 'D';
-    const POSTDOC   = 'P'; // Guessing at the name here, not sure what 'P' really is
-
+    const DOCTORAL = 'D';
+    const POSTDOC = 'P'; // Guessing at the name here, not sure what 'P' really is
     const FRESHMEN = 'Freshmen';
     const SOPHOMORE = 'Sophomore';
     const JUNIOR = 'Junior';
@@ -40,12 +38,12 @@ class BannerStudentProvider extends StudentProvider {
         // Get the REST API URL from the module's settings
         $apiUrl = \PHPWS_Settings::get('election', 'studentDataApiUrl');
 
-        if(is_null($apiUrl)){
+        if (is_null($apiUrl)) {
             throw new \InvalidArgumentException('Student data API url is not configured.');
         }
 
         // If the URL doesn't end with a trailing slash, then add one
-        if(substr($apiUrl, -1) != '/'){
+        if (substr($apiUrl, -1) != '/') {
             $apiUrl .= '/';
         }
 
@@ -59,22 +57,21 @@ class BannerStudentProvider extends StudentProvider {
      */
     public function getStudent($studentId)
     {
-        if($studentId === null || $studentId == ''){
+        if ($studentId === null || $studentId == '') {
             throw new \InvalidArgumentException('Missing student ID.');
         }
-
-        if (STUDENT_DATA_TEST) {
-            $json = $this->getFakeResponse();
-        } else {
-            $json = $this->sendRequest($studentId);
-        }
+        $json = $this->sendRequest($studentId);
 
         // Check for error response like ['Message'] = 'An error has occurred.';
         // TODO
-
         // Log the request
         $this->logRequest('getStudent', 'success', array($studentId));
 
+        
+        if (!isset($data['creditHoursEnrolled']) || (int)$data['creditHoursEnrolled'] === 0) {
+            throw new \Election\Exception\NotAllowed('No credit hours');
+        }
+        
         // Create the Student object and plugin the values
         $student = new \election\Resource\Student();
         $this->plugValues($student, $json);
@@ -106,21 +103,20 @@ class BannerStudentProvider extends StudentProvider {
      */
     protected function plugValues(&$student, Array $data)
     {
-        /**********************
+        /**
          * Basic Demographics *
-         **********************/
+         */
         $student->setBannerId($data['ID']);
         $student->setUsername($data['userName']);
 
         $student->setFirstName($data['firstName']);
         $student->setLastName($data['lastName']);
 
-        /*****************
-         * Academic Info *
-         *****************/
-
+        /**
+         * Academic Info
+         */
         // Level (grad vs undergrad)
-        if($data['studentLevel'] == self::UNDERGRAD) {
+        if ($data['studentLevel'] == self::UNDERGRAD) {
             $student->setLevel(Student::UNDERGRAD);
         } elseif ($data['studentLevel'] == self::GRADUATE) {
             $student->setLevel(Student::GRADUATE);
@@ -157,5 +153,10 @@ class BannerStudentProvider extends StudentProvider {
         $args = implode(', ', $params);
         $msg = "$functionName($args) result: $result";
         \PHPWS_Core::log($msg, 'soap.log', 'SOAP');
+    }
+
+    public function pullStudentId()
+    {
+        return preg_replace('/@appstate.edu/', '', $_SERVER['HTTP_SHIB_CAMPUSPERMANENTID']);
     }
 }
