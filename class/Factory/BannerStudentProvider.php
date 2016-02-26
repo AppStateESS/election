@@ -70,9 +70,6 @@ class BannerStudentProvider extends StudentProvider
         // Create the Student object and plugin the values
         $student = new \election\Resource\Student();
         $this->plugValues($student, $json);
-        if (!$student->isEligibleToVote()) {
-            throw new \Election\Exception\NotAllowed('No credit hours or not an undergraduate student.');
-        }
 
         $clubProvider = new ClubCategoriesProvider();
         $clubTypes = $clubProvider->getCategoryListForStudent($student);

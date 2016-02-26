@@ -36,17 +36,18 @@ class User extends \Http\Controller
         $provider = \election\Factory\StudentProviderFactory::getProvider();
         $studentId = $provider->pullStudentId();
 
-        try {
-            if (preg_match('/^9\d{8}/', $studentId)) {
-                $student = \election\Factory\StudentFactory::getStudentByBannerId($studentId);
-            } else {
-                $student = \election\Factory\StudentFactory::getStudentByUsername($studentId);
-            }
-        } catch (\election\Exception\NotAllowed $ex) {
+        if (preg_match('/^9\d{8}/', $studentId)) {
+            $student = \election\Factory\StudentFactory::getStudentByBannerId($studentId);
+        } else {
+            $student = \election\Factory\StudentFactory::getStudentByUsername($studentId);
+        }
+            
+        if (!$student->isEligibleToVote()) {
             $controller = new User\NotAllowed($this->getModule());
-            $controller->setMessage($ex->getMessage());
+            $controller->setMessage('No credit hours or not an undergraduate student.');
             return $controller;
         }
+        
         // If there's an election going on, check to see if this student has already voted in it
         if ($election !== false && $student->hasVoted($election['id'])) {
             $command = 'AlreadyVoted';
