@@ -37,7 +37,11 @@ class User extends \Http\Controller
         $studentId = $provider->pullStudentId();
 
         try {
-            $student = \election\Factory\StudentFactory::getStudentByBannerId($studentId);
+            if (preg_match('/^9\d{8}/', $studentId)) {
+                $student = \election\Factory\StudentFactory::getStudentByBannerId($studentId);
+            } else {
+                $student = \election\Factory\StudentFactory::getStudentByUsername($studentId);
+            }
         } catch (\election\Exception\NotAllowed $ex) {
             $controller = new User\NotAllowed($this->getModule());
             $controller->setMessage($ex->getMessage());

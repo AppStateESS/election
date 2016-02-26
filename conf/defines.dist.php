@@ -24,4 +24,5 @@ define('ELECTION_LOGIN_DIRECTORY', 'secure/');
 // if true, any student who signs in will get the fake account
 define('STUDENT_DATA_TEST', false);
 
+// set banner id or user name
 define('TEST_STUDENT_ID', '000000000');

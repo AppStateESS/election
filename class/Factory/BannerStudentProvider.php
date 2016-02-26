@@ -67,14 +67,12 @@ class BannerStudentProvider extends StudentProvider
         // Log the request
         $this->logRequest('getStudent', 'success', array($studentId));
 
-        
-        if (!isset($data['creditHoursEnrolled']) || (int)$data['creditHoursEnrolled'] === 0) {
-            throw new \Election\Exception\NotAllowed('No credit hours');
-        }
-        
         // Create the Student object and plugin the values
         $student = new \election\Resource\Student();
         $this->plugValues($student, $json);
+        if (!$student->isEligibleToVote()) {
+            throw new \Election\Exception\NotAllowed('No credit hours or not an undergraduate student.');
+        }
 
         $clubProvider = new ClubCategoriesProvider();
         $clubTypes = $clubProvider->getCategoryListForStudent($student);
@@ -131,7 +129,7 @@ class BannerStudentProvider extends StudentProvider
         }
 
         // Credit Hours
-        $student->setCreditHours($data['creditHoursEnrolled']);
+        $student->setCreditHours(isset($data['creditHoursEnrolled']) ? $data['creditHoursEnrolled'] : 0);
 
         // Type
         $student->setStudentType($data['studentType']);
