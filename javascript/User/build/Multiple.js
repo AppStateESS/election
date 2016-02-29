@@ -141,7 +141,7 @@ var MultipleBallot = React.createClass({
             ),
             React.createElement(
                 "div",
-                { className: "remaining-seats alert alert-success" },
+                { className: "container remaining-seats alert alert-success" },
                 button,
                 "You have selected ",
                 this.state.totalSelected,

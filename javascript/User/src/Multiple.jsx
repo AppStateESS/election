@@ -107,7 +107,7 @@ var MultipleBallot = React.createClass({
         return (
             <div className="multiple-ticket-vote">
                 <h2>{this.props.title}</h2>
-                <div className="remaining-seats alert alert-success">
+                <div className="container remaining-seats alert alert-success">
                     {button}You have selected {this.state.totalSelected} of the allowed {this.props.seatNumber} seats.
                 </div>
                 <ul className="list-group">

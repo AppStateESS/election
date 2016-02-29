@@ -44,8 +44,8 @@
     font-weight : bold;
     position : fixed;
     top : 0px;
-    width : 85%;
-    margin : 0 auto;
+    /*width : 70%;*/
+    /*margin : 0 auto;*/
     z-index : 201;
 }
 
