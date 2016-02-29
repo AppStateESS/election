@@ -36,12 +36,18 @@ class User extends \Http\Controller
         $provider = \election\Factory\StudentProviderFactory::getProvider();
         $studentId = $provider->pullStudentId();
 
-        if (preg_match('/^9\d{8}/', $studentId)) {
-            $student = \election\Factory\StudentFactory::getStudentByBannerId($studentId);
-        } else {
-            $student = \election\Factory\StudentFactory::getStudentByUsername($studentId);
+        try {
+            if (preg_match('/^9\d{8}/', $studentId)) {
+                $student = \election\Factory\StudentFactory::getStudentByBannerId($studentId);
+            } else {
+                $student = \election\Factory\StudentFactory::getStudentByUsername($studentId);
+            }
+        } catch (\Guzzle\Http\Exception\BadResponseException $ex) {
+            $controller = new User\NotAllowed($this->getModule());
+            $controller->setMessage('We could not pull your student record.');
+            return $controller;
         }
-            
+         
         if (!$student->isEligibleToVote()) {
             $controller = new User\NotAllowed($this->getModule());
             $controller->setMessage('No credit hours or not an undergraduate student.');
