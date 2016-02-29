@@ -110,7 +110,6 @@ var MultipleBallot = React.createClass({
             unqualified = React.createElement(
                 "div",
                 { className: "" },
-                React.createElement("hr", null),
                 React.createElement(
                     "p",
                     null,
@@ -158,10 +157,14 @@ var MultipleBallot = React.createClass({
             React.createElement("hr", null),
             React.createElement(
                 "div",
-                { className: "text-right" },
+                null,
                 button
             ),
-            unqualified
+            React.createElement(
+                "div",
+                { style: { clear: 'both' } },
+                unqualified
+            )
         );
     }
 });

@@ -93,7 +93,6 @@ var MultipleBallot = React.createClass({
         if (this.props.unqualified.length > 0) {
             unqualified = (
                 <div className="">
-                    <hr />
                     <p>You were not qualified to vote in the following ballots<br />
                     because of your class, college, or organizational affiliation.</p>
                     <ul>
@@ -115,10 +114,12 @@ var MultipleBallot = React.createClass({
                     {candidates}
                 </ul>
                 <hr />
-                <div className="text-right">
+                <div>
                     {button}
                 </div>
-                {unqualified}
+                <div style={{clear : 'both'}}>
+                    {unqualified}
+                </div>
             </div>
         );
     }
