@@ -94,7 +94,8 @@ class Student
         $greekLife = $this->getGreekList();
 
         // Put the lists together
-        return array('Class' => $classCategory, 'College' => $collegeCategory, 'Club Affiliation' => $clubAffiliation, 'Greek Life' => $greekLife);
+        return array('Class' => $classCategory, 'College' => $collegeCategory, 'Club Affiliation' => $clubAffiliation, 
+            'Greek Life' => $greekLife, 'Student Type' => $this->getStudentType());
     }
 
     private function getClassCategory()
@@ -152,6 +153,11 @@ class Student
         return $this->bannerId;
     }
 
+    public function getStudentType()
+    {
+        return $this->studentType;
+    }
+    
     public function setBannerId($id)
     {
         $this->bannerId = $id;
