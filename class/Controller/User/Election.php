@@ -36,10 +36,14 @@ class Election extends \election\Controller\User\Base
         \Layout::addStyle('election', 'style.css');
         \Layout::addStyle('election', 'User/style.css');
 
-        $content = <<<EOF
+        $content = null;
+        // Shows student data
+        //$content .= '<pre>' . var_export($this->student, true) . '</pre>';
+        $content .= <<<EOF
 <div id="election"></div>
 $react
 EOF;
+        
         $view = new \View\HtmlView($content);
         return $view;
     }
