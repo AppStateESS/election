@@ -54,11 +54,14 @@ class Multiple extends Ballot
 
     public static function filter(array &$multiple, $student)
     {
-        $unqualified = null;
+        $unqualified = array();
         $categoryListByType = self::categoryListingByType();
         $studentCategories = $student->getVotingCategories();
-        //var_dump($studentCategories);
         foreach ($multiple as $key => $ballot) {
+            // ballots without candidates skipped
+            if (empty($ballot['candidates'])) {
+                unset($multiple[$key]);
+            }
             $categoryType = $ballot['category'];
             if (!isset($categoryListByType[$categoryType])) {
                 throw new \Exception('Bad category type');
@@ -77,13 +80,16 @@ class Multiple extends Ballot
                         $unqualified[] = $ballot['title'];
                     }
                 }
+            } else {
+                unset($multiple[$key]);
+                $unqualified[] = $ballot['title'];
             }
         }
         //reset index
         $multiple = array_values($multiple);
         return $unqualified;
     }
-    
+
     private static function categoryListingByType()
     {
         $json = Election::getFilterTypes();
