@@ -25,7 +25,7 @@ class NotAllowed extends \election\Controller\User\Base
         $reason = $this->getMessage();
         // TODO.. Fill this in with an actual template
         $content = <<<EOF
-<div class='well'><p><strong>Sorry, but you may not vote.</strong></p>
+<div class='well'><p><strong>Sorry, but you are not eligible to vote.</strong></p>
 <p><strong>Reason:</strong> $reason</p>
 EOF;
 
