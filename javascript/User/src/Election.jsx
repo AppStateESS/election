@@ -44,17 +44,17 @@ var Election = React.createClass({
 
                 /* If there are no single-type elections, then skip to multiple type */
                 if (singleLength === 0) {
-                    stage = 'multiple';
+                    if (multipleLength === 0) {
+                        if (referendumLength === 0) {
+                            stage = 'empty';
+                        } else {
+                            stage = 'referendum';
+                        }
+                    } else {
+                        stage = 'multiple';
+                    }
                 } else {
                     stage = 'single';
-                }
-                /* If there's no single and no multiple types, skip to referendum */
-                if (singleLength === 0 && multipleLength === 0) {
-                    stage = 'referendum';
-                }
-                /* If there are no elections at all, show the empty message */
-                if (singleLength === 0 && multipleLength === 0 && referendumLength === 0) {
-                    stage = 'empty';
                 }
                 var ballotCount = singleLength + multipleLength;
                 this.setState({
