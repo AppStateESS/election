@@ -14,7 +14,6 @@ class Student
     const GRADUATE2 = 'grad2';
     const DOCTORAL = 'doctoral';
     const POSTDOC = 'postdoc';
-
     const CLASS_FR = 'Freshmen';
     const CLASS_SO = 'Sophomore';
     const CLASS_JR = 'Junior';
@@ -36,7 +35,7 @@ class Student
 
     public function __construct()
     {
-
+        
     }
 
     /**
@@ -45,7 +44,7 @@ class Student
      */
     public function isEligibleToVote()
     {
-        if($this->creditHours >= 1 && $this->level == Student::UNDERGRAD){
+        if ($this->creditHours >= 1 && $this->level == Student::UNDERGRAD) {
             return true;
         }
 
@@ -92,13 +91,15 @@ class Student
         // TODO
         $clubAffiliation = $this->getClubAffiliation();
 
+        $greekLife = $this->getGreekList();
+
         // Put the lists together
-        return array('Class' => $classCategory, 'College' => $collegeCategory, 'Club Affiliation' => $clubAffiliation);
+        return array('Class' => $classCategory, 'College' => $collegeCategory, 'Club Affiliation' => $clubAffiliation, 'Greek Life' => $greekLife);
     }
 
     private function getClassCategory()
     {
-        switch($this->class){
+        switch ($this->class) {
             case self::CLASS_FR:
                 return self::CLASS_FR;
             case self::CLASS_SO:
@@ -114,38 +115,40 @@ class Student
 
     public function getCollegeCategory()
     {
-        switch($this->collegeCode){
-            case 'GC': // University College
-                return 'UC';
-            case 'AS': // College of Arts & Sciences
-                return 'CAS';
-            case 'HS': // College of Health Sciences
-                return 'CHS';
-            case 'FA':
-                return 'CFAA';
-            case 'CB':
-                return 'CB';
-            case 'ED':
-                return 'CE';
-            case 'MU':
-                return 'CM';
-        }
+        return $this->collegeCode;
     }
 
     public function getClubAffiliation()
     {
-        return null;
+        $clubs = $this->clubTypes;
+        return $clubs;
     }
 
-    public function isMemberOfClubType($type){
-        if(in_array($type, $this->clubTypes)){
+    public function getGreekList()
+    {
+        $greeks = array();
+        $affil = null;
+        include PHPWS_SOURCE_DIR . 'mod/election/inc/greek.php';
+
+        foreach ($this->greekOrgs as $greek_title) {
+            if (isset($greeks[$greek_title])) {
+                $affil[] = $greeks[$greek_title];
+            }
+        }
+        return $affil;
+    }
+
+    public function isMemberOfClubType($type)
+    {
+        if (in_array($type, $this->clubTypes)) {
             return true;
         }
 
         return false;
     }
 
-    public function getBannerId(){
+    public function getBannerId()
+    {
         return $this->bannerId;
     }
 
@@ -230,4 +233,5 @@ class Student
     {
         $this->greekOrgs = $greekOrgs;
     }
+
 }
