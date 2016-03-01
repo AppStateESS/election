@@ -26,3 +26,6 @@ define('STUDENT_DATA_TEST', false);
 
 // set banner id or user name
 define('TEST_STUDENT_ID', '000000000');
+
+// Address to test voter completion. Prevents sending email to test user
+define('TEST_STUDENT_EMAIL', 'name@address.com');

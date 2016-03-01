@@ -3,36 +3,42 @@
         $('#submit-settings').click(function() {
             var dataUrl = $('#studentDataApiUrl').val();
             var orgUrl = $('#studentOrgApiUrl').val();
+            var fromAddress = $('#fromAddress').val();
 
             if (dataUrl.length === 0 || orgUrl === 0) {
                 return;
             }
 
-            console.log('post');
             $.post('election/Admin/Settings', {
                 command: 'save',
                 studentDataApiUrl: dataUrl,
-                studentOrgApiUrl: orgUrl
+                studentOrgApiUrl: orgUrl,
+                fromAddress: fromAddress
             }).done(function() {
                 var alert = '<div class="alert alert-success">\n\
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n\
 \n\Settings updated.</div>';
-                $('#sga-settings').prepend(alert);
+                $('#sga-settings').html(alert);
             });
         });
     });
 </script>
 
 <div id="sga-settings">
-    <div class="form-group">
-        <label for="studentDataApiUrl" />Student Data API URL</label>
-        <input id="studentDataApiUrl" type="text" class="form-control" name="studentDataApiUrl" value="<?php echo $studentDataApiUrl ?>" />
-    </div>
-
-    <div class="form-group">
-        <label for="studentOrgApiUrl" />Student Org. API URL</label>
-        <input id="studentOrgApiUrl" type="text" class="form-control" name="studentOrgApiUrl" value="<?php echo $studentOrgApiUrl ?>" />
-    </div>
-
-    <button id="submit-settings" class="btn btn-primary">Update settings</button>
 </div>
+<div class="form-group">
+    <label for="studentDataApiUrl" />Student Data API URL</label>
+    <input id="studentDataApiUrl" type="text" class="form-control" name="studentDataApiUrl" value="<?php echo $studentDataApiUrl ?>" />
+</div>
+
+<div class="form-group">
+    <label for="studentOrgApiUrl" />Student Org. API URL</label>
+    <input id="studentOrgApiUrl" type="text" class="form-control" name="studentOrgApiUrl" value="<?php echo $studentOrgApiUrl ?>" />
+</div>
+
+<div class="form-group">
+    <label for="fromAddress" />Completion email from address</label>
+    <input id="fromAddress" type="text" class="form-control" name="fromAddress" value="<?php echo $fromAddress ?>" />
+</div>
+
+<button id="submit-settings" class="btn btn-primary">Update settings</button>

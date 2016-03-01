@@ -44,6 +44,7 @@ class Vote extends Base
 
         self::complete($election_id, $student->getBannerId());
         $db->commit();
+        self::emailStudent($student, $election);
     }
 
     private static function saveSingleResult($election_id, array $single_result, \election\Resource\Student $student)
@@ -59,6 +60,32 @@ class Vote extends Base
             $tbl->insert();
             $tbl->resetValues();
         }
+    }
+    
+    private static function emailStudent(\election\Resource\Student $student, array $election)
+    {
+        require_once PHPWS_SOURCE_DIR . 'lib/vendor/autoload.php';
+        if (STUDENT_DATA_TEST) {
+            $email_address = TEST_STUDENT_EMAIL;
+        } else {
+            $email_address = $student->getEmailAddress();
+        }
+        
+        $transport = \Swift_MailTransport::newInstance();
+        
+        $template = new \Template;
+        $template->setModuleTemplate('election', 'Admin/VoteSuccess.html');
+        $template->add('title', $election['title']);
+        $content = $template->get();
+        
+        $message = \Swift_Message::newInstance();
+        $message->setSubject('Vote complete');
+        $message->setFrom(\PHPWS_Settings::get('election', 'fromAddress'));
+        $message->setTo($email_address);
+        $message->setBody($content, 'text/html');
+        
+        $mailer = \Swift_Mailer::newInstance($transport);
+        $mailer->send($message);
     }
 
     private static function saveMultipleResult($election_id, $multiple_result, \election\Resource\Student $student)

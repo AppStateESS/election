@@ -2,6 +2,8 @@
 
 namespace election\Resource;
 
+define('EMAIL_USERNAME_SUFFIX', '@appstate.edu');
+
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Matthew McNaney <mcnaney at gmail dot com>
@@ -240,4 +242,8 @@ class Student
         $this->greekOrgs = $greekOrgs;
     }
 
+    public function getEmail()
+    {
+        return $this->username . EMAIL_USERNAME_SUFFIX;
+    }
 }

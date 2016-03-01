@@ -14,6 +14,7 @@ class Settings extends \election\Controller\Base
         javascript('jquery');
         $tplvars['studentDataApiUrl'] = \PHPWS_Settings::get('election', 'studentDataApiUrl');
         $tplvars['studentOrgApiUrl'] = \PHPWS_Settings::get('election', 'studentOrgApiUrl');
+        $tplvars['fromAddress'] = \PHPWS_Settings::get('election', 'fromAddress');
         $template = new \Template($tplvars);
         $template->setModuleTemplate('election', 'Admin/Settings.html');
         $content = $template->get();
@@ -47,6 +48,9 @@ class Settings extends \election\Controller\Base
 
         $studentOrgApiUrl = $request->getVar('studentOrgApiUrl');
         \PHPWS_Settings::set('election', 'studentOrgApiUrl', $studentOrgApiUrl);
+
+        $fromAddress = $request->getVar('fromAddress');
+        \PHPWS_Settings::set('election', 'fromAddress', $fromAddress);
 
         \PHPWS_Settings::save('election');
     }
