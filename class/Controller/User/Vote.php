@@ -19,14 +19,14 @@ class Vote extends \election\Controller\User\Base
         $command = $request->getVar('command');
         switch ($command) {
             case 'save':
-                Factory::post($this->student);
+                $json = Factory::post($this->student);
                 break;
 
             default:
                 throw new \Exception('Unknown Vote command');
         }
 
-        $view = new \View\JsonView(array('success' => true));
+        $view = new \View\JsonView($json);
         $response = new \Response($view);
         return $response;
     }

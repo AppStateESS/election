@@ -45,6 +45,10 @@ class Vote extends Base
         self::complete($election_id, $student->getBannerId());
         $db->commit();
         self::emailStudent($student, $election);
+        
+        $json['surveyLink'] = \PHPWS_Settings::get('election', 'surveyLink');
+        $json['success'] = true;
+        return $json;
     }
 
     private static function saveSingleResult($election_id, array $single_result, \election\Resource\Student $student)

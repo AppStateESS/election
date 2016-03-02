@@ -17,7 +17,8 @@ var Election = React.createClass({
             multipleVote : [],
             referendumVote : [],
             unqualified : [],
-            backToReview : false
+            backToReview : false,
+            surveyLink : null
         };
     },
 
@@ -277,7 +278,8 @@ var Election = React.createClass({
                 if (data.success === true) {
                     this.setState({
                         backToReview : false,
-                        stage : 'finished'
+                        stage : 'finished',
+                        surveyLink : data.surveyLink
                     });
                 } else {
                     this.setState({
@@ -309,7 +311,7 @@ var Election = React.createClass({
             break;
 
             case 'finished':
-            content = <Finished election={this.state.election}/>;
+            content = <Finished election={this.state.election} surveyLink={this.state.surveyLink}/>;
             break;
 
             case 'single':
@@ -377,28 +379,12 @@ var Empty = function() {
 }
 
 var Finished = React.createClass({
-
-    getInitialState: function() {
-        return {
-            message : null
-        };
-    },
-
     getDefaultProps: function() {
         return {
-            election : {}
+            election : {},
+            surveyLink : null
         };
     },
-
-    /*
-    componentDidMount: function() {
-        $.getJSON('election/User/Election', {
-        	command : ''
-        }).done(function(data){
-
-        }.bind(this));
-    },
-    */
 
     render: function() {
         return (
@@ -408,7 +394,8 @@ var Finished = React.createClass({
                         <h2>{this.props.election.title}</h2>
                         <h3>Thank you for voting! Watch SGA for results.</h3>
                         <a href="./index.php?module=users&action=user&command=logout" className="btn btn-lg btn-primary">Sign out</a>
-                        {this.state.message}
+                        <hr />
+                        <p>What do you think about the voting process? <a href={this.props.surveyLink}>Let us know!</a></p>
                     </div>
                 </div>
             </div>
@@ -469,7 +456,7 @@ var Countdown = React.createClass({
 
         return (
             <div className="alert alert-info">
-                There {isAre} currently {ballots} {and} {referendum} for you to vote on. We'll review all your selections later, before your votes are submitted.
+                There {isAre} currently {ballots} {and} {referendum} for you to vote on. We will review all your selections later, before your votes are submitted.
             </div>
         );
     }

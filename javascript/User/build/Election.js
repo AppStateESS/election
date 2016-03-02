@@ -19,7 +19,8 @@ var Election = React.createClass({
             multipleVote: [],
             referendumVote: [],
             unqualified: [],
-            backToReview: false
+            backToReview: false,
+            surveyLink: null
         };
     },
 
@@ -276,7 +277,8 @@ var Election = React.createClass({
             if (data.success === true) {
                 this.setState({
                     backToReview: false,
-                    stage: 'finished'
+                    stage: 'finished',
+                    surveyLink: data.surveyLink
                 });
             } else {
                 this.setState({
@@ -315,7 +317,7 @@ var Election = React.createClass({
                 break;
 
             case 'finished':
-                content = React.createElement(Finished, { election: this.state.election });
+                content = React.createElement(Finished, { election: this.state.election, surveyLink: this.state.surveyLink });
                 break;
 
             case 'single':
@@ -387,27 +389,12 @@ var Empty = function () {
 var Finished = React.createClass({
     displayName: 'Finished',
 
-
-    getInitialState: function () {
-        return {
-            message: null
-        };
-    },
-
     getDefaultProps: function () {
         return {
-            election: {}
+            election: {},
+            surveyLink: null
         };
     },
-
-    /*
-    componentDidMount: function() {
-        $.getJSON('election/User/Election', {
-        	command : ''
-        }).done(function(data){
-         }.bind(this));
-    },
-    */
 
     render: function () {
         return React.createElement(
@@ -434,7 +421,17 @@ var Finished = React.createClass({
                         { href: './index.php?module=users&action=user&command=logout', className: 'btn btn-lg btn-primary' },
                         'Sign out'
                     ),
-                    this.state.message
+                    React.createElement('hr', null),
+                    React.createElement(
+                        'p',
+                        null,
+                        'What do you think about the voting process? ',
+                        React.createElement(
+                            'a',
+                            { href: this.props.surveyLink },
+                            'Let us know!'
+                        )
+                    )
                 )
             )
         );
@@ -505,7 +502,7 @@ var Countdown = React.createClass({
             and,
             ' ',
             referendum,
-            ' for you to vote on. We\'ll review all your selections later, before your votes are submitted.'
+            ' for you to vote on. We will review all your selections later, before your votes are submitted.'
         );
     }
 

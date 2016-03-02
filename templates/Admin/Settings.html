@@ -4,6 +4,7 @@
             var dataUrl = $('#studentDataApiUrl').val();
             var orgUrl = $('#studentOrgApiUrl').val();
             var fromAddress = $('#fromAddress').val();
+            var surveyLink = $('#surveyLink').val();
 
             if (dataUrl.length === 0 || orgUrl === 0) {
                 return;
@@ -13,7 +14,8 @@
                 command: 'save',
                 studentDataApiUrl: dataUrl,
                 studentOrgApiUrl: orgUrl,
-                fromAddress: fromAddress
+                fromAddress: fromAddress,
+                surveyLink : surveyLink
             }).done(function() {
                 var alert = '<div class="alert alert-success">\n\
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n\
@@ -42,8 +44,8 @@
 </div>
 
 <div class="form-group">
-    <label for="postVoteMessage" />Post vote message</label>
-<textarea id="postVoteMessage" type="text" class="form-control" name="postVoteMessage" value="<?php echo $postVoteMessage ?>"></textarea>
+    <label for="surveyLink" />Survey link</label>
+    <input id="surveyLink" type="text" class="form-control" name="surveyLink" value="<?php echo $surveyLink ?>" />
 </div>
 
 <button id="submit-settings" class="btn btn-primary">Update settings</button>

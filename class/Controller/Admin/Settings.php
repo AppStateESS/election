@@ -15,7 +15,7 @@ class Settings extends \election\Controller\Base
         $tplvars['studentDataApiUrl'] = \PHPWS_Settings::get('election', 'studentDataApiUrl');
         $tplvars['studentOrgApiUrl'] = \PHPWS_Settings::get('election', 'studentOrgApiUrl');
         $tplvars['fromAddress'] = \PHPWS_Settings::get('election', 'fromAddress');
-        $tplvars['postVoteMessage'] = \PHPWS_Settings::get('election', 'postVoteMessage');
+        $tplvars['surveyLink'] = \PHPWS_Settings::get('election', 'surveyLink');
         $template = new \Template($tplvars);
         $template->setModuleTemplate('election', 'Admin/Settings.html');
         $content = $template->get();
@@ -53,8 +53,8 @@ class Settings extends \election\Controller\Base
         $fromAddress = $request->getVar('fromAddress');
         \PHPWS_Settings::set('election', 'fromAddress', $fromAddress);
 
-        $postVoteMessage = $request->getVar('postVoteMessage');
-        \PHPWS_Settings::set('election', 'postVoteMessage', $postVoteMessage);
+        $surveyLink = $request->getVar('surveyLink');
+        \PHPWS_Settings::set('election', 'surveyLink', $surveyLink);
 
         \PHPWS_Settings::save('election');
     }
