@@ -39,7 +39,9 @@ var ElectionList = React.createClass({
     },
 
     render: function () {
-        var rows = this.state.elections.map((value, key) => React.createElement(ElectionRow, _extends({ key: key }, value, { hideForm: this.hideForm })));
+        var rows = this.state.elections.map(function (value, key) {
+            return React.createElement(ElectionRow, _extends({ key: key }, value, { hideForm: this.hideForm }));
+        }.bind(this));
         var form = React.createElement(
             'button',
             { className: 'btn btn-success', onClick: this.showForm },
@@ -71,6 +73,7 @@ var ElectionList = React.createClass({
 
 var ElectionRow = React.createClass({
     displayName: 'ElectionRow',
+
 
     getDefaultProps: function () {
         return {
