@@ -267,11 +267,13 @@ var MultipleListRow = React.createClass({
 
 });
 
-var CategoryTitle = (props) => (
-    <span>
-        {categoryTypes[props.category]}
-    </span>
-);
+var CategoryTitle = function(props) {
+    return (
+        <span>
+            {categoryTypes[props.category]}
+        </span>
+    );
+}
 
 var MultipleForm = React.createClass({
     getInitialState: function() {

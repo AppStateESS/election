@@ -988,11 +988,13 @@ var MultipleListRow = React.createClass({
 
 });
 
-var CategoryTitle = props => React.createElement(
-    'span',
-    null,
-    categoryTypes[props.category]
-);
+var CategoryTitle = function (props) {
+    return React.createElement(
+        'span',
+        null,
+        categoryTypes[props.category]
+    );
+};
 
 var MultipleForm = React.createClass({
     displayName: 'MultipleForm',
