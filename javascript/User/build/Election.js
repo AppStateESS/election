@@ -372,24 +372,42 @@ var Election = React.createClass({
 
 });
 
-var Empty = () => React.createElement(
-    'div',
-    null,
-    React.createElement(
-        'h3',
+var Empty = function () {
+    return React.createElement(
+        'div',
         null,
-        'No elections are available. Please check back later.'
-    )
-);
+        React.createElement(
+            'h3',
+            null,
+            'No elections are available. Please check back later.'
+        )
+    );
+};
 
 var Finished = React.createClass({
     displayName: 'Finished',
+
+
+    getInitialState: function () {
+        return {
+            message: null
+        };
+    },
 
     getDefaultProps: function () {
         return {
             election: {}
         };
     },
+
+    /*
+    componentDidMount: function() {
+        $.getJSON('election/User/Election', {
+        	command : ''
+        }).done(function(data){
+         }.bind(this));
+    },
+    */
 
     render: function () {
         return React.createElement(
@@ -415,7 +433,8 @@ var Finished = React.createClass({
                         'a',
                         { href: './index.php?module=users&action=user&command=logout', className: 'btn btn-lg btn-primary' },
                         'Sign out'
-                    )
+                    ),
+                    this.state.message
                 )
             )
         );

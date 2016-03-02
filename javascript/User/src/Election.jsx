@@ -368,18 +368,37 @@ var Election = React.createClass({
 
 });
 
-var Empty = () => (
-    <div>
-        <h3>No elections are available. Please check back later.</h3>
-    </div>
-);
+var Empty = function() {
+    return (
+        <div>
+            <h3>No elections are available. Please check back later.</h3>
+        </div>
+    );
+}
 
 var Finished = React.createClass({
+
+    getInitialState: function() {
+        return {
+            message : null
+        };
+    },
+
     getDefaultProps: function() {
         return {
             election : {}
         };
     },
+
+    /*
+    componentDidMount: function() {
+        $.getJSON('election/User/Election', {
+        	command : ''
+        }).done(function(data){
+
+        }.bind(this));
+    },
+    */
 
     render: function() {
         return (
@@ -389,6 +408,7 @@ var Finished = React.createClass({
                         <h2>{this.props.election.title}</h2>
                         <h3>Thank you for voting! Watch SGA for results.</h3>
                         <a href="./index.php?module=users&action=user&command=logout" className="btn btn-lg btn-primary">Sign out</a>
+                        {this.state.message}
                     </div>
                 </div>
             </div>
