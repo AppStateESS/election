@@ -72,7 +72,7 @@ class Vote extends Base
         if (STUDENT_DATA_TEST) {
             $email_address = TEST_STUDENT_EMAIL;
         } else {
-            $email_address = $student->getEmailAddress();
+            $email_address = $student->getEmail();
         }
         
         $transport = \Swift_MailTransport::newInstance();
