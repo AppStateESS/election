@@ -73,10 +73,9 @@ class BannerStudentProvider extends StudentProvider
 
         $clubProvider = new ClubCategoriesProvider();
         $clubTypes = $clubProvider->getCategoryListForStudent($student);
-
-        $student->setClubTypes($clubTypes['clubCategories']);
-        $student->setGreekOrgs($clubTypes['greekOrgs']);
-
+        
+        $student->setClubTypes(isset($clubTypes['clubCategories']) ? $clubTypes['clubCategories'] : array());
+        $student->setGreekOrgs(isset($clubTypes['greekOrgs']) ? ($clubTypes['greekOrgs']) : array());
         return $student;
     }
 
@@ -154,4 +153,5 @@ class BannerStudentProvider extends StudentProvider
     {
         return preg_replace('/@appstate.edu/', '', $_SERVER['HTTP_SHIB_CAMPUSPERMANENTID']);
     }
+
 }
