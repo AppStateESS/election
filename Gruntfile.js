@@ -16,7 +16,7 @@ module.exports = function(grunt) {
                 src: [
                     'javascript/Mixin/build/Mixin.js',
                     'javascript/Mixin/build/Date.js',
-                    'javascript/Admin/List/build/script.js'
+                    'javascript/Admin/List/build/List.js'
                 ],
                 dest: 'javascript/Admin/List/build/concat.js'
             },
