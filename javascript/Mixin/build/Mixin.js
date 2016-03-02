@@ -74,11 +74,13 @@ var BreakIt = function (text) {
     return broken;
 };
 
-var AbstainButton = props => React.createElement(
-    'div',
-    { className: 'btn btn-warning btn-lg', onClick: props.handleClick },
-    'Abstain from ',
-    props.title,
-    ' ',
-    React.createElement('i', { className: 'fa fa-arrow-right' })
-);
+var AbstainButton = function (props) {
+    return React.createElement(
+        'div',
+        { className: 'btn btn-warning btn-lg', onClick: props.handleClick },
+        'Abstain from ',
+        props.title,
+        ' ',
+        React.createElement('i', { className: 'fa fa-arrow-right' })
+    );
+};
