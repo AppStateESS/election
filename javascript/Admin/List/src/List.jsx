@@ -35,9 +35,9 @@ var ElectionList = React.createClass({
     },
 
     render: function() {
-        var rows = this.state.elections.map((value, key) =>
-            <ElectionRow key={key} {...value} hideForm={this.hideForm}/>
-        );
+        var rows = this.state.elections.map(function(value, key) {
+            return <ElectionRow key={key} {...value} hideForm={this.hideForm}/>;
+        }.bind(this));
         var form = <button className="btn btn-success" onClick={this.showForm}><i className="fa fa-plus"> Add Election</i></button>;
         if (this.state.showForm) {
             form = <ElectionForm hideForm={this.hideForm} load={this.load}/>;

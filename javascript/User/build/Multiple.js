@@ -147,7 +147,9 @@ var MultipleBallot = React.createClass({
                 this.state.totalSelected,
                 " of the allowed ",
                 this.props.seatNumber,
-                " seats."
+                " seat",
+                this.props.seatNumber === '1' ? null : 's',
+                "."
             ),
             React.createElement(
                 "ul",

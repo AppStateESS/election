@@ -1048,6 +1048,11 @@ var MultipleForm = React.createClass({
     },
 
     updateSeatNumber: function (e) {
+        var seatNumber = e.target.value;
+        if (seatNumber < 1) {
+            e.target.value = '1';
+            return;
+        }
         this.setState({
             seatNumber: e.target.value
         });
@@ -1063,6 +1068,9 @@ var MultipleForm = React.createClass({
         var error = false;
         if (this.state.title.length === 0) {
             $(this.refs.multipleTitle).css('borderColor', 'red').attr('placeholder', 'Please enter a title');
+            error = true;
+        }
+        if (this.state.seatNumber < 1) {
             error = true;
         }
 
@@ -1110,7 +1118,7 @@ var MultipleForm = React.createClass({
                             'Ballot title (e.g. Sophomore Senate)'
                         ),
                         React.createElement('input', { ref: 'multipleTitle', type: 'text', className: 'form-control',
-                            defaultValue: this.props.title, id: 'multiple-title',
+                            defaultValue: this.props.title, id: 'multiple-title', min: '2',
                             onFocus: this.resetBorder, onChange: this.updateTitle })
                     )
                 ),
@@ -1125,7 +1133,7 @@ var MultipleForm = React.createClass({
                             null,
                             'Available seats'
                         ),
-                        React.createElement('input', { type: 'number', className: 'form-control',
+                        React.createElement('input', { ref: 'seatNumber', type: 'number', className: 'form-control',
                             onChange: this.updateSeatNumber,
                             defaultValue: this.props.seatNumber })
                     ),

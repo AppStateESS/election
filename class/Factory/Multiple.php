@@ -16,7 +16,11 @@ class Multiple extends Ballot
         $multiple = self::build(self::pullPostInteger('multipleId'), new Resource);
 
         $multiple->setTitle(self::pullPostString('title'));
-        $multiple->setSeatNumber(self::pullPostInteger('seatNumber'));
+        $seatNumber = self::pullPostInteger('seatNumber');
+        if ((int)$seatNumber < 1) {
+            $seatNumber = 1;
+        }
+        $multiple->setSeatNumber($seatNumber);
         $multiple->setElectionId(self::pullPostInteger('electionId'));
         $multiple->setCategory(self::pullPostString('category'));
 
