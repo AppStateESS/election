@@ -59,6 +59,10 @@ EOF;
             case 'list':
                 $json = self::getVotingData();
                 break;
+            
+            case 'message':
+                $json['message'] = \PHPWS_Settings::get('election', 'postVoteMessage');
+                break;
         }
         $view = new \View\JsonView($json);
         return $view;

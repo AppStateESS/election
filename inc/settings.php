@@ -1,5 +1,8 @@
 <?php
 
-$settings = array('studentDataApiUrl' => null,
+$settings = array(
+    'studentDataApiUrl' => null,
     'studentOrgApiUrl' => null,
-    'fromAddress' => 'noreply@noreply.com');
+    'fromAddress' => 'noreply@noreply.com',
+    'postVoteMessage' => null
+    );
