@@ -142,12 +142,6 @@
                     "type": "nphc",
                     "matchName": "Greek Life",
                     "matchValue": "NPHC"
-                },
-                {
-                    "name": "Multicultural",
-                    "type": "multi",
-                    "matchName": "Greek Life",
-                    "matchValue": "MULT"
                 }
             ]
         }
