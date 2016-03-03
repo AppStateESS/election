@@ -64,6 +64,30 @@ var ElectionList = React.createClass({
                 React.createElement(
                     'tbody',
                     null,
+                    React.createElement(
+                        'tr',
+                        null,
+                        React.createElement(
+                            'th',
+                            null,
+                            'Title'
+                        ),
+                        React.createElement(
+                            'th',
+                            null,
+                            'Date range'
+                        ),
+                        React.createElement(
+                            'th',
+                            null,
+                            'Total votes'
+                        ),
+                        React.createElement(
+                            'th',
+                            null,
+                            ' '
+                        )
+                    ),
                     rows
                 )
             )
@@ -81,6 +105,7 @@ var ElectionRow = React.createClass({
             title: '',
             startDateFormatted: '',
             endDateFormatted: '',
+            totalVotes: 0,
             past: false,
             edit: false
         };
@@ -118,6 +143,11 @@ var ElectionRow = React.createClass({
                 this.props.startDateFormatted,
                 ' - ',
                 this.props.endDateFormatted
+            ),
+            React.createElement(
+                'td',
+                null,
+                this.props.totalVotes
             ),
             React.createElement(
                 'td',

@@ -47,6 +47,12 @@ var ElectionList = React.createClass({
                 {form}
                 <table className="table table-striped pad-top">
                     <tbody>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date range</th>
+                            <th>Total votes</th>
+                            <th>&nbsp;</th>
+                        </tr>
                         {rows}
                     </tbody>
                 </table>
@@ -63,6 +69,7 @@ var ElectionRow = React.createClass({
             title : '',
             startDateFormatted : '',
             endDateFormatted : '',
+            totalVotes : 0,
             past : false,
             edit: false
         };
@@ -80,6 +87,7 @@ var ElectionRow = React.createClass({
             <tr>
                 <td>{this.props.title}</td>
                 <td>{this.props.startDateFormatted} - {this.props.endDateFormatted}</td>
+                <td>{this.props.totalVotes}</td>
                 <td>{buttons}</td>
             </tr>
         );

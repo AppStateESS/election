@@ -39,8 +39,14 @@ class Election extends Base
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_election');
+        $tbl2 = $db->addTable('elect_vote_complete', null, false);
+        $exp = $db->getExpression('count(' . $tbl2->getField('electionId') . ')', 'totalVotes');
+        $db->addExpression($exp);
         $tbl->addOrderBy('endDate', 'desc');
         $tbl->addFieldConditional('active', 1);
+        
+        $join_conditional = $db->createConditional($tbl->getField('id'), $tbl2->getField('electionId'));
+        $db->joinResources($tbl, $tbl2, $join_conditional, 'left');
         $result = $db->select();
         if (empty($result)) {
             return $result;
