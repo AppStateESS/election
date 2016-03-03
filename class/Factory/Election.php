@@ -47,6 +47,7 @@ class Election extends Base
         
         $join_conditional = $db->createConditional($tbl->getField('id'), $tbl2->getField('electionId'));
         $db->joinResources($tbl, $tbl2, $join_conditional, 'left');
+        $db->setGroupBy($tbl->getField('id'));
         $result = $db->select();
         if (empty($result)) {
             return $result;
