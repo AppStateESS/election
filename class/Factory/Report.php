@@ -13,6 +13,9 @@ class Report extends Base
     {
         $singles = Single::getListWithTickets($electionId, true, false);
         $votes = Vote::getSingleVotes($electionId);
+        if (empty($votes)) {
+            return self::noTicketVotes();
+        }
 
         foreach ($votes as $v) {
             $key = $v['singleId'];
@@ -23,7 +26,7 @@ class Report extends Base
         if (empty($singles)) {
             return null;
         }
-
+        
         foreach ($singles as $ballot) {
             $ballot_row['title'] = $ballot['title'];
             foreach ($ballot['tickets'] as $ticket) {
@@ -33,10 +36,10 @@ class Report extends Base
                     $ticket_rows[$vote . '.' . $ticket['id']] = self::ticketTemplate($ticket);
                 }
             }
-            krsort($ticket_rows);
-            $ballot_row['tickets'] = implode("\n", $ticket_rows);
-            $tpl['ballots'][] = $ballot_row;
-        }
+                krsort($ticket_rows);
+                $ballot_row['tickets'] = implode("\n", $ticket_rows);
+                $tpl['ballots'][] = $ballot_row;
+            }
         $template = new \Template;
         $template->addVariables($tpl);
         $template->setModuleTemplate('election', 'Admin/Report/Single.html');
@@ -63,6 +66,9 @@ class Report extends Base
             return null;
         }
         $votes = Vote::getMultipleVotes($electionId);
+        if (empty($votes)) {
+            return 'No multiple chair votes recorded.';
+        }
 
         foreach ($votes as $v) {
             $key = $v['multipleId'];
@@ -71,7 +77,7 @@ class Report extends Base
         foreach ($multiples as $ballot) {
             $ballot_row['title'] = $ballot['title'];
             $ballot_row['seats'] = $ballot['seatNumber'];
-            $candidates = null;
+            $candidates = array();
             foreach ($ballot['candidates'] as $c) {
                 if (isset($sorted_votes[$ballot['id']][$c['id']])) {
                     $vote = $sorted_votes[$ballot['id']][$c['id']];
@@ -83,8 +89,12 @@ class Report extends Base
                     $candidates[$vote . '.' . $c['id']] = $template->get();
                 }
             }
-            krsort($candidates);
-            $ballot_row['candidates'] = implode("\n", $candidates);
+            if (!empty($candidates)) {
+                krsort($candidates);
+                $ballot_row['candidates'] = implode("\n", $candidates);
+            } else {
+                $ballot_row['candidates'] = self::noCandidateVotes();
+            }
             $tpl['ballots'][] = $ballot_row;
         }
 
@@ -94,6 +104,30 @@ class Report extends Base
         return $template->get();
     }
 
+    private static function noCandidateVotes()
+    {
+        static $noVotes;
+        
+        if (empty($noVotes)) {
+            $tpl = new \Template;
+            $tpl->setModuleTemplate('election', 'Admin/Report/NoCandidateVotesMultiple.html');
+            $noVotes = $tpl->get();
+        }
+        return $noVotes;
+    }
+    
+    private static function noTicketVotes()
+    {
+        static $noVotes;
+        
+        if (empty($noVotes)) {
+            $tpl = new \Template;
+            $tpl->setModuleTemplate('election', 'Admin/Report/NoTicketVotesSingle.html');
+            $noVotes = $tpl->get();
+        }
+        return $noVotes;
+    }
+    
     public static function getReferendumResults($electionId)
     {
         $referendums = Referendum::getList($electionId);
