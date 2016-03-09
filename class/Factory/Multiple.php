@@ -74,7 +74,14 @@ class Multiple extends Ballot
             if (isset($studentCategories[$category->matchName])) {
                 $match = $studentCategories[$category->matchName];
                 if (is_array($match)) {
-                    if (!in_array($category->matchValue, $match)) {
+                    $matchValue = $category->matchValue;
+                    if (is_array($matchValue)) {
+                        $intersect = array_intersect($matchValue, $match);
+                        if (empty($intersect)) {
+                            unset($multiple[$key]);
+                            $unqualified[] = $ballot['title'];
+                        }
+                    } elseif (!in_array($matchValue, $match)) {
                         unset($multiple[$key]);
                         $unqualified[] = $ballot['title'];
                     }

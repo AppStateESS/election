@@ -106,19 +106,19 @@
                     "name": "Sports",
                     "type": "sports",
                     "matchName": "Club Affiliation",
-                    "matchValue": "Sports"
+                    "matchValue": "Club Sports"
                 },
                 {
                     "name": "Service Initiatives",
                     "type": "service",
                     "matchName": "Club Affiliation",
-                    "matchValue": "Service Initiative"
+                    "matchValue": "Service"
                 },
                 {
                     "name": "Special Interest Groups",
                     "type": "special-interest",
                     "matchName": "Club Affiliation",
-                    "matchValue": "Special Interest"
+                    "matchValue": ["Special Interest", "Religious"]
                 }
             ]
         },
