@@ -27,13 +27,13 @@ $greeks = array(
     'Sigma Kappa' => 'PHC',
     'Phi Mu' => 'PHC',
     'Zeta Tau Alpha' => 'PHC',
-    'Alpha Kappa Alpha' => 'NPHC',
-    'Alpha Phi Alpha' => 'NPHC',
+    'Alpha Kappa Alpha Sorority, Inc.' => 'NPHC',
+    'Alpha Phi Alpha Fraternity, Inc.' => 'NPHC',
     'Delta Sigma Theta Sorority, Inc.' => 'NPHC',
     'Kappa Alpha Psi' => 'NPHC',
     'Phi Beta Sigma' => 'NPHC',
     'Zeta Phi Beta' => 'NPHC',
     'Zeta Phi Beta Sorority, Inc.' => 'NPHC',
-    'Chi Upsilon Sigma' => 'MULT'
+    'Chi Upsilon Sigma National Latin Sorority, Inc' => 'MULT'
 );
 ?>
