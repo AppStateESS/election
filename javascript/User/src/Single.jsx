@@ -65,9 +65,14 @@ var SingleBallotTicket = React.createClass({
     },
 
     render: function() {
-        var candidates = this.props.candidates.map(function(value){
-            return <SingleCandidate key={value.id} {...value} />;
-        }.bind(this));
+        var candidateCount = this.props.candidates.length;
+        if (candidateCount > 0) {
+            var candidates = this.props.candidates.map(function(value){
+                return <SingleCandidate key={value.id} {...value} candidateLength={candidateCount} />;
+            }.bind(this));
+        } else {
+            var candidates = null;
+        }
 
         var heading = <h2>{this.props.title}</h2>;
 
@@ -80,16 +85,14 @@ var SingleBallotTicket = React.createClass({
         }
 
         var body = (
-            <div>
+            <div className="ticket">
                 <div className="row">
-                    <div className="col-xs-12 col-sm-5 col-md-6">
+                    <div className="col-sm-6">
                         {platform}
                         <hr />
                         {website}
                     </div>
-                    <div className="col-xs-12 col-sm-7 col-md-6 pad-top">
                         {candidates}
-                    </div>
                 </div>
                 <button className="btn btn-primary btn-block btn-lg" onClick={this.props.updateVote}>
                     <i className="fa fa-check-square-o"></i> Vote for {this.props.title}
@@ -115,18 +118,26 @@ var SingleCandidate = React.createClass({
             firstName : '',
             lastName : '',
             picture : '',
-            title : ''
+            title : '',
+            candidateLength : 1
         };
     },
 
     render: function() {
+        switch (this.props.candidateLength) {
+            case 1:
+            var colSize = 'col-sm-6';
+            break;
+            case 2:
+            var colSize = 'col-sm-3';
+        }
         return (
-            <div className="candidate">
-                <div className="photo-matte">
+            <div className={colSize}>
+                <div>
                     {this.props.picture.length > 0 ? (
-                        <div>
+                        <div className="photo-matte">
                             <span className="helper"></span>
-                            <img src={this.props.picture} className="candidate-pic" />
+                            <img src={this.props.picture} className="img-responsive candidate" />
                         </div>
                     ) : (
                         <div className="no-picture text-muted"><i className="fa fa-user fa-5x"></i><br />No picture</div>

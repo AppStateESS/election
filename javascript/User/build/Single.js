@@ -88,9 +88,14 @@ var SingleBallotTicket = React.createClass({
     },
 
     render: function () {
-        var candidates = this.props.candidates.map(function (value) {
-            return React.createElement(SingleCandidate, _extends({ key: value.id }, value));
-        }.bind(this));
+        var candidateCount = this.props.candidates.length;
+        if (candidateCount > 0) {
+            var candidates = this.props.candidates.map(function (value) {
+                return React.createElement(SingleCandidate, _extends({ key: value.id }, value, { candidateLength: candidateCount }));
+            }.bind(this));
+        } else {
+            var candidates = null;
+        }
 
         var heading = React.createElement(
             "h2",
@@ -118,22 +123,18 @@ var SingleBallotTicket = React.createClass({
 
         var body = React.createElement(
             "div",
-            null,
+            { className: "ticket" },
             React.createElement(
                 "div",
                 { className: "row" },
                 React.createElement(
                     "div",
-                    { className: "col-xs-12 col-sm-5 col-md-6" },
+                    { className: "col-sm-6" },
                     platform,
                     React.createElement("hr", null),
                     website
                 ),
-                React.createElement(
-                    "div",
-                    { className: "col-xs-12 col-sm-7 col-md-6 pad-top" },
-                    candidates
-                )
+                candidates
             ),
             React.createElement(
                 "button",
@@ -161,22 +162,30 @@ var SingleCandidate = React.createClass({
             firstName: '',
             lastName: '',
             picture: '',
-            title: ''
+            title: '',
+            candidateLength: 1
         };
     },
 
     render: function () {
+        switch (this.props.candidateLength) {
+            case 1:
+                var colSize = 'col-sm-6';
+                break;
+            case 2:
+                var colSize = 'col-sm-3';
+        }
         return React.createElement(
             "div",
-            { className: "candidate" },
+            { className: colSize },
             React.createElement(
                 "div",
-                { className: "photo-matte" },
+                null,
                 this.props.picture.length > 0 ? React.createElement(
                     "div",
-                    null,
+                    { className: "photo-matte" },
                     React.createElement("span", { className: "helper" }),
-                    React.createElement("img", { src: this.props.picture, className: "candidate-pic" })
+                    React.createElement("img", { src: this.props.picture, className: "img-responsive candidate" })
                 ) : React.createElement(
                     "div",
                     { className: "no-picture text-muted" },
