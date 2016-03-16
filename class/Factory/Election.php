@@ -44,7 +44,7 @@ class Election extends Base
         $db->addExpression($exp);
         $tbl->addOrderBy('endDate', 'desc');
         $tbl->addFieldConditional('active', 1);
-        
+
         $join_conditional = $db->createConditional($tbl->getField('id'), $tbl2->getField('electionId'));
         $db->joinResources($tbl, $tbl2, $join_conditional, 'left');
         $db->setGroupBy($tbl->getField('id'));
@@ -119,6 +119,12 @@ class Election extends Base
         $db->addConditional($c12);
         $result = $db->selectOneRow();
         return array('conflict' => (bool) $result);
+    }
+
+    public static function allowChange($electionId)
+    {
+        $currentElection = self::getCurrent();
+        return !($currentElection && (int) $currentElection['id'] == (int) $electionId);
     }
 
 }

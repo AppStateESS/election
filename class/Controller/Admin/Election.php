@@ -50,7 +50,9 @@ class Election extends \election\Controller\Base
         javascript('datetimepicker');
         $script[] = '<script type="text/javascript" src="' . PHPWS_SOURCE_HTTP . 'mod/election/node_modules/react-dropzone/dist/react-dropzone.js"></script>';
 
-        $script[] = '<script type="text/javascript">var electionId = ' . $electionId . ';</script>';
+        $allowChange = Factory::allowChange($electionId) ? 'true' : 'false';
+        
+        $script[] = '<script type="text/javascript">var allowChange=' . $allowChange  . ';var electionId = ' . $electionId . ';</script>';
 
         if (ELECTION_REACT_DEV) {
             $script[] = \election\Factory\React::development('Mixin/', 'Mixin.js');
@@ -116,7 +118,7 @@ EOF;
             case 'saveTitle':
                 $this->saveTitle();
                 break;
-            
+
             case 'saveDates':
                 $this->saveDates();
                 break;
@@ -168,7 +170,7 @@ EOF;
         $election->setTitle($title);
         Factory::saveResource($election);
     }
-    
+
     private function saveDates()
     {
         $electionId = Factory::pullPostInteger('electionId');
