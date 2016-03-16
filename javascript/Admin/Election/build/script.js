@@ -17,7 +17,7 @@ var Candidates = React.createClass({
             ticketId: 0,
             multipleId: 0,
             type: 'ticket',
-            showAdd: false
+            showAdd: true
         };
     },
 
