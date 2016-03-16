@@ -33,6 +33,7 @@ $greeks = array(
     'Kappa Alpha Psi' => 'NPHC',
     'Phi Beta Sigma' => 'NPHC',
     'Zeta Phi Beta' => 'NPHC',
+    'Zeta Phi Beta Sorority, Inc.' => 'NPHC',
     'Chi Upsilon Sigma' => 'MULT'
 );
 ?>
