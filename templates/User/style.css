@@ -29,7 +29,7 @@
 .multiple-ticket-vote .list-group .list-group-item.active {
     border-color : white;
 }
-.multiple-ticket-vote .list-group .list-group-item.active i.fa-check {
+.multiple-ticket-vote .list-group .list-group-item button {
     margin-top : 20px;
 }
 

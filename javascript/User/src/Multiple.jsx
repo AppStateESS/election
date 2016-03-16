@@ -145,13 +145,14 @@ var MultipleCandidate = React.createClass({
     render: function() {
         if (this.props.selected) {
             var _className = 'list-group-item pointer active';
-            var icon = <i className="pull-right fa fa-check fa-2x"></i>;
+            // var icon = <i className="pull-right fa fa-check fa-2x" title="Click to unselect for candidate"></i>;
+            var icon = <button className="pull-right btn btn-default btn-lg"><i className="fa fa-check"></i> Selected</button>;
         } else {
             var _className = 'list-group-item pointer';
-            var icon = null;
+            var icon = <button className="pull-right btn btn-default btn-lg">Select</button>;
         }
 
-        var picture = <img className="img-circle" src='mod/election/img/no-picture.gif'/>
+        var picture = <img className="img-circle" src={defaultPicture}/>
 
         if (this.props.picture.length > 0) {
             picture = <img className="img-circle" src={this.props.picture}/>;

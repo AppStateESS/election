@@ -192,13 +192,23 @@ var MultipleCandidate = React.createClass({
     render: function () {
         if (this.props.selected) {
             var _className = 'list-group-item pointer active';
-            var icon = React.createElement("i", { className: "pull-right fa fa-check fa-2x" });
+            // var icon = <i className="pull-right fa fa-check fa-2x" title="Click to unselect for candidate"></i>;
+            var icon = React.createElement(
+                "button",
+                { className: "pull-right btn btn-default btn-lg" },
+                React.createElement("i", { className: "fa fa-check" }),
+                " Selected"
+            );
         } else {
             var _className = 'list-group-item pointer';
-            var icon = null;
+            var icon = React.createElement(
+                "button",
+                { className: "pull-right btn btn-default btn-lg" },
+                "Select"
+            );
         }
 
-        var picture = React.createElement("img", { className: "img-circle", src: "mod/election/img/no-picture.gif" });
+        var picture = React.createElement("img", { className: "img-circle", src: defaultPicture });
 
         if (this.props.picture.length > 0) {
             picture = React.createElement("img", { className: "img-circle", src: this.props.picture });
