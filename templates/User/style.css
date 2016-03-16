@@ -88,3 +88,8 @@
     font-size : 1.2em;
     font-weight : bold;
 }
+
+img.candidate {
+    max-height : 400px;
+    margin-bottom : 1em;
+}
