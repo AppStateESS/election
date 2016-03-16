@@ -12,7 +12,8 @@ var Candidates = React.createClass({
             candidates : [],
             ticketId : 0,
             multipleId : 0,
-            type : 'ticket'
+            type : 'ticket',
+            showAdd : false
         };
     },
 
@@ -57,7 +58,7 @@ var Candidates = React.createClass({
             }
         }.bind(this));
 
-        if (this.state.currentForm === 0) {
+        if (this.state.currentForm === 0 && this.props.showAdd && allowChange) {
             var form = (
                 <div>
                     <button className="btn btn-primary" onClick={this.setCurrentForm.bind(null, -1)}>
@@ -99,7 +100,7 @@ var CandidateProfile = React.createClass({
                     {this.props.picture.length > 0 ? (
                         <div>
                             <span className="helper"></span>
-                            <img src={this.props.picture} className="candidate-pic" />
+                            <img src={this.props.picture} className="img-responsive candidate-pic" />
                         </div>
                     ) : (
                         <div className="no-picture text-muted"><i className="fa fa-user fa-5x"></i><br />No picture</div>
@@ -111,7 +112,7 @@ var CandidateProfile = React.createClass({
                         {this.props.title}
                     </p>
                     <button className="btn btn-primary" title="Edit candidate" onClick={this.props.edit}><i className="fa fa-edit"></i></button>&nbsp;
-                    <button className="btn btn-danger" onClick={this.props.delete} title="Delete candidate"><i className="fa fa-times"></i></button>
+                    <button className="btn btn-danger" disabled={!allowChange} onClick={this.props.delete} title="Delete candidate"><i className="fa fa-times"></i></button>
                 </div>
             </div>
         );
