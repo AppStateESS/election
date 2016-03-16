@@ -44,7 +44,7 @@ var Tickets = React.createClass({
             form = <TicketForm {...shared} singleId={this.props.singleId}/>
         } else {
             form = (
-                <button className="btn btn-primary" onClick={this.editFormId.bind(null,0)}>
+                <button disabled={!allowChange} className="btn btn-primary" onClick={this.editFormId.bind(null,0)}>
                     <i className="fa fa-plus"></i> Add a new ticket
                 </button>);
         }
@@ -301,12 +301,13 @@ var TicketRow = React.createClass({
                 </p>
             );
         }
+        var showAdd = this.state.candidates.length < 2;
 
         var body = (
             <div className="ticket-form-view">
                 <div className="change-buttons">
                     <button className="btn btn-sm btn-success" data-tid={this.props.id} onClick={this.props.handleEdit} title="Edit ticket"><i className="fa fa-lg fa-edit"></i> Edit ticket</button>
-                    <button className="btn btn-sm btn-danger" onClick={this.props.handleDelete} title="Delete ticket"><i className="fa fa-lg fa-trash-o"></i> Delete ticket</button>
+                    <button disabled={!allowChange} className="btn btn-sm btn-danger" onClick={this.props.handleDelete} title="Delete ticket"><i className="fa fa-lg fa-trash-o"></i> Delete ticket</button>
                 </div>
                 <div className="ticket-title">{this.props.title}</div>
                 <div>
@@ -318,7 +319,7 @@ var TicketRow = React.createClass({
                     </div>
                 </div>
                 <hr />
-                <Candidates type="ticket" candidates={this.state.candidates} singleId={this.props.singleId} ticketId={this.props.id} reload={this.load}/>
+                <Candidates type="ticket" candidates={this.state.candidates} singleId={this.props.singleId} ticketId={this.props.id} reload={this.load} showAdd={showAdd}/>
             </div>
         );
 

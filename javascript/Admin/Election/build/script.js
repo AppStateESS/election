@@ -16,7 +16,8 @@ var Candidates = React.createClass({
             candidates: [],
             ticketId: 0,
             multipleId: 0,
-            type: 'ticket'
+            type: 'ticket',
+            showAdd: false
         };
     },
 
@@ -60,7 +61,7 @@ var Candidates = React.createClass({
             }
         }.bind(this));
 
-        if (this.state.currentForm === 0) {
+        if (this.state.currentForm === 0 && this.props.showAdd && allowChange) {
             var form = React.createElement(
                 'div',
                 null,
@@ -109,7 +110,7 @@ var CandidateProfile = React.createClass({
                     'div',
                     null,
                     React.createElement('span', { className: 'helper' }),
-                    React.createElement('img', { src: this.props.picture, className: 'candidate-pic' })
+                    React.createElement('img', { src: this.props.picture, className: 'img-responsive candidate-pic' })
                 ) : React.createElement(
                     'div',
                     { className: 'no-picture text-muted' },
@@ -142,7 +143,7 @@ var CandidateProfile = React.createClass({
                 ' ',
                 React.createElement(
                     'button',
-                    { className: 'btn btn-danger', onClick: this.props.delete, title: 'Delete candidate' },
+                    { className: 'btn btn-danger', disabled: !allowChange, onClick: this.props.delete, title: 'Delete candidate' },
                     React.createElement('i', { className: 'fa fa-times' })
                 )
             )
@@ -641,6 +642,15 @@ var Election = React.createClass({
             null,
             electionTitle,
             date,
+            allowChange ? null : React.createElement(
+                'p',
+                null,
+                React.createElement(
+                    'em',
+                    null,
+                    'This is an ongoing election. Some options are disabled.'
+                )
+            ),
             React.createElement(
                 'div',
                 null,
@@ -735,7 +745,7 @@ var MultipleBallot = React.createClass({
                 { className: 'col-sm-3' },
                 React.createElement(
                     'button',
-                    { className: 'btn btn-block btn-primary', onClick: this.showForm },
+                    { className: 'btn btn-block btn-primary', onClick: this.showForm, disabled: !allowChange },
                     React.createElement('i', { className: 'fa fa-plus' }),
                     ' New ballot'
                 )
@@ -958,7 +968,7 @@ var MultipleListRow = React.createClass({
                 ),
                 React.createElement(
                     'button',
-                    { className: 'btn btn-danger btn-block', onClick: this.handleDelete },
+                    { disabled: !allowChange, className: 'btn btn-danger btn-block', onClick: this.handleDelete },
                     React.createElement('i', { className: 'fa fa-trash-o', title: 'Remove ballot' }),
                     ' Delete'
                 )
@@ -1305,7 +1315,7 @@ var Referendum = React.createClass({
                 { className: 'col-sm-4' },
                 React.createElement(
                     'button',
-                    { className: 'btn btn-block btn-primary', onClick: this.showForm },
+                    { className: 'btn btn-block btn-primary', onClick: this.showForm, disabled: !allowChange },
                     React.createElement('i', { className: 'fa fa-plus' }),
                     ' New referendum'
                 )
@@ -1599,7 +1609,7 @@ var ReferendumListRow = React.createClass({
                 ),
                 React.createElement(
                     'button',
-                    { className: 'btn btn-danger', onClick: this.deleteReferendum },
+                    { disabled: !allowChange, className: 'btn btn-danger', onClick: this.deleteReferendum },
                     React.createElement('i', { className: 'fa fa-trash-o' }),
                     ' Delete'
                 )
@@ -1706,7 +1716,7 @@ var SingleBallot = React.createClass({
                 { className: 'col-sm-3' },
                 React.createElement(
                     'button',
-                    { className: 'btn btn-block btn-primary', onClick: this.showForm },
+                    { className: 'btn btn-block btn-primary', disabled: !allowChange, onClick: this.showForm },
                     React.createElement('i', { className: 'fa fa-plus' }),
                     ' New ballot'
                 )
@@ -1912,7 +1922,7 @@ var SingleListRow = React.createClass({
                     ),
                     React.createElement(
                         'button',
-                        { className: 'btn btn-danger', onClick: this.handleDelete },
+                        { disabled: !allowChange, className: 'btn btn-danger', onClick: this.handleDelete },
                         React.createElement('i', { className: 'fa fa-trash-o', title: 'Remove ballot' }),
                         ' Delete'
                     )
@@ -2101,7 +2111,7 @@ var Tickets = React.createClass({
         } else {
             form = React.createElement(
                 'button',
-                { className: 'btn btn-primary', onClick: this.editFormId.bind(null, 0) },
+                { disabled: !allowChange, className: 'btn btn-primary', onClick: this.editFormId.bind(null, 0) },
                 React.createElement('i', { className: 'fa fa-plus' }),
                 ' Add a new ticket'
             );
@@ -2416,6 +2426,7 @@ var TicketRow = React.createClass({
                 })
             );
         }
+        var showAdd = this.state.candidates.length < 2;
 
         var body = React.createElement(
             'div',
@@ -2431,7 +2442,7 @@ var TicketRow = React.createClass({
                 ),
                 React.createElement(
                     'button',
-                    { className: 'btn btn-sm btn-danger', onClick: this.props.handleDelete, title: 'Delete ticket' },
+                    { disabled: !allowChange, className: 'btn btn-sm btn-danger', onClick: this.props.handleDelete, title: 'Delete ticket' },
                     React.createElement('i', { className: 'fa fa-lg fa-trash-o' }),
                     ' Delete ticket'
                 )
@@ -2470,7 +2481,7 @@ var TicketRow = React.createClass({
                 )
             ),
             React.createElement('hr', null),
-            React.createElement(Candidates, { type: 'ticket', candidates: this.state.candidates, singleId: this.props.singleId, ticketId: this.props.id, reload: this.load })
+            React.createElement(Candidates, { type: 'ticket', candidates: this.state.candidates, singleId: this.props.singleId, ticketId: this.props.id, reload: this.load, showAdd: showAdd })
         );
 
         return React.createElement(

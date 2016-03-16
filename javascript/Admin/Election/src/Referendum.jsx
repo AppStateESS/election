@@ -59,7 +59,7 @@ var Referendum = React.createClass({
                     <h4>Referendum - {this.state.itemCount} measure{this.state.itemCount !== 1 ? 's' : null}</h4>
                 </div>
                 <div className="col-sm-4">
-                    <button className="btn btn-block btn-primary" onClick={this.showForm}>
+                    <button className="btn btn-block btn-primary" onClick={this.showForm} disabled={!allowChange} >
                         <i className="fa fa-plus"></i> New referendum</button>
                 </div>
             </div>
@@ -318,7 +318,7 @@ var ReferendumListRow = React.createClass({
                     <button className="btn btn-success pad-right" onClick={this.props.edit}>
                         <i className="fa fa-edit"></i> Edit
                     </button>
-                    <button className="btn btn-danger" onClick={this.deleteReferendum}>
+                    <button disabled={!allowChange} className="btn btn-danger" onClick={this.deleteReferendum}>
                         <i className="fa fa-trash-o"></i> Delete
                     </button>
                 </div>

@@ -224,6 +224,7 @@ var Election = React.createClass({
             <div>
                 {electionTitle}
                 {date}
+                {allowChange ? null:<p><em>This is an ongoing election. Some options are disabled.</em></p>}
                 <div>
                     {details}
                 </div>

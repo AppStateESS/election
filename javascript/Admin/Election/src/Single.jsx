@@ -63,7 +63,7 @@ var SingleBallot = React.createClass({
                     <h4>Single chair - {this.state.itemCount} ballot{this.state.itemCount !== 1 ? 's' : null}</h4>
                 </div>
                 <div className="col-sm-3">
-                    <button className="btn btn-block btn-primary" onClick={this.showForm}>
+                    <button className="btn btn-block btn-primary" disabled={!allowChange} onClick={this.showForm}>
                         <i className="fa fa-plus"></i> New ballot</button>
                 </div>
             </div>
@@ -240,7 +240,7 @@ var SingleListRow = React.createClass({
                     <div className="pull-right">
                         <button className="btn btn-success pad-right" onClick={this.edit} title="Edit ballot">
                             <i className="fa fa-edit"></i> Edit</button>
-                        <button className="btn btn-danger" onClick={this.handleDelete}>
+                        <button disabled={!allowChange} className="btn btn-danger" onClick={this.handleDelete}>
                             <i className="fa fa-trash-o" title="Remove ballot"></i> Delete</button>
                     </div>
                 </div>

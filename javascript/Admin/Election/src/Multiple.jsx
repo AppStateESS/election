@@ -63,7 +63,7 @@ var MultipleBallot = React.createClass({
                     <h4>Multiple chair - {this.state.itemCount} ballot{this.state.itemCount !== 1 ? 's' : null}</h4>
                 </div>
                 <div className="col-sm-3">
-                    <button className="btn btn-block btn-primary" onClick={this.showForm}>
+                    <button className="btn btn-block btn-primary" onClick={this.showForm} disabled={!allowChange}>
                         <i className="fa fa-plus"></i> New ballot</button>
                 </div>
             </div>
@@ -238,7 +238,7 @@ var MultipleListRow = React.createClass({
                 <div className="col-sm-3">
                     <button className="btn btn-success btn-block" onClick={this.edit} title="Edit ballot">
                         <i className="fa fa-edit"></i> Edit</button>
-                    <button className="btn btn-danger btn-block" onClick={this.handleDelete}>
+                    <button disabled={!allowChange} className="btn btn-danger btn-block" onClick={this.handleDelete}>
                         <i className="fa fa-trash-o" title="Remove ballot"></i> Delete</button>
                 </div>
             </div>
