@@ -99,6 +99,9 @@ class Candidate extends Base
     public static function deletePicture(\election\Resource\Candidate $candidate)
     {
         $image_name = $candidate->getPicture();
+        if (empty($image_name)) {
+            return;
+        }
         $image_directory = self::getImageDirectory();
         
         unlink($image_directory . $image_name);
