@@ -109,7 +109,8 @@ EOF;
             'single' => $single,
             'multiple' => $multiple,
             'referendum' => $referendum,
-            'unqualified' => $unqualified
+            'unqualified' => $unqualified,
+            'supportLink'=>\PHPWS_Settings::get('election', 'supportLink')
         );
 
         return $voting_data;

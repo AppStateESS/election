@@ -9,7 +9,8 @@ var Multiple = React.createClass({
             updateVote: null,
             vote: [],
             ballot: {},
-            unqualified: []
+            unqualified: [],
+            supportLink: null
         };
     },
 
@@ -18,7 +19,7 @@ var Multiple = React.createClass({
         }, this.props.ballot, {
             updateVote: this.props.updateVote,
             vote: this.props.vote,
-            unqualified: this.props.unqualified }));
+            unqualified: this.props.unqualified, supportLink: this.props.supportLink }));
     }
 });
 
@@ -39,7 +40,8 @@ var MultipleBallot = React.createClass({
             title: null,
             candidates: [],
             vote: null,
-            multipleId: 0
+            multipleId: 0,
+            supportLink: null
         };
     },
 
@@ -107,26 +109,70 @@ var MultipleBallot = React.createClass({
 
         var unqualified = null;
         if (this.props.unqualified.length > 0) {
+            var supportLink = 'mailto:' + this.props.supportLink;
             unqualified = React.createElement(
                 "div",
-                { className: "" },
+                { className: "row" },
                 React.createElement(
-                    "p",
-                    null,
-                    "You were not qualified to vote in the following ballots",
-                    React.createElement("br", null),
-                    "because of your class, college, or organizational affiliation."
+                    "div",
+                    { className: "col-sm-6" },
+                    React.createElement(
+                        "p",
+                        null,
+                        "You were not qualified to vote in the following ballots because of your class, college, or organizational affiliation."
+                    ),
+                    React.createElement(
+                        "ul",
+                        null,
+                        this.props.unqualified.map(function (value, key) {
+                            return React.createElement(
+                                "li",
+                                { key: key },
+                                value
+                            );
+                        })
+                    )
                 ),
                 React.createElement(
-                    "ul",
-                    null,
-                    this.props.unqualified.map(function (value, key) {
-                        return React.createElement(
+                    "div",
+                    { className: "col-sm-6 well" },
+                    React.createElement(
+                        "div",
+                        { className: "alert alert-danger" },
+                        React.createElement(
+                            "strong",
+                            null,
+                            "Is there ballot you should be able to vote on?"
+                        )
+                    ),
+                    React.createElement(
+                        "ol",
+                        null,
+                        React.createElement(
                             "li",
-                            { key: key },
-                            value
-                        );
-                    })
+                            null,
+                            "STOP! Do not complete your vote"
+                        ),
+                        React.createElement(
+                            "li",
+                            null,
+                            React.createElement(
+                                "a",
+                                { href: supportLink },
+                                React.createElement(
+                                    "strong",
+                                    null,
+                                    "click here"
+                                ),
+                                " and email your ASU username and the missing ballot name."
+                            )
+                        )
+                    ),
+                    React.createElement(
+                        "p",
+                        null,
+                        "We will check your account and get back to you."
+                    )
                 )
             );
         }
@@ -192,7 +238,6 @@ var MultipleCandidate = React.createClass({
     render: function () {
         if (this.props.selected) {
             var _className = 'list-group-item pointer active';
-            // var icon = <i className="pull-right fa fa-check fa-2x" title="Click to unselect for candidate"></i>;
             var icon = React.createElement(
                 "button",
                 { className: "pull-right btn btn-default btn-lg" },

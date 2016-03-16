@@ -16,6 +16,7 @@ class Settings extends \election\Controller\Base
         $tplvars['studentOrgApiUrl'] = \PHPWS_Settings::get('election', 'studentOrgApiUrl');
         $tplvars['fromAddress'] = \PHPWS_Settings::get('election', 'fromAddress');
         $tplvars['surveyLink'] = \PHPWS_Settings::get('election', 'surveyLink');
+        $tplvars['supportLink'] = \PHPWS_Settings::get('election', 'supportLink');
         $template = new \Template($tplvars);
         $template->setModuleTemplate('election', 'Admin/Settings.html');
         $content = $template->get();
@@ -55,6 +56,9 @@ class Settings extends \election\Controller\Base
 
         $surveyLink = $request->getVar('surveyLink');
         \PHPWS_Settings::set('election', 'surveyLink', $surveyLink);
+
+        $supportLink = $request->getVar('supportLink');
+        \PHPWS_Settings::set('election', 'supportLink', $supportLink);
 
         \PHPWS_Settings::save('election');
     }

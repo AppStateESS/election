@@ -47,6 +47,7 @@ class Vote extends Base
         self::emailStudent($student, $election);
         
         $json['surveyLink'] = \PHPWS_Settings::get('election', 'surveyLink');
+        $json['supportLink'] = \PHPWS_Settings::get('election', 'surveyLink');
         $json['success'] = true;
         return $json;
     }

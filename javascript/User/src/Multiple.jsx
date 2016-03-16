@@ -5,7 +5,8 @@ var Multiple = React.createClass({
             updateVote : null,
             vote : [],
             ballot : {},
-            unqualified : []
+            unqualified : [],
+            supportLink : null
         };
     },
 
@@ -14,7 +15,7 @@ var Multiple = React.createClass({
             {...this.props.ballot}
             updateVote={this.props.updateVote}
             vote={this.props.vote}
-            unqualified={this.props.unqualified}/>;
+            unqualified={this.props.unqualified} supportLink={this.props.supportLink}/>;
     }
 });
 
@@ -33,7 +34,8 @@ var MultipleBallot = React.createClass({
             title : null,
             candidates : [],
             vote : null,
-            multipleId : 0
+            multipleId : 0,
+            supportLink : null
         };
     },
 
@@ -91,15 +93,26 @@ var MultipleBallot = React.createClass({
 
         var unqualified = null;
         if (this.props.unqualified.length > 0) {
+            var supportLink = 'mailto:' + this.props.supportLink;
             unqualified = (
-                <div className="">
-                    <p>You were not qualified to vote in the following ballots<br />
-                    because of your class, college, or organizational affiliation.</p>
-                    <ul>
-                        {this.props.unqualified.map(function(value, key){
-                            return <li key={key}>{value}</li>;
-                        })}
-                    </ul>
+                <div className="row">
+                    <div className="col-sm-6">
+                        <p>You were not qualified to vote in the following ballots
+                        because of your class, college, or organizational affiliation.</p>
+                        <ul>
+                            {this.props.unqualified.map(function(value, key){
+                                return <li key={key}>{value}</li>;
+                                })}
+                        </ul>
+                    </div>
+                    <div className="col-sm-6 well">
+                        <div className="alert alert-danger"><strong>Is there ballot you should be able to vote on?</strong></div>
+                        <ol>
+                            <li>STOP! Do not complete your vote</li>
+                            <li><a href={supportLink}><strong>click here</strong> and email your ASU username and the missing ballot name.</a></li>
+                        </ol>
+                        <p>We will check your account and get back to you.</p>
+                    </div>
                 </div>
             );
         }
@@ -145,7 +158,6 @@ var MultipleCandidate = React.createClass({
     render: function() {
         if (this.props.selected) {
             var _className = 'list-group-item pointer active';
-            // var icon = <i className="pull-right fa fa-check fa-2x" title="Click to unselect for candidate"></i>;
             var icon = <button className="pull-right btn btn-default btn-lg"><i className="fa fa-check"></i> Selected</button>;
         } else {
             var _className = 'list-group-item pointer';

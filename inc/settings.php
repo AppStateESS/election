@@ -4,5 +4,6 @@ $settings = array(
     'studentDataApiUrl' => null,
     'studentOrgApiUrl' => null,
     'fromAddress' => 'noreply@noreply.com',
-    'surveyLink' => null
+    'surveyLink' => null,
+    'supportLink' => null
     );

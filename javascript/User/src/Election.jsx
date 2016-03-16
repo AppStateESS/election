@@ -18,7 +18,8 @@ var Election = React.createClass({
             referendumVote : [],
             unqualified : [],
             backToReview : false,
-            surveyLink : null
+            surveyLink : null,
+            supportLink : null
         };
     },
 
@@ -67,7 +68,8 @@ var Election = React.createClass({
                     referendum : data.referendum,
                     ballotCount : ballotCount,
                     referendumCount : referendumLength,
-                    unqualified : data.unqualified
+                    unqualified : data.unqualified,
+                    supportLink : data.supportLink
                 });
             }
 
@@ -321,10 +323,11 @@ var Election = React.createClass({
             break;
 
             case 'multiple':
+            console.log(this.state);
             content = <Multiple election={this.state.election}
                 ballot={this.state.multiple[this.state.currentMultiple]}
                 updateVote={this.updateMultipleVote} vote={this.state.multipleVote}
-                unqualified={this.state.unqualified}/>
+                unqualified={this.state.unqualified} supportLink={this.state.supportLink}/>
             break;
 
             case 'referendum':
