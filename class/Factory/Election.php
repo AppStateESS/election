@@ -123,6 +123,9 @@ class Election extends Base
 
     public static function allowChange($electionId)
     {
+        if (\Current_User::isDeity()) {
+            return true;
+        }
         $currentElection = self::getCurrent();
         return !($currentElection && (int) $currentElection['id'] == (int) $electionId);
     }
