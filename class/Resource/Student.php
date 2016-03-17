@@ -16,7 +16,7 @@ class Student
     const GRADUATE2 = 'grad2';
     const DOCTORAL = 'doctoral';
     const POSTDOC = 'postdoc';
-    const CLASS_FR = 'Freshmen';
+    const CLASS_FR = 'Freshman';
     const CLASS_SO = 'Sophomore';
     const CLASS_JR = 'Junior';
     const CLASS_SR = 'Senior';
