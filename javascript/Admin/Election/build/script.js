@@ -1192,7 +1192,7 @@ var CategoryList = React.createClass({
 
     getDefaultProps: function () {
         return {
-            defValue: '',
+            default: '',
             handleChange: null
         };
     },
@@ -1203,7 +1203,7 @@ var CategoryList = React.createClass({
         });
         return React.createElement(
             'select',
-            { className: 'form-control', defaultValue: this.props.defValue, onChange: this.props.handleChange },
+            { className: 'form-control', defaultValue: this.props.defValue, onChange: this.props.handleChange, value: this.props.default },
             options
         );
     }

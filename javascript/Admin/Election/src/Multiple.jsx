@@ -423,7 +423,7 @@ var CategoryList = React.createClass({
 
     getDefaultProps: function() {
         return {
-            defValue : '',
+            default : '',
             handleChange : null
         };
     },
@@ -435,7 +435,7 @@ var CategoryList = React.createClass({
             );
         });
         return (
-            <select className="form-control" defaultValue={this.props.defValue} onChange={this.props.handleChange}>
+            <select className="form-control" defaultValue={this.props.defValue} onChange={this.props.handleChange} value={this.props.default}>
                 {options}
             </select>
         );
