@@ -329,7 +329,6 @@ var Election = React.createClass({
                 break;
 
             case 'multiple':
-                console.log(this.state);
                 content = React.createElement(Multiple, { election: this.state.election,
                     ballot: this.state.multiple[this.state.currentMultiple],
                     updateVote: this.updateMultipleVote, vote: this.state.multipleVote,
