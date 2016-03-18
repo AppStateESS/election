@@ -13,10 +13,15 @@ class Single extends Ballot
 
     public static function post()
     {
-        $single = self::build(self::pullPostInteger('singleId'), new Resource);
-
+        $electionId = self::pullPostInteger('electionId');
+        $singleId = self::pullPostInteger('singleId');
+        
+        if (!$singleId && !Election::allowChange($electionId)) {
+            throw new \Exception('Cannot save new ballot in ongoing election');
+        }
+        $single = self::build($singleId, new Resource);
         $single->setTitle(self::pullPostString('title'));
-        $single->setElectionId(self::pullPostInteger('electionId'));
+        $single->setElectionId($electionId);
 
         self::saveResource($single);
     }

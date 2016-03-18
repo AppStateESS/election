@@ -329,6 +329,9 @@ var SingleBallotForm = React.createClass({
             	.done(function(data){
                     this.props.reload();
             	}.bind(this))
+                .fail(function(){
+                    alert('Could not save single chair ballot');
+                })
                 .always(function(){
                     this.props.hideForm();
                 }.bind(this));

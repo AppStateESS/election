@@ -253,7 +253,15 @@ var MultipleCandidate = React.createClass({
             );
         }
 
-        var picture = React.createElement("img", { className: "img-circle", src: defaultPicture });
+        var picture = React.createElement(
+            "div",
+            { className: "no-photo" },
+            React.createElement(
+                "span",
+                null,
+                "No photo"
+            )
+        );
 
         if (this.props.picture.length > 0) {
             picture = React.createElement("img", { className: "img-circle", src: this.props.picture });

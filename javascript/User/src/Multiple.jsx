@@ -164,7 +164,7 @@ var MultipleCandidate = React.createClass({
             var icon = <button className="pull-right btn btn-default btn-lg">Select</button>;
         }
 
-        var picture = <img className="img-circle" src={defaultPicture}/>
+        var picture = <div className="no-photo"><span>No photo</span></div>;
 
         if (this.props.picture.length > 0) {
             picture = <img className="img-circle" src={this.props.picture}/>;

@@ -13,7 +13,9 @@ class Candidate extends Base
 
     public static function post()
     {
-        $candidate = self::build(self::pullPostInteger('candidateId'), new Resource);
+        $candidateId = self::pullPostInteger('candidateId');
+        $candidate = self::build($candidateId, new Resource);
+
         $type = self::pullPostString('type');
 
         if ($type == 'ticket') {
@@ -23,13 +25,29 @@ class Candidate extends Base
         } else {
             throw new \Exception('Unknown candidate type');
         }
-        
+
         $ticket_id = $candidate->getTicketId();
         $multiple_id = $candidate->getMultipleId();
 
-        if ((int)$ticket_id === 0 && (int)$multiple_id === 0) {
+        if ((int) $ticket_id === 0 && (int) $multiple_id === 0) {
             throw new \Exception('Missing candidate foreign key');
         }
+
+        /**
+         * If this is a new candidate make sure the election
+         * is not ongoing or the person doesn't have rights.
+         */
+        if (!$candidateId) {
+            if ($ticket_id) {
+                $election_id = Ticket::getElectionId($ticket_id);
+            } else {
+                $election_id = Multiple::getElectionId($multiple_id);
+            }
+            if (!Election::allowChange($election_id)) {
+                throw new \Exception('Cannot create new candidate in active election');
+            }
+        }
+
 
         $candidate->setFirstName(ucfirst(self::pullPostString('firstName')));
         $candidate->setLastName(ucfirst(self::pullPostString('lastName')));
@@ -70,7 +88,6 @@ class Candidate extends Base
         return $result;
     }
 
-    
     public static function getCandidateList($multipleId = 0, $active_only = true)
     {
         if (empty($multipleId)) {
@@ -95,7 +112,6 @@ class Candidate extends Base
         return $result;
     }
 
-    
     public static function deletePicture(\election\Resource\Candidate $candidate)
     {
         $image_name = $candidate->getPicture();
@@ -103,10 +119,11 @@ class Candidate extends Base
             return;
         }
         $image_directory = self::getImageDirectory();
-        
-        unlink($image_directory . $image_name);
+        if (is_file($image_directory . $image_name)) {
+            unlink($image_directory . $image_name);
+        }
     }
-    
+
     private static function savePicture(array $file, \election\Resource\Candidate $candidate)
     {
         $filename = $file['name'];
@@ -167,8 +184,46 @@ class Candidate extends Base
             throw new \Exception('Missing id');
         }
         $candidate = self::build($candidateId, new Resource);
+
+        $election_id = self::getElectionId($candidate);
+        if (!Election::allowChange($election_id)) {
+            throw new \Exception('Cannot delete candidate in active election');
+        }
+
         $candidate->setActive(false);
         self::saveResource($candidate);
+    }
+
+    public static function getElectionId(\election\Resource\Candidate $candidate)
+    {
+        $candidateId = $candidate->getId();
+        if (empty($candidate) || empty($candidateId)) {
+            throw new \Exception('Missing candidate');
+        }
+        $db = \Database::getDB();
+        $t1 = $db->addTable('elect_candidate', null, false);
+        $t1->addFieldConditional('id', $candidateId);
+        $ticketId = $candidate->getTicketId();
+        $multipleId = $candidate->getMultipleId();
+        if ($ticketId) {
+            $t2 = $db->addTable('elect_ticket', null, false);
+            $cond = new \Database\Conditional($db, $t1->getField('ticketId'), $t2->getField('id'), '=');
+            $join = $db->joinResources($t1, $t2, $cond, 'left');
+            $t3 = $db->addTable('elect_single', null, false);
+            $cond2 = new \Database\Conditional($db, $t2->getField('singleId'), $t3->getField('id'), '=');
+            $db->joinResources($t2, $t3, $cond2, 'left');
+            $t3->addField('electionId');
+        } elseif ($multipleId) {
+            $t2 = $db->addTable('elect_multiple', null, false);
+            $cond = new \Database\Conditional($db, $t1->getField('multipleId'), $t2->getField('id'), '=');
+            $db->joinResources($t1, $t2, $cond, 'left');
+            $t2->addField('electionId');
+        } else {
+            throw new \Exception('Missing foreign key id');
+        }
+        $db->loadSelectStatement();
+        $result = $db->fetchColumn();
+        return $result;
     }
 
 }

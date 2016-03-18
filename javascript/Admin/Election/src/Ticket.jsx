@@ -28,7 +28,11 @@ var Tickets = React.createClass({
             }, null, 'json')
             	.done(function(data){
                     this.props.load();
-            	}.bind(this));
+            	}.bind(this))
+                .fail(function(){
+                    alert('Unable to delete this ticket.');
+                    this.props.load();
+                });
         }
     },
 

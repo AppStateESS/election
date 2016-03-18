@@ -115,5 +115,14 @@ class Multiple extends Ballot
         }
         return $categories;
     }
+    
+    public static function getElectionId($multiple_id)
+    {
+        $db = \Database::getDB();
+        $tbl = $db->addTable('elect_multiple');
+        $tbl->addField('electionId');
+        $tbl->addFieldConditional('id', $multiple_id);
+        return $db->selectColumn();
+    }
 
 }

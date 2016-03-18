@@ -41,7 +41,9 @@ var Candidates = React.createClass({
                 candidateId: candidateId
             }, null, 'json').done(function (data) {
                 this.load();
-            }.bind(this));
+            }.bind(this)).fail(function () {
+                alert('Failed to delete candidate');
+            });
         }
     },
 
@@ -242,6 +244,10 @@ var CandidateForm = React.createClass({
             processData: false,
             contentType: false,
             success: function (data) {
+                this.props.reload();
+            }.bind(this),
+            error: function () {
+                alert('Failed to save candidate');
                 this.props.reload();
             }.bind(this)
         });
@@ -976,7 +982,7 @@ var MultipleListRow = React.createClass({
         );
 
         if (this.props.isOpen) {
-            var body = React.createElement(Candidates, { type: 'multiple', multipleId: this.props.multipleId,
+            var body = React.createElement(Candidates, { type: 'multiple', electionId: this.props.electionId, multipleId: this.props.multipleId,
                 candidates: this.state.candidates, reload: this.load });
             var arrow = React.createElement('i', { className: 'fa fa-chevron-up' });
         } else {
@@ -2014,7 +2020,9 @@ var SingleBallotForm = React.createClass({
                 title: this.state.title
             }, null, 'json').done(function (data) {
                 this.props.reload();
-            }.bind(this)).always(function () {
+            }.bind(this)).fail(function () {
+                alert('Could not save single chair ballot');
+            }).always(function () {
                 this.props.hideForm();
             }.bind(this));
         }
@@ -2094,7 +2102,10 @@ var Tickets = React.createClass({
                 ticketId: ticketId
             }, null, 'json').done(function (data) {
                 this.props.load();
-            }.bind(this));
+            }.bind(this)).fail(function () {
+                alert('Unable to delete this ticket.');
+                this.props.load();
+            });
         }
     },
 

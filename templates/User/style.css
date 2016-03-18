@@ -93,3 +93,16 @@ img.candidate {
     max-height : 400px;
     margin-bottom : 1em;
 }
+
+
+.no-photo {
+    font-size : 12px;
+    float: left;
+    border : 1px solid #e3e3e3;
+    color : #b3b3b3;
+    border-radius: 4px;
+    margin-right : 1em;
+    height : 100px;
+    padding : 6px;
+    font-weight : bold;
+}

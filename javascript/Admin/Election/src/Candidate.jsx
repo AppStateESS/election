@@ -38,7 +38,10 @@ var Candidates = React.createClass({
             }, null, 'json')
             	.done(function(data){
                     this.load();
-            	}.bind(this));
+            	}.bind(this))
+                .fail(function(){
+                    alert('Failed to delete candidate');
+                });
         }
     },
 
@@ -189,7 +192,6 @@ var CandidateForm = React.createClass({
             data.append(key, value);
         });
 
-
         if (this.props.ticketId > 0) {
             data.append('ticketId', this.props.ticketId);
         } else {
@@ -209,6 +211,10 @@ var CandidateForm = React.createClass({
             processData: false,
             contentType: false,
             success: function(data) {
+                this.props.reload();
+            }.bind(this),
+            error: function() {
+                alert('Failed to save candidate');
                 this.props.reload();
             }.bind(this)
         });

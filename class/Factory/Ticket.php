@@ -97,4 +97,24 @@ class Ticket extends Base
         return $tickets;
     }
 
+    /**
+     * Return the election id for specific ticket
+     * @param type $ticketId
+     * @return type
+     */
+    public static function getElectionId($ticketId)
+    {
+        $db = \Database::getDB();
+        $ticketTable = $db->addTable('elect_ticket', null, false);
+        $ticketTable->addFieldConditional('id', $ticketId);
+        $singleTable = $db->addTable('elect_single', null, false);
+        $singleTable->addField('electionId');
+
+        $db->joinResources($singleTable, $ticketTable, new \Database\Conditional($db, $singleTable->getField('id'), $ticketTable->getField('singleId'), '='));
+
+        $db->loadSelectStatement();
+        $result = $db->fetchColumn();
+        return $result;
+    }
+
 }
