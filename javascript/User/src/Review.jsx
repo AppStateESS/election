@@ -213,7 +213,7 @@ var MultipleCandidateRow = React.createClass({
     render: function() {
         var icon = <i className="pull-right text-success fa fa-check-circle fa-2x"></i>;
 
-        var picture = <img className="img-circle" src='mod/election/img/no-picture.gif'/>
+        var picture = <div className="no-photo"><span>No photo</span></div>;
 
         if (this.props.picture.length > 0) {
             picture = <img className="img-circle" src={this.props.picture}/>;
