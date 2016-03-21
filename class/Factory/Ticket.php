@@ -28,9 +28,19 @@ class Ticket extends Base
 
     public static function post()
     {
-        $ticket = self::build(self::pullPostInteger('ticketId'), new Resource);
+        $ticketId = self::pullPostInteger('ticketId');
+        $singleId = self::pullPostInteger('singleId');
+        $ticket = self::build($ticketId, new Resource);
 
-        $ticket->setSingleId(self::pullPostInteger('singleId'));
+        if (!$ticketId) {
+            $single = Single::build($singleId, new \election\Resource\Single);
+            $electionId = $single->getElectionId();
+            if (!Election::allowChange($electionId)) {
+                throw new \Exception('Cannot create new ticket in ongoing election');
+            }
+        }
+
+        $ticket->setSingleId($singleId);
         $ticket->setTitle(self::pullPostString('title'));
         $ticket->setPlatform(self::pullPostString('platform'));
         $siteAddress = self::pullPostString('siteAddress');
@@ -64,6 +74,11 @@ class Ticket extends Base
             throw new \Exception('Missing ticket id');
         }
         $ticket = self::build($ticketId, new Resource);
+        $electionId = self::getElectionId($ticket->getId());
+        if (!Election::allowChange($electionId)) {
+            throw new \Exception('Cannot delete a ticket in ongoing election');
+        }
+
         $ticket->setActive(false);
         self::saveResource($ticket);
     }
