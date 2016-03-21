@@ -15,7 +15,7 @@ class Single extends Ballot
     {
         $electionId = self::pullPostInteger('electionId');
         $singleId = self::pullPostInteger('singleId');
-        
+
         if (!$singleId && !Election::allowChange($electionId)) {
             throw new \Exception('Cannot save new ballot in ongoing election');
         }
@@ -32,6 +32,9 @@ class Single extends Ballot
             throw new \Exception('Missing id');
         }
         $single = self::build($singleId, new Resource);
+        if (!Election::allowChange($single->getElectionId())) {
+            throw new \Exception('Cannot delete ballot in ongoing election');
+        }
         $single->setActive(false);
         self::saveResource($single);
     }
@@ -50,7 +53,7 @@ class Single extends Ballot
      * @param type $addCandidates
      * @return array
      */
-    public static function getListWithTickets($electionId, $addCandidates = true, $randomize=ELECTION_RANDOMIZE_TICKETS)
+    public static function getListWithTickets($electionId, $addCandidates = true, $randomize = ELECTION_RANDOMIZE_TICKETS)
     {
         $singleList = self::getList($electionId);
         if (empty($singleList)) {
