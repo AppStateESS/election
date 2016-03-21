@@ -10,13 +10,21 @@ use election\Resource\Referendum as Resource;
  */
 class Referendum extends Base
 {
+
     public static function post()
     {
-        $referendum = self::build(self::pullPostInteger('referendumId'), new Resource);
+        $electionId = self::pullPostInteger('electionId');
+
+        if (!Election::allowChange($electionId)) {
+            throw new \Exception('Cannot save new referendum in ongoing election.');
+        }
+
+        $referendumId = self::pullPostInteger('referendumId');
+        $referendum = self::build($referendumId, new Resource);
 
         $referendum->setTitle(self::pullPostString('title'));
         $referendum->setDescription(self::pullPostString('description'));
-        $referendum->setElectionId(self::pullPostInteger('electionId'));
+        $referendum->setElectionId($electionId);
 
         self::saveResource($referendum);
     }
@@ -27,6 +35,10 @@ class Referendum extends Base
             throw new \Exception('Missing id');
         }
         $referendum = self::build($referendumId, new Resource);
+        $electionId = $referendum->getElectionId();
+        if (!Election::allowChange($electionId)) {
+            throw new \Exception('Cannot referendum in ongoing election');
+        }
         $referendum->setActive(false);
         self::saveResource($referendum);
     }
@@ -50,4 +62,5 @@ class Referendum extends Base
         }
         return $result;
     }
+
 }
