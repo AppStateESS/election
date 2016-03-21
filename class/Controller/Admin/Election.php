@@ -80,7 +80,8 @@ EOF;
     {
         javascript('datetimepicker');
         \Layout::addStyle('election', 'Admin/style.css');
-        $date_format = '<script type="text/javascript">var dateFormat = "' . ELECTION_DATETIME_FORMAT . '";var tomorrow="' .
+        $deity = \Current_User::isDeity() ? 'true' : 'false';
+        $date_format = '<script type="text/javascript">var admin = ' . $deity . ';var dateFormat = "' . ELECTION_DATETIME_FORMAT . '";var tomorrow="' .
                 strftime('%Y/%m/%d', time() + 86400) . '";</script>';
 
         if (ELECTION_REACT_DEV) {
@@ -112,7 +113,11 @@ EOF;
                 break;
 
             case 'delete':
-                Factory::delete(Factory::pullPostInteger('electionId'));
+                if (\Current_User::isDeity()) {
+                    Factory::delete(Factory::pullPostInteger('electionId'));
+                } else {
+                    throw new \Exception('Non-deity election deletion not allowed.');
+                }
                 break;
 
             case 'saveTitle':
