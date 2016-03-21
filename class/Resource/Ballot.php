@@ -44,7 +44,7 @@ class Ballot extends Base
         $this->electionId->set($var);
     }
 
-    public function getElectionId($var)
+    public function getElectionId()
     {
         return $this->electionId->get();
     }
