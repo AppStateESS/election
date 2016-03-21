@@ -17,7 +17,7 @@ class Multiple extends Ballot
 
         $multiple->setTitle(self::pullPostString('title'));
         $seatNumber = self::pullPostInteger('seatNumber');
-        if ((int)$seatNumber < 1) {
+        if ((int) $seatNumber < 1) {
             $seatNumber = 1;
         }
         $multiple->setSeatNumber($seatNumber);
@@ -33,6 +33,9 @@ class Multiple extends Ballot
             throw new \Exception('Missing id');
         }
         $multiple = self::build($multipleId, new Resource);
+        if (!Election::allowChange($multiple->getElectionId())) {
+            throw new \Exception('Cannot delete ballot in ongoing election');
+        }
         $multiple->setActive(false);
         self::saveResource($multiple);
     }
@@ -115,7 +118,7 @@ class Multiple extends Ballot
         }
         return $categories;
     }
-    
+
     public static function getElectionId($multiple_id)
     {
         $db = \Database::getDB();
