@@ -123,6 +123,9 @@ class Election extends Base
 
     public static function allowChange($electionId)
     {
+        if (!$electionId) {
+            throw new \Exception('Election id was empty');
+        }
         if (\Current_User::isDeity()) {
             return true;
         }
