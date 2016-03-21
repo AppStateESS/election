@@ -124,28 +124,14 @@ var ElectionRow = React.createClass({
     },
 
     render: function () {
-        if (this.props.past) {
-            var reportHref = 'election/Admin/Election/?electionId=' + this.props.id;
-            var buttons = React.createElement(
-                'div',
-                null,
-                admin ? React.createElement(
-                    'span',
-                    null,
-                    React.createElement(
-                        'button',
-                        { className: 'btn btn-danger', onClick: this.delete },
-                        React.createElement('i', { className: 'fa fa-trash-o' }),
-                        ' Delete'
-                    ),
-                    ' '
-                ) : null,
-                React.createElement(
-                    'a',
-                    { href: reportHref, className: 'btn btn-info' },
-                    React.createElement('i', { className: 'fa fa-envelope' }),
-                    ' Report'
-                )
+        var buttons = null;
+        // admin defined in <head> by Admin/Election class.
+        if (this.props.past && admin) {
+            buttons = React.createElement(
+                'button',
+                { className: 'btn btn-danger', onClick: this.delete },
+                React.createElement('i', { className: 'fa fa-trash-o' }),
+                ' Delete'
             );
         } else {
             var href = 'election/Admin/?command=edit&electionId=' + this.props.id;
@@ -156,6 +142,7 @@ var ElectionRow = React.createClass({
                 ' Edit'
             );
         }
+        var reportHref = 'election/Admin/Report/?command=show&electionId=' + this.props.id;
         return React.createElement(
             'tr',
             null,
@@ -179,7 +166,14 @@ var ElectionRow = React.createClass({
             React.createElement(
                 'td',
                 null,
-                buttons
+                buttons,
+                ' ',
+                React.createElement(
+                    'a',
+                    { href: reportHref, className: 'btn btn-info' },
+                    React.createElement('i', { className: 'fa fa-envelope' }),
+                    ' Report'
+                )
             )
         );
     }

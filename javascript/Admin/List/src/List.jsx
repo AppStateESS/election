@@ -89,24 +89,23 @@ var ElectionRow = React.createClass({
     },
 
     render: function() {
-        if (this.props.past) {
-            var reportHref = 'election/Admin/Election/?electionId=' + this.props.id;
-            var buttons = (
-                <div>
-                    {admin ? <span><button className="btn btn-danger" onClick={this.delete}><i className="fa fa-trash-o"></i> Delete</button>&nbsp;</span> : null}
-                    <a href={reportHref} className="btn btn-info"><i className="fa fa-envelope"></i> Report</a>
-                </div>
-            );
+        var buttons = null;
+        // admin defined in <head> by Admin/Election class.
+        if (this.props.past && admin) {
+            buttons = <button className="btn btn-danger" onClick={this.delete}><i className="fa fa-trash-o"></i> Delete</button>;
         } else {
             var href = 'election/Admin/?command=edit&electionId=' + this.props.id;
             var buttons = <a href={href} className="btn btn-primary"><i className="fa fa-edit"></i> Edit</a>;
         }
+        var reportHref = 'election/Admin/Report/?command=show&electionId=' + this.props.id;
         return (
             <tr>
                 <td>{this.props.title}</td>
                 <td>{this.props.startDateFormatted} - {this.props.endDateFormatted}</td>
                 <td>{this.props.totalVotes}</td>
-                <td>{buttons}</td>
+                <td>{buttons}&nbsp;
+                    <a href={reportHref} className="btn btn-info"><i className="fa fa-envelope"></i> Report</a>
+                </td>
             </tr>
         );
     }
