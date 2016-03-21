@@ -59,11 +59,12 @@ var Referendum = React.createClass({
                     <h4>Referendum - {this.state.itemCount} measure{this.state.itemCount !== 1 ? 's' : null}</h4>
                 </div>
                 <div className="col-sm-4">
-                    <button className="btn btn-block btn-primary" onClick={this.showForm} disabled={!allowChange} >
+                    <button disabled={!allowChange} className="btn btn-block btn-primary" onClick={this.showForm}>
                         <i className="fa fa-plus"></i> New referendum</button>
                 </div>
             </div>
         );
+
         if (this.state.panelOpen) {
             var form  = null;
             if (this.state.showForm) {
@@ -232,6 +233,9 @@ var ReferendumForm = React.createClass({
             	}.bind(this))
                 .always(function(){
                     this.props.hideForm();
+                }.bind(this))
+                .fail(function(data){
+                    alert('Cannot save referendum');
                 }.bind(this));
         }
     },
@@ -303,7 +307,11 @@ var ReferendumListRow = React.createClass({
             }, null, 'json')
             	.done(function(data){
             		this.props.reload();
-            	}.bind(this));
+            	}.bind(this))
+                .fail(function(data){
+                    alert('Cannot delete referendum');
+                    this.props.reload();
+                }.bind(this));
 
         }
     },

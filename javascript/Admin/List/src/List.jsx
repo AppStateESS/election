@@ -36,7 +36,7 @@ var ElectionList = React.createClass({
 
     render: function() {
         var rows = this.state.elections.map(function(value, key) {
-            return <ElectionRow key={key} {...value} hideForm={this.hideForm}/>;
+            return <ElectionRow key={key} {...value} hideForm={this.hideForm} reload={this.load}/>;
         }.bind(this));
         var form = <button className="btn btn-success" onClick={this.showForm}><i className="fa fa-plus"> Add Election</i></button>;
         if (this.state.showForm) {
@@ -71,14 +71,32 @@ var ElectionRow = React.createClass({
             endDateFormatted : '',
             totalVotes : 0,
             past : false,
-            edit: false
+            edit: false,
+            reload : null
         };
+    },
+
+    delete: function() {
+        if (prompt('Are you sure you want to delete this election? Type Y-E-S if sure.') == 'YES') {
+            $.post('election/Admin/Election', {
+                command : 'delete',
+                electionId : this.props.id
+            }, null, 'json')
+                .done(function(data){
+                    this.props.reload();
+                }.bind(this));
+        }
     },
 
     render: function() {
         if (this.props.past) {
-            var href = 'election/Admin/Report/?electionId=' + this.props.id;
-            var buttons = <a href={href} className="btn btn-info"><i className="fa fa-envelope"></i> Report</a>
+            var reportHref = 'election/Admin/Election/?electionId=' + this.props.id;
+            var buttons = (
+                <div>
+                    {admin ? <span><button className="btn btn-danger" onClick={this.delete}><i className="fa fa-trash-o"></i> Delete</button>&nbsp;</span> : null}
+                    <a href={reportHref} className="btn btn-info"><i className="fa fa-envelope"></i> Report</a>
+                </div>
+            );
         } else {
             var href = 'election/Admin/?command=edit&electionId=' + this.props.id;
             var buttons = <a href={href} className="btn btn-primary"><i className="fa fa-edit"></i> Edit</a>;

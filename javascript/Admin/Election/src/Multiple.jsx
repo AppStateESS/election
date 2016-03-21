@@ -216,7 +216,11 @@ var MultipleListRow = React.createClass({
             }, null, 'json')
             	.done(function(data){
                     this.props.reload();
-            	}.bind(this));
+            	}.bind(this))
+                .fail(function(data){
+                    alert('Unable to delete multiple ballot');
+                    this.props.reload();
+                }.bind(this));
         }
     },
 

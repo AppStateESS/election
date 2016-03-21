@@ -32,7 +32,7 @@ var Tickets = React.createClass({
                 .fail(function(){
                     alert('Unable to delete this ticket.');
                     this.props.load();
-                });
+                }.bind(this));
         }
     },
 

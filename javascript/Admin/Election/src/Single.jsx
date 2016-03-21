@@ -219,7 +219,11 @@ var SingleListRow = React.createClass({
             }, null, 'json')
             	.done(function(data){
                     this.props.reload();
-            	}.bind(this));
+            	}.bind(this))
+                .fail(function(data){
+                    alert('Unable to delete ballot.');
+                    this.props.reload();
+                }.bind(this));
         }
     },
 
@@ -331,7 +335,7 @@ var SingleBallotForm = React.createClass({
             	}.bind(this))
                 .fail(function(){
                     alert('Could not save single chair ballot');
-                })
+                }.bind(this))
                 .always(function(){
                     this.props.hideForm();
                 }.bind(this));

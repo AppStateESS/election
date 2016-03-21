@@ -915,6 +915,9 @@ var MultipleListRow = React.createClass({
                 ballotId: this.props.id
             }, null, 'json').done(function (data) {
                 this.props.reload();
+            }.bind(this)).fail(function (data) {
+                alert('Unable to delete multiple ballot');
+                this.props.reload();
             }.bind(this));
         }
     },
@@ -1321,12 +1324,13 @@ var Referendum = React.createClass({
                 { className: 'col-sm-4' },
                 React.createElement(
                     'button',
-                    { className: 'btn btn-block btn-primary', onClick: this.showForm, disabled: !allowChange },
+                    { disabled: !allowChange, className: 'btn btn-block btn-primary', onClick: this.showForm },
                     React.createElement('i', { className: 'fa fa-plus' }),
                     ' New referendum'
                 )
             )
         );
+
         if (this.state.panelOpen) {
             var form = null;
             if (this.state.showForm) {
@@ -1503,6 +1507,8 @@ var ReferendumForm = React.createClass({
                 this.props.reload();
             }.bind(this)).always(function () {
                 this.props.hideForm();
+            }.bind(this)).fail(function (data) {
+                alert('Cannot save referendum');
             }.bind(this));
         }
     },
@@ -1586,6 +1592,9 @@ var ReferendumListRow = React.createClass({
                 command: 'delete',
                 referendumId: this.props.referendumId
             }, null, 'json').done(function (data) {
+                this.props.reload();
+            }.bind(this)).fail(function (data) {
+                alert('Cannot delete referendum');
                 this.props.reload();
             }.bind(this));
         }
@@ -1888,6 +1897,9 @@ var SingleListRow = React.createClass({
                 singleId: this.props.id
             }, null, 'json').done(function (data) {
                 this.props.reload();
+            }.bind(this)).fail(function (data) {
+                alert('Unable to delete ballot.');
+                this.props.reload();
             }.bind(this));
         }
     },
@@ -2022,7 +2034,7 @@ var SingleBallotForm = React.createClass({
                 this.props.reload();
             }.bind(this)).fail(function () {
                 alert('Could not save single chair ballot');
-            }).always(function () {
+            }.bind(this)).always(function () {
                 this.props.hideForm();
             }.bind(this));
         }
@@ -2105,7 +2117,7 @@ var Tickets = React.createClass({
             }.bind(this)).fail(function () {
                 alert('Unable to delete this ticket.');
                 this.props.load();
-            });
+            }.bind(this));
         }
     },
 
