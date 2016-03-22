@@ -27,7 +27,8 @@
                     "matchName": "Class",
                     "matchValue": "Senior"
                 }
-            ]
+            ],
+            "unqualified": "Your credit hour class designation is different."
         },
         {
             "category": "Student Type",
@@ -38,7 +39,8 @@
                     "matchName": "Student Type",
                     "matchValue": "T"
                 }
-            ]
+            ],
+            "unqualified": "You are not a transfer student this semester."
         },
         {
             "category": "College",
@@ -85,7 +87,8 @@
                     "matchName": "College",
                     "matchValue": "MU"
                 }
-            ]
+            ],
+            "unqualified": "Your major is in different college."
         },
         {
             "category": "Club Affiliation",
@@ -120,7 +123,8 @@
                     "matchName": "Club Affiliation",
                     "matchValue": ["Special Interest", "Religious"]
                 }
-            ]
+            ],
+            "unqualified": "You are not affiliated with the required clubs."
         },
         {
             "category": "Greek Life",
@@ -143,7 +147,8 @@
                     "matchName": "Greek Life",
                     "matchValue": "NPHC"
                 }
-            ]
+            ],
+            "unqualified": "You are not a member of this greek council."
         }
     ]
 }

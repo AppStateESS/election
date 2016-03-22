@@ -119,18 +119,34 @@ var MultipleBallot = React.createClass({
                     React.createElement(
                         "p",
                         null,
-                        "You were not qualified to vote in the following ballots because of your class, college, or organizational affiliation."
+                        React.createElement(
+                            "strong",
+                            null,
+                            "You were not qualified to vote in the following ballots because of your class, college, or organizational affiliation."
+                        )
                     ),
                     React.createElement(
-                        "ul",
-                        null,
-                        this.props.unqualified.map(function (value, key) {
-                            return React.createElement(
-                                "li",
-                                { key: key },
-                                value
-                            );
-                        })
+                        "div",
+                        { style: { height: '300px', overflow: 'auto' } },
+                        React.createElement(
+                            "table",
+                            { className: "table table-striped" },
+                            React.createElement(
+                                "tbody",
+                                null,
+                                this.props.unqualified.map(function (value, key) {
+                                    return React.createElement(
+                                        "tr",
+                                        { key: key },
+                                        React.createElement(
+                                            "td",
+                                            null,
+                                            value
+                                        )
+                                    );
+                                })
+                            )
+                        )
                     )
                 ),
                 React.createElement(

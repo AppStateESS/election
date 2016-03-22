@@ -74,29 +74,31 @@ class Multiple extends Ballot
                 throw new \Exception('Bad category type');
             }
             $category = $categoryListByType[$categoryType];
-            if (isset($studentCategories[$category->matchName])) {
-                $match = $studentCategories[$category->matchName];
+            $reason = ' - ' . $category['unqualified'];
+            
+            if (isset($studentCategories[$category['matchName']])) {
+                $match = $studentCategories[$category['matchName']];
                 if (is_array($match)) {
-                    $matchValue = $category->matchValue;
+                    $matchValue = $category['matchValue'];
                     if (is_array($matchValue)) {
                         $intersect = array_intersect($matchValue, $match);
                         if (empty($intersect)) {
                             unset($multiple[$key]);
-                            $unqualified[] = $ballot['title'];
+                            $unqualified[] = $ballot['title'] . $reason;
                         }
                     } elseif (!in_array($matchValue, $match)) {
                         unset($multiple[$key]);
-                        $unqualified[] = $ballot['title'];
+                        $unqualified[] = $ballot['title'] . $reason;
                     }
                 } else {
-                    if ($category->matchValue !== $match) {
+                    if ($category['matchValue'] !== $match) {
                         unset($multiple[$key]);
-                        $unqualified[] = $ballot['title'];
+                        $unqualified[] = $ballot['title'] . $reason;
                     }
                 }
             } else {
                 unset($multiple[$key]);
-                $unqualified[] = $ballot['title'];
+                $unqualified[] = $ballot['title'] . $reason;
             }
         }
         //reset index
@@ -110,10 +112,12 @@ class Multiple extends Ballot
         if (empty($json)) {
             throw new \Exception('Missing election types');
         }
-        $types = json_decode($json);
-        foreach ($types->electionTypes as $cat) {
-            foreach ($cat->subcategory as $sub) {
-                $categories[$sub->type] = $sub;
+        $types = json_decode($json, true);
+        
+        foreach ($types['electionTypes'] as $cat) {
+            foreach ($cat['subcategory'] as $sub) {
+                $sub['unqualified'] = $cat['unqualified'];
+                $categories[$sub['type']] = $sub;
             }
         }
         return $categories;

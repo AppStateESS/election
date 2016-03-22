@@ -97,13 +97,17 @@ var MultipleBallot = React.createClass({
             unqualified = (
                 <div className="row">
                     <div className="col-sm-6">
-                        <p>You were not qualified to vote in the following ballots
-                        because of your class, college, or organizational affiliation.</p>
-                        <ul>
-                            {this.props.unqualified.map(function(value, key){
-                                return <li key={key}>{value}</li>;
-                                })}
-                        </ul>
+                        <p><strong>You were not qualified to vote in the following ballots
+                        because of your class, college, or organizational affiliation.</strong></p>
+                    <div style={{height:'300px', overflow:'auto'}}>
+                        <table className="table table-striped">
+                            <tbody>
+                                {this.props.unqualified.map(function(value, key){
+                                    return <tr key={key}><td>{value}</td></tr>;
+                                    })}
+                            </tbody>
+                        </table>
+                    </div>
                     </div>
                     <div className="col-sm-6 well">
                         <div className="alert alert-danger"><strong>Is there ballot you should be able to vote on?</strong></div>
