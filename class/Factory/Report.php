@@ -33,7 +33,7 @@ class Report extends Base
             foreach ($ballot['tickets'] as $ticket) {
                 if (isset($sorted_votes[$ticket['singleId']][$ticket['id']])) {
                     $vote = $sorted_votes[$ticket['singleId']][$ticket['id']];
-                    $percentage = floor(($vote / $total_cast_votes) * 100);
+                    $percentage = round(($vote / $total_cast_votes) * 100, 1);
                     $ticket['votes'] = "$vote ($percentage%)";
                     $ticket_rows[$vote . '.' . $ticket['id']] = self::ticketTemplate($ticket);
                 }
@@ -93,7 +93,7 @@ class Report extends Base
                     $template = new \Template;
                     $template->setModuleTemplate('election', 'Admin/Report/Candidate.html');
                     $template->add('name', $c['firstName'] . ' ' . $c['lastName']);
-                    $percentage = floor(($vote / $total_cast_votes[$ballot['id']]) * 100);
+                    $percentage = round(($vote / $total_cast_votes[$ballot['id']]) * 100, 1);
                     $template->add('vote', "$vote ($percentage%)");
                     $template->add('picture', $c['picture']);
                     $candidates[$vote . '.' . $c['id']] = $template->get();
