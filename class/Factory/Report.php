@@ -17,7 +17,9 @@ class Report extends Base
             return self::noTicketVotes();
         }
 
+        $total_cast_votes = 0;
         foreach ($votes as $v) {
+            $total_cast_votes += $v['votes'];
             $key = $v['singleId'];
             $sorted_votes[$key][$v['ticketId']] = $v['votes'];
         }
@@ -26,20 +28,20 @@ class Report extends Base
         if (empty($singles)) {
             return null;
         }
-        
         foreach ($singles as $ballot) {
             $ballot_row['title'] = $ballot['title'];
             foreach ($ballot['tickets'] as $ticket) {
                 if (isset($sorted_votes[$ticket['singleId']][$ticket['id']])) {
                     $vote = $sorted_votes[$ticket['singleId']][$ticket['id']];
-                    $ticket['votes'] = $vote;
+                    $percentage = floor(($vote / $total_cast_votes) * 100);
+                    $ticket['votes'] = "$vote ($percentage%)";
                     $ticket_rows[$vote . '.' . $ticket['id']] = self::ticketTemplate($ticket);
                 }
             }
-                krsort($ticket_rows);
-                $ballot_row['tickets'] = implode("\n", $ticket_rows);
-                $tpl['ballots'][] = $ballot_row;
-            }
+            krsort($ticket_rows);
+            $ballot_row['tickets'] = implode("\n", $ticket_rows);
+            $tpl['ballots'][] = $ballot_row;
+        }
         $template = new \Template;
         $template->addVariables($tpl);
         $template->setModuleTemplate('election', 'Admin/Report/Single.html');
@@ -60,6 +62,7 @@ class Report extends Base
 
     public static function getMultipleResults($electionId)
     {
+        $total_votes = Election::getTotalVotes($electionId);
         $multiples = Multiple::getListWithCandidates($electionId);
 
         if (empty($multiples)) {
@@ -70,10 +73,16 @@ class Report extends Base
             return 'No multiple chair votes recorded.';
         }
 
+        $total_cast_votes = array();
         foreach ($votes as $v) {
             $key = $v['multipleId'];
+            if (!isset($total_cast_votes[$key])) {
+                $total_cast_votes[$key] = 0;
+            }
+            $total_cast_votes[$key] += $v['votes'];
             $sorted_votes[$key][$v['candidateId']] = $v['votes'];
         }
+
         foreach ($multiples as $ballot) {
             $ballot_row['title'] = $ballot['title'];
             $ballot_row['seats'] = $ballot['seatNumber'];
@@ -84,7 +93,8 @@ class Report extends Base
                     $template = new \Template;
                     $template->setModuleTemplate('election', 'Admin/Report/Candidate.html');
                     $template->add('name', $c['firstName'] . ' ' . $c['lastName']);
-                    $template->add('vote', $vote);
+                    $percentage = floor(($vote / $total_cast_votes[$ballot['id']]) * 100);
+                    $template->add('vote', "$vote ($percentage%)");
                     $template->add('picture', $c['picture']);
                     $candidates[$vote . '.' . $c['id']] = $template->get();
                 }
@@ -107,7 +117,7 @@ class Report extends Base
     private static function noCandidateVotes()
     {
         static $noVotes;
-        
+
         if (empty($noVotes)) {
             $tpl = new \Template;
             $tpl->setModuleTemplate('election', 'Admin/Report/NoCandidateVotesMultiple.html');
@@ -115,11 +125,11 @@ class Report extends Base
         }
         return $noVotes;
     }
-    
+
     private static function noTicketVotes()
     {
         static $noVotes;
-        
+
         if (empty($noVotes)) {
             $tpl = new \Template;
             $tpl->setModuleTemplate('election', 'Admin/Report/NoTicketVotesSingle.html');
@@ -127,7 +137,7 @@ class Report extends Base
         }
         return $noVotes;
     }
-    
+
     public static function getReferendumResults($electionId)
     {
         $referendums = Referendum::getList($electionId);
