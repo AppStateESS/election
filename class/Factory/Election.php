@@ -132,5 +132,16 @@ class Election extends Base
         $currentElection = self::getCurrent();
         return !($currentElection && (int) $currentElection['id'] == (int) $electionId);
     }
+    
+    public static function getTotalVotes($electionId)
+    {
+        $db = \Database::getDB();
+        $tbl = $db->addTable('elect_vote_complete', null, false);
+        $tbl->addFieldConditional('electionId', $electionId);
+        $expression = new \Database\Expression('count(' .$tbl->getField('bannerId') . ')');
+        $db->addExpression($expression, 'count');
+        $count = $db->selectColumn();
+        return $count;
+    }
 
 }
