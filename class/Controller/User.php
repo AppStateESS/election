@@ -35,7 +35,6 @@ class User extends \Http\Controller
 
         $provider = \election\Factory\StudentProviderFactory::getProvider();
         $studentId = $provider->pullStudentId();
-
         try {
             if (preg_match('/^9\d{8}/', $studentId)) {
                 $student = \election\Factory\StudentFactory::getStudentByBannerId($studentId);
@@ -46,14 +45,18 @@ class User extends \Http\Controller
             $controller = new User\NotAllowed($this->getModule());
             $controller->setMessage('We could not pull your student record.');
             return $controller;
+        } catch (\Guzzle\Http\Exception\CurlException $ex) {
+            $controller = new User\ServerError($this->getModule());
+            $controller->setMessage('Please contact the site administrator and try again later.');
+            return $controller;
         }
-         
+
         if (!$student->isEligibleToVote()) {
             $controller = new User\NotAllowed($this->getModule());
             $controller->setMessage('No credit hours or not an undergraduate student.');
             return $controller;
         }
-        
+
         // If there's an election going on, check to see if this student has already voted in it
         if ($election !== false && $student->hasVoted($election['id'])) {
             $command = 'AlreadyVoted';
@@ -94,14 +97,17 @@ class User extends \Http\Controller
         $template->setModuleTemplate('election', 'User/welcome.html');
         if (!\Current_User::isLogged()) {
             $template->add('color', 'primary');
-            $template->add('label', '<i class="fa fa-check-square-o"></i> Sign in to Vote');
+            $template->add('label',
+                    '<i class="fa fa-check-square-o"></i> Sign in to Vote');
             $template->add('url', ELECTION_LOGIN_DIRECTORY);
         } else {
             $template->add('color', 'success');
-            $template->add('label', '<i class="fa fa-check-square-o"></i> Get started voting!');
+            $template->add('label',
+                    '<i class="fa fa-check-square-o"></i> Get started voting!');
             $template->add('url', 'election/');
         }
-        $template->add('image', PHPWS_SOURCE_HTTP . 'mod/election/img/background1.jpg');
+        $template->add('image',
+                PHPWS_SOURCE_HTTP . 'mod/election/img/background1.jpg');
         \Layout::add($template->get());
     }
 
