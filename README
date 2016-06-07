@@ -1,0 +1,7 @@
+You will need to run composer install and "npm install" and "composer install" to
+get this module functioning. You will ALSO need to go into
+
+./node_modules/react-dropzone
+
+run 'npm install'
+then 'webpack'
