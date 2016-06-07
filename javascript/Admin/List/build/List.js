@@ -6,10 +6,7 @@ var ElectionList = React.createClass({
     displayName: 'ElectionList',
 
     getInitialState: function () {
-        return {
-            elections: [],
-            showForm: false
-        };
+        return { elections: [], showForm: false };
     },
 
     componentDidMount: function () {
@@ -17,25 +14,17 @@ var ElectionList = React.createClass({
     },
 
     load: function () {
-        $.getJSON('election/Admin/Election', {
-            command: 'list'
-        }).done(function (data) {
-            this.setState({
-                elections: data
-            });
+        $.getJSON('election/Admin/Election', { command: 'list' }).done(function (data) {
+            this.setState({ elections: data });
         }.bind(this));
     },
 
     showForm: function () {
-        this.setState({
-            showForm: true
-        });
+        this.setState({ showForm: true });
     },
 
     hideForm: function () {
-        this.setState({
-            showForm: false
-        });
+        this.setState({ showForm: false });
     },
 
     render: function () {
@@ -45,11 +34,8 @@ var ElectionList = React.createClass({
         var form = React.createElement(
             'button',
             { className: 'btn btn-success', onClick: this.showForm },
-            React.createElement(
-                'i',
-                { className: 'fa fa-plus' },
-                ' Add Election'
-            )
+            React.createElement('i', { className: 'fa fa-plus' }),
+            '  Add Election'
         );
         if (this.state.showForm) {
             form = React.createElement(ElectionForm, { hideForm: this.hideForm, load: this.load });
@@ -131,7 +117,7 @@ var ElectionRow = React.createClass({
                 'button',
                 { className: 'btn btn-danger', onClick: this.delete },
                 React.createElement('i', { className: 'fa fa-trash-o' }),
-                ' Delete'
+                '  Delete'
             );
         } else {
             var href = 'election/Admin/?command=edit&electionId=' + this.props.id;
@@ -139,7 +125,7 @@ var ElectionRow = React.createClass({
                 'a',
                 { href: href, className: 'btn btn-primary' },
                 React.createElement('i', { className: 'fa fa-edit' }),
-                ' Edit'
+                'Edit'
             );
         }
         var reportHref = 'election/Admin/Report/?command=show&electionId=' + this.props.id;
@@ -155,7 +141,7 @@ var ElectionRow = React.createClass({
                 'td',
                 null,
                 this.props.startDateFormatted,
-                ' - ',
+                '- ',
                 this.props.endDateFormatted
             ),
             React.createElement(
@@ -172,7 +158,7 @@ var ElectionRow = React.createClass({
                     'a',
                     { href: reportHref, className: 'btn btn-info' },
                     React.createElement('i', { className: 'fa fa-envelope' }),
-                    ' Report'
+                    '  Report'
                 )
             )
         );
@@ -186,23 +172,11 @@ var ElectionForm = React.createClass({
     mixins: [DateMixin],
 
     getInitialState: function () {
-        return {
-            title: '',
-            startDate: '',
-            endDate: '',
-            unixStart: 0,
-            unixEnd: 0
-        };
+        return { title: '', startDate: '', endDate: '', unixStart: 0, unixEnd: 0 };
     },
 
     getDefaultProps: function () {
-        return {
-            electionId: 0,
-            title: '',
-            startDate: '',
-            endDate: '',
-            hideForm: null
-        };
+        return { electionId: 0, title: '', startDate: '', endDate: '', hideForm: null };
     },
 
     componentDidMount: function () {
@@ -217,19 +191,11 @@ var ElectionForm = React.createClass({
     },
 
     copyPropsToState: function () {
-        this.setState({
-            title: this.props.title,
-            startDate: this.props.startDateFormatted,
-            endDate: this.props.endDateFormatted,
-            unixStart: this.props.startDate,
-            unixEnd: this.props.endDate
-        });
+        this.setState({ title: this.props.title, startDate: this.props.startDateFormatted, endDate: this.props.endDateFormatted, unixStart: this.props.startDate, unixEnd: this.props.endDate });
     },
 
     updateTitle: function (e) {
-        this.setState({
-            title: e.target.value
-        });
+        this.setState({ title: e.target.value });
     },
 
     checkForErrors: function () {
@@ -266,20 +232,14 @@ var ElectionForm = React.createClass({
                 } else {
                     $(this.refs.startDate).css('borderColor', 'red').attr('placeholder', 'Date conflict');
                     $(this.refs.endDate).css('borderColor', 'red').attr('placeholder', 'Date conflict');
-                    this.setState({
-                        startDate: '',
-                        unixStart: 0,
-                        endDate: '',
-                        unixEnd: 0
-                    });
+                    this.setState({ startDate: '', unixStart: 0, endDate: '', unixEnd: 0 });
                 }
             }.bind(this));
         }
     },
 
     render: function () {
-        var title = React.createElement('input', { ref: 'electionTitle', type: 'text', className: 'form-control', defaultValue: this.props.title,
-            id: 'election-title', onFocus: this.resetBorder, onChange: this.updateTitle, placeholder: 'Title (e.g. Fall 2016 Election)' });
+        var title = React.createElement('input', { ref: 'electionTitle', type: 'text', className: 'form-control', defaultValue: this.props.title, id: 'election-title', onFocus: this.resetBorder, onChange: this.updateTitle, placeholder: 'Title (e.g. Fall 2016 Election)' });
         var date = React.createElement(
             'div',
             { className: 'row pad-top' },
@@ -289,8 +249,7 @@ var ElectionForm = React.createClass({
                 React.createElement(
                     'div',
                     { className: 'input-group' },
-                    React.createElement('input', { placeholder: 'Voting start date and time', ref: 'startDate', type: 'text', className: 'form-control datepicker', id: 'start-date',
-                        onFocus: this.resetBorder, onChange: this.changeStartDate, value: this.state.startDate }),
+                    React.createElement('input', { placeholder: 'Voting start date and time', ref: 'startDate', type: 'text', className: 'form-control datepicker', id: 'start-date', onFocus: this.resetBorder, onChange: this.changeStartDate, value: this.state.startDate }),
                     React.createElement(
                         'div',
                         { className: 'input-group-addon' },
@@ -304,8 +263,7 @@ var ElectionForm = React.createClass({
                 React.createElement(
                     'div',
                     { className: 'input-group' },
-                    React.createElement('input', { placeholder: 'Voting deadline', ref: 'endDate', type: 'text', className: 'form-control datepicker', id: 'end-date',
-                        onFocus: this.resetBorder, onChange: this.changeEndDate, value: this.state.endDate }),
+                    React.createElement('input', { placeholder: 'Voting deadline', ref: 'endDate', type: 'text', className: 'form-control datepicker', id: 'end-date', onFocus: this.resetBorder, onChange: this.changeEndDate, value: this.state.endDate }),
                     React.createElement(
                         'div',
                         { className: 'input-group-addon' },
@@ -321,13 +279,13 @@ var ElectionForm = React.createClass({
                 'button',
                 { className: 'btn btn-primary btn-block', onClick: this.save },
                 React.createElement('i', { className: 'fa fa-save' }),
-                ' Save election'
+                'Save election'
             ),
             React.createElement(
                 'button',
                 { className: 'btn btn-danger btn-block', onClick: this.props.hideForm },
                 React.createElement('i', { className: 'fa fa-times' }),
-                ' Cancel'
+                'Cancel'
             )
         );
 

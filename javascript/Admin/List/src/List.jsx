@@ -2,10 +2,7 @@
 
 var ElectionList = React.createClass({
     getInitialState: function() {
-        return {
-            elections : [],
-            showForm : false
-        };
+        return {elections: [], showForm: false};
     },
 
     componentDidMount: function() {
@@ -13,32 +10,27 @@ var ElectionList = React.createClass({
     },
 
     load: function() {
-        $.getJSON('election/Admin/Election', {
-            command : 'list'
-        }).done(function(data){
-            this.setState({
-                elections : data
-            });
+        $.getJSON('election/Admin/Election', {command: 'list'}).done(function(data) {
+            this.setState({elections: data});
         }.bind(this));
     },
 
-    showForm : function() {
-        this.setState({
-            showForm : true
-        });
+    showForm: function() {
+        this.setState({showForm: true});
     },
 
-    hideForm : function() {
-        this.setState({
-            showForm : false
-        });
+    hideForm: function() {
+        this.setState({showForm: false});
     },
 
     render: function() {
         var rows = this.state.elections.map(function(value, key) {
             return <ElectionRow key={key} {...value} hideForm={this.hideForm} reload={this.load}/>;
         }.bind(this));
-        var form = <button className="btn btn-success" onClick={this.showForm}><i className="fa fa-plus"> Add Election</i></button>;
+        var form = <button className="btn btn-success" onClick={this.showForm}>
+            <i className="fa fa-plus"></i>&nbsp;
+                Add Election
+        </button>;
         if (this.state.showForm) {
             form = <ElectionForm hideForm={this.hideForm} load={this.load}/>;
         }
@@ -65,26 +57,25 @@ var ElectionRow = React.createClass({
 
     getDefaultProps: function() {
         return {
-            id : 0,
-            title : '',
-            startDateFormatted : '',
-            endDateFormatted : '',
-            totalVotes : 0,
-            past : false,
+            id: 0,
+            title: '',
+            startDateFormatted: '',
+            endDateFormatted: '',
+            totalVotes: 0,
+            past: false,
             edit: false,
-            reload : null
+            reload: null
         };
     },
 
     delete: function() {
         if (prompt('Are you sure you want to delete this election? Type Y-E-S if sure.') == 'YES') {
             $.post('election/Admin/Election', {
-                command : 'delete',
-                electionId : this.props.id
-            }, null, 'json')
-                .done(function(data){
-                    this.props.reload();
-                }.bind(this));
+                command: 'delete',
+                electionId: this.props.id
+            }, null, 'json').done(function(data) {
+                this.props.reload();
+            }.bind(this));
         }
     },
 
@@ -92,19 +83,26 @@ var ElectionRow = React.createClass({
         var buttons = null;
         // admin defined in <head> by Admin/Election class.
         if (this.props.past && admin) {
-            buttons = <button className="btn btn-danger" onClick={this.delete}><i className="fa fa-trash-o"></i> Delete</button>;
+            buttons = <button className="btn btn-danger" onClick={this.delete}>
+                <i className="fa fa-trash-o"></i>&nbsp;
+                Delete</button>;
         } else {
             var href = 'election/Admin/?command=edit&electionId=' + this.props.id;
-            var buttons = <a href={href} className="btn btn-primary"><i className="fa fa-edit"></i> Edit</a>;
+            var buttons = <a href={href} className="btn btn-primary">
+                <i className="fa fa-edit"></i>
+                Edit</a>;
         }
         var reportHref = 'election/Admin/Report/?command=show&electionId=' + this.props.id;
         return (
             <tr>
                 <td>{this.props.title}</td>
-                <td>{this.props.startDateFormatted} - {this.props.endDateFormatted}</td>
+                <td>{this.props.startDateFormatted}
+                    - {this.props.endDateFormatted}</td>
                 <td>{this.props.totalVotes}</td>
                 <td>{buttons}&nbsp;
-                    <a href={reportHref} className="btn btn-info"><i className="fa fa-envelope"></i> Report</a>
+                    <a href={reportHref} className="btn btn-info">
+                        <i className="fa fa-envelope"></i>&nbsp;
+                        Report</a>
                 </td>
             </tr>
         );
@@ -113,26 +111,14 @@ var ElectionRow = React.createClass({
 });
 
 var ElectionForm = React.createClass({
-    mixins : [DateMixin],
+    mixins: [DateMixin],
 
     getInitialState: function() {
-        return {
-            title : '',
-            startDate : '',
-            endDate : '',
-            unixStart : 0,
-            unixEnd : 0
-        };
+        return {title: '', startDate: '', endDate: '', unixStart: 0, unixEnd: 0};
     },
 
     getDefaultProps: function() {
-        return {
-            electionId : 0,
-            title: '',
-            startDate : '',
-            endDate : '',
-            hideForm : null
-        };
+        return {electionId: 0, title: '', startDate: '', endDate: '', hideForm: null};
     },
 
     componentDidMount: function() {
@@ -146,26 +132,15 @@ var ElectionForm = React.createClass({
         }
     },
 
-
     copyPropsToState: function() {
-        this.setState({
-            title : this.props.title,
-            startDate : this.props.startDateFormatted,
-            endDate : this.props.endDateFormatted,
-            unixStart : this.props.startDate,
-            unixEnd : this.props.endDate
-        });
+        this.setState({title: this.props.title, startDate: this.props.startDateFormatted, endDate: this.props.endDateFormatted, unixStart: this.props.startDate, unixEnd: this.props.endDate});
     },
 
-
-    updateTitle : function(e) {
-        this.setState({
-            title : e.target.value
-        });
+    updateTitle: function(e) {
+        this.setState({title: e.target.value});
     },
 
-
-    checkForErrors : function() {
+    checkForErrors: function() {
         var error = false;
         if (this.state.title.length === 0) {
             $(this.refs.electionTitle).css('borderColor', 'red').attr('placeholder', 'Please enter a title');
@@ -179,50 +154,39 @@ var ElectionForm = React.createClass({
         return error;
     },
 
-    save : function() {
+    save: function() {
         var error = this.checkForErrors();
         if (error === false) {
             var conflict = this.checkForConflict();
-            conflict.done(function(data){
+            conflict.done(function(data) {
                 if (data.conflict === false) {
                     $.post('election/Admin/Election', {
-                        command : 'save',
-                        electionId : this.props.electionId,
-                        title : this.state.title,
-                        startDate : this.state.unixStart,
+                        command: 'save',
+                        electionId: this.props.electionId,
+                        title: this.state.title,
+                        startDate: this.state.unixStart,
                         endDate: this.state.unixEnd
-                    }, null, 'json')
-                    .done(function(data){
+                    }, null, 'json').done(function(data) {
                         this.props.load();
-                    }.bind(this))
-                    .always(function(){
+                    }.bind(this)).always(function() {
                         this.props.hideForm();
                     }.bind(this));
                 } else {
                     $(this.refs.startDate).css('borderColor', 'red').attr('placeholder', 'Date conflict');
                     $(this.refs.endDate).css('borderColor', 'red').attr('placeholder', 'Date conflict');
-                    this.setState({
-                        startDate : '',
-                        unixStart : 0,
-                        endDate : '',
-                        unixEnd : 0
-                    });
+                    this.setState({startDate: '', unixStart: 0, endDate: '', unixEnd: 0});
                 }
             }.bind(this));
         }
     },
 
     render: function() {
-        var title = (
-            <input ref="electionTitle" type="text" className="form-control" defaultValue={this.props.title}
-            id="election-title" onFocus={this.resetBorder} onChange={this.updateTitle} placeholder='Title (e.g. Fall 2016 Election)' />
-        );
-        var date =(
+        var title = (<input ref="electionTitle" type="text" className="form-control" defaultValue={this.props.title} id="election-title" onFocus={this.resetBorder} onChange={this.updateTitle} placeholder='Title (e.g. Fall 2016 Election)'/>);
+        var date = (
             <div className="row pad-top">
                 <div className="col-sm-6">
                     <div className="input-group">
-                        <input placeholder="Voting start date and time" ref="startDate" type="text" className="form-control datepicker" id="start-date"
-                            onFocus={this.resetBorder} onChange={this.changeStartDate} value={this.state.startDate}/>
+                        <input placeholder="Voting start date and time" ref="startDate" type="text" className="form-control datepicker" id="start-date" onFocus={this.resetBorder} onChange={this.changeStartDate} value={this.state.startDate}/>
                         <div className="input-group-addon">
                             <i className="fa fa-calendar" onClick={this.showStartCalendar}></i>
                         </div>
@@ -230,8 +194,7 @@ var ElectionForm = React.createClass({
                 </div>
                 <div className="col-sm-6">
                     <div className="input-group">
-                        <input placeholder="Voting deadline" ref="endDate" type="text" className="form-control datepicker" id="end-date"
-                             onFocus={this.resetBorder} onChange={this.changeEndDate} value={this.state.endDate}/>
+                        <input placeholder="Voting deadline" ref="endDate" type="text" className="form-control datepicker" id="end-date" onFocus={this.resetBorder} onChange={this.changeEndDate} value={this.state.endDate}/>
                         <div className="input-group-addon">
                             <i className="fa fa-calendar" onClick={this.showEndCalendar}></i>
                         </div>
@@ -241,8 +204,12 @@ var ElectionForm = React.createClass({
         );
         var buttons = (
             <div>
-                <button className="btn btn-primary btn-block" onClick={this.save}><i className="fa fa-save"></i> Save election</button>
-                <button className="btn btn-danger btn-block" onClick={this.props.hideForm}><i className="fa fa-times"></i> Cancel</button>
+                <button className="btn btn-primary btn-block" onClick={this.save}>
+                    <i className="fa fa-save"></i>
+                    Save election</button>
+                <button className="btn btn-danger btn-block" onClick={this.props.hideForm}>
+                    <i className="fa fa-times"></i>
+                    Cancel</button>
             </div>
         );
 
@@ -258,11 +225,10 @@ var ElectionForm = React.createClass({
             </div>
         );
 
-        return (
-            <Panel type="info" heading={heading} />
-        );
+        return (<Panel type="info" heading={heading}/>);
     }
 
 });
 
-ReactDOM.render(<ElectionList/>, document.getElementById('election-listing'));
+ReactDOM.render(
+    <ElectionList/>, document.getElementById('election-listing'));
