@@ -3,6 +3,7 @@
 namespace election\Factory;
 
 require_once PHPWS_SOURCE_DIR . 'mod/election/vendor/autoload.php';
+
 use election\Resource\Student;
 use Guzzle\Http\Client;
 
@@ -20,6 +21,7 @@ if (!defined('STUDENT_DATA_TEST')) {
  */
 class BannerStudentProvider extends StudentProvider
 {
+
     private $client;
 
     // Student level: grad, undergrad
@@ -73,7 +75,7 @@ class BannerStudentProvider extends StudentProvider
 
         $clubProvider = new ClubCategoriesProvider();
         $clubTypes = $clubProvider->getCategoryListForStudent($student);
-        
+
         $student->setClubTypes(isset($clubTypes['clubCategories']) ? $clubTypes['clubCategories'] : array());
         $student->setGreekOrgs(isset($clubTypes['greekOrgs']) ? ($clubTypes['greekOrgs']) : array());
         return $student;
@@ -81,7 +83,7 @@ class BannerStudentProvider extends StudentProvider
 
     protected function sendRequest($studentId)
     {
-        $request = $this->client->get($studentId); //NB: URL is relative to the base URL from the module's settings
+        $request = $this->client->get($studentId, null, array('timeout' => 3)); //NB: URL is relative to the base URL from the module's settings
 
         $response = $request->send();
 
@@ -151,7 +153,8 @@ class BannerStudentProvider extends StudentProvider
 
     public function pullStudentId()
     {
-        return preg_replace('/@appstate.edu/', '', $_SERVER['HTTP_SHIB_CAMPUSPERMANENTID']);
+        return preg_replace('/@appstate.edu/', '',
+                $_SERVER['HTTP_SHIB_CAMPUSPERMANENTID']);
     }
 
 }
