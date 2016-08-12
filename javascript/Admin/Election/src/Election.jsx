@@ -1,5 +1,16 @@
 'use strict';
 
+import React from 'react';
+import {render} from 'react-dom';
+
+require("../../../Mixin/src/Mixin.jsx");
+require("../../../Mixin/src/Date.jsx");
+import Candidates from './Candidate.jsx';
+import Tickets from './Ticket.jsx';
+import SingleBallot from './Single.jsx';
+import MultipleBallot from './Multiple.jsx';
+import Referendum from './Referendum.jsx';
+
 var electionTypes = {};
 var categoryTypes = {};
 

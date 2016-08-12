@@ -85,11 +85,14 @@ EOF;
                 strftime('%Y/%m/%d', time() + 86400) . '";</script>';
 
         if (ELECTION_REACT_DEV) {
-            $script[] = \election\Factory\React::development('Mixin/', 'Mixin.js');
-            $script[] = \election\Factory\React::development('Mixin/', 'Date.js');
-            $script[] = \election\Factory\React::development('Admin/List/', 'List.js');
+            $script[] = \election\Factory\React::development('dist', 'list.bundle.js');
+            
+//            $script[] = \election\Factory\React::development('Mixin/', 'Mixin.js');
+//            $script[] = \election\Factory\React::development('Mixin/', 'Date.js');
+//            $script[] = \election\Factory\React::development('Admin/List/', 'List.js');
         } else {
-            $script[] = \election\Factory\React::production('Admin/List/', 'script.min.js');
+            $script[] = \election\Factory\React::development('dist', 'list.bundle.js');
+//            $script[] = \election\Factory\React::production('Admin/List/', 'script.min.js');
         }
         $react = implode("\n", $script);
         $content = <<<EOF

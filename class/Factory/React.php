@@ -13,7 +13,7 @@ class React
         self::requireReact(true, false);
         
         $root_directory = PHPWS_SOURCE_HTTP . 'mod/election/javascript/';
-        $script = "<script type='text/javascript' src='{$root_directory}{$directory}build/$filename'></script>";
+        $script = "<script type='text/javascript' src='{$root_directory}{$directory}/$filename'></script>";
         return $script;
     }
     
@@ -23,7 +23,7 @@ class React
         
         $root_directory = PHPWS_SOURCE_HTTP . 'mod/election/javascript/';
         $hash = md5($directory . $filename);
-        $script = "<script type='text/javascript' src='{$root_directory}{$directory}build/$filename'></script>";
+        $script = "<script type='text/javascript' src='{$root_directory}{$directory}/$filename'></script>";
         return $script;
     }
 

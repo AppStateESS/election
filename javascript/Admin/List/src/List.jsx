@@ -1,5 +1,12 @@
 'use strict';
 
+import React from 'react';
+import {render} from 'react-dom';
+
+require("../../../Mixin/src/Mixin.jsx");
+require("../../../Mixin/src/Date.jsx");
+import DateMixin from "../../../Mixin/src/Date.jsx";
+
 var ElectionList = React.createClass({
     getInitialState: function() {
         return {elections: [], showForm: false};
