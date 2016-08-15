@@ -48,18 +48,25 @@ class Election extends \election\Controller\Base
     private function edit($electionId)
     {
         javascript('datetimepicker');
-        $script[] = '<script type="text/javascript" src="' . PHPWS_SOURCE_HTTP . 'mod/election/node_modules/react-dropzone/dist/react-dropzone.js"></script>';
+        //$script[] = '<script type="text/javascript" src="' . PHPWS_SOURCE_HTTP . 'mod/election/node_modules/react-dropzone/dist/react-dropzone.js"></script>';
 
         $allowChange = Factory::allowChange($electionId) ? 'true' : 'false';
-        
-        $script[] = '<script type="text/javascript">var allowChange=' . $allowChange  . ';var electionId = ' . $electionId . ';</script>';
+
+        $script[] = '<script type="text/javascript">var allowChange=' . $allowChange . ';var electionId = ' . $electionId . ';</script>';
 
         if (ELECTION_REACT_DEV) {
-            $script[] = \election\Factory\React::development('Mixin/', 'Mixin.js');
-            $script[] = \election\Factory\React::development('Mixin/', 'Date.js');
-            $script[] = \election\Factory\React::development('Admin/Election/', 'script.js');
+            $script[] = \election\Factory\React::development('dist',
+                            'election.bundle.js');
+            /*
+              $script[] = \election\Factory\React::development('Mixin/', 'Mixin.js');
+              $script[] = \election\Factory\React::development('Mixin/', 'Date.js');
+              $script[] = \election\Factory\React::development('Admin/Election/', 'script.js');
+             * 
+             */
         } else {
-            $script[] = \election\Factory\React::production('Admin/Election/', 'script.min.js');
+            //$script[] = \election\Factory\React::production('Admin/Election/', 'script.min.js');
+            $script[] = \election\Factory\React::development('dist',
+                            'election.bundle.js');
         }
         $react = implode("\n", $script);
 
@@ -85,13 +92,15 @@ EOF;
                 strftime('%Y/%m/%d', time() + 86400) . '";</script>';
 
         if (ELECTION_REACT_DEV) {
-            $script[] = \election\Factory\React::development('dist', 'list.bundle.js');
-            
+            $script[] = \election\Factory\React::development('dist',
+                            'list.bundle.js');
+
 //            $script[] = \election\Factory\React::development('Mixin/', 'Mixin.js');
 //            $script[] = \election\Factory\React::development('Mixin/', 'Date.js');
 //            $script[] = \election\Factory\React::development('Admin/List/', 'List.js');
         } else {
-            $script[] = \election\Factory\React::development('dist', 'list.bundle.js');
+            $script[] = \election\Factory\React::development('dist',
+                            'list.bundle.js');
 //            $script[] = \election\Factory\React::production('Admin/List/', 'script.min.js');
         }
         $react = implode("\n", $script);
@@ -163,7 +172,9 @@ EOF;
                 break;
 
             case 'checkConflict':
-                $json = Factory::checkForConflict(Factory::pullGetInteger('startDate'), Factory::pullGetInteger('endDate'), Factory::pullGetInteger('electionId'));
+                $json = Factory::checkForConflict(Factory::pullGetInteger('startDate'),
+                                Factory::pullGetInteger('endDate'),
+                                Factory::pullGetInteger('electionId'));
                 break;
         }
         $view = new \View\JsonView($json);
