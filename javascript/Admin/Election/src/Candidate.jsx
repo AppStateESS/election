@@ -1,4 +1,5 @@
-'use strict';
+import React from 'react';
+import Dropzone from 'react-dropzone';
 
 var Candidates = React.createClass({
     getInitialState: function() {
@@ -105,8 +106,8 @@ var CandidateProfile = React.createClass({
                             <span className="helper"></span>
                             <img src={this.props.picture} className="img-responsive candidate-pic" />
                         </div>
-                    ) : (
-                        <div className="no-picture text-muted"><i className="fa fa-user fa-5x"></i><br />No picture</div>
+                        ) : (
+                            <div className="no-picture text-muted"><i className="fa fa-user fa-5x"></i><br />No picture</div>
                     )}
                 </div>
                 <div>
@@ -321,3 +322,5 @@ var Photo = React.createClass({
         );
     }
 });
+
+export default Candidates;

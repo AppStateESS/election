@@ -1,8 +1,9 @@
 'use strict';
+import React from 'react';
+import Panel from './Panel.jsx';
+import Tickets from './Ticket.jsx';
 
-var SingleBallot = React.createClass({
-    mixins : ['Panel'],
-
+module.exports = React.createClass({
     getInitialState: function() {
         return {
             singleList : [],

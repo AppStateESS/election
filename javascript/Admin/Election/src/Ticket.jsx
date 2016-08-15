@@ -1,5 +1,9 @@
 'use strict';
 
+import React from 'react';
+import Candidates from './Candidate.jsx';
+import Panel from './Panel.jsx';
+
 var Tickets = React.createClass({
     getInitialState: function() {
         return {
@@ -335,3 +339,5 @@ var TicketRow = React.createClass({
     }
 
 });
+
+export default Tickets;

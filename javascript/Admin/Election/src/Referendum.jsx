@@ -1,3 +1,6 @@
+import React from 'react';
+import Panel from './Panel.jsx'
+
 var Referendum = React.createClass({
     getInitialState: function() {
         return {
@@ -142,11 +145,11 @@ var ReferendumList = React.createClass({
         var referendumList = this.props.listing.map(function(value){
             if (value.id === this.state.currentEdit) {
                 return <ReferendumForm key={value.id} {...value}
-                        referendumId={value.id} {...shared}/>;
+                    referendumId={value.id} {...shared}/>;
             } else {
                 return <ReferendumListRow key={value.id} {...value}
-                        isOpen={this.state.openReferendum === value.id}
-                        referendumId={value.id} edit={this.editRow.bind(null, value.id)}
+                    isOpen={this.state.openReferendum === value.id}
+                    referendumId={value.id} edit={this.editRow.bind(null, value.id)}
                         {...shared}/>
             }
         }.bind(this));
@@ -349,3 +352,4 @@ var ReferendumListRow = React.createClass({
     }
 
 });
+export default Referendum;

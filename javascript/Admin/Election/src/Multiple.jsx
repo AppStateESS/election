@@ -1,7 +1,9 @@
 'use strict';
-var MultipleBallot = React.createClass({
-    mixins : ['Panel'],
 
+import React from 'react';
+import Panel from './Panel.jsx'
+
+var Multiple = React.createClass({
     getInitialState: function() {
         return {
             multipleList : [],
@@ -463,3 +465,4 @@ var CategoryOption = React.createClass({
     }
 
 });
+export default Multiple;

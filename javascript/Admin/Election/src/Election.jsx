@@ -1,10 +1,9 @@
 'use strict';
 
 import React from 'react';
-import {render} from 'react-dom';
+import ReactDOM from 'react-dom';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
-require("../../../Mixin/src/Mixin.jsx");
-require("../../../Mixin/src/Date.jsx");
 import Candidates from './Candidate.jsx';
 import Tickets from './Ticket.jsx';
 import SingleBallot from './Single.jsx';
@@ -36,8 +35,6 @@ var sortCategoryTypes = function() {
 };
 
 var Election = React.createClass({
-    mixins : [DateMixin],
-
     getInitialState: function() {
         return {
             editTitle : false,
@@ -62,6 +59,98 @@ var Election = React.createClass({
             this.initStartDate();
             this.initEndDate();
         }
+    },
+
+    initStartDate : function() {
+        $('#start-date').datetimepicker({
+            minDate: tomorrow,
+            value : this.state.startDate,
+            format : dateFormat,
+            onChangeDateTime : function(ct, i) {
+                this.updateStartDate(this.refs.startDate.value);
+            }.bind(this)
+        });
+    },
+
+    initEndDate : function() {
+        $('#end-date').datetimepicker({
+            minDate:0,
+            format : dateFormat,
+            value : this.state.endDate,
+            onChangeDateTime : function(ct, i) {
+                this.updateEndDate(this.refs.endDate.value);
+            }.bind(this)
+        });
+    },
+
+    changeStartDate: function(e) {
+        this.updateStartDate(e.target.value);
+    },
+
+    changeEndDate: function(e) {
+        this.updateEndDate(e.target.value);
+    },
+
+    hasDateErrors : function() {
+        var error = false;
+
+        if (this.state.startDate.length === 0) {
+            $(this.refs.startDate).css('borderColor', 'red').attr('placeholder', 'Please enter a start date');
+            error = true;
+        } else if (this.state.unixStart > this.state.unixEnd) {
+            $(this.refs.endDate).css('borderColor', 'red').attr('placeholder', 'End date must be greater').val('');
+            this.setState({
+                endDate : '',
+                unixEnd : 0
+            });
+            error = true;
+        }
+
+        if (this.state.endDate.length === 0) {
+            $(this.refs.endDate).css('borderColor', 'red').attr('placeholder', 'Please enter a end date');
+            error = true;
+        }
+
+        return error;
+    },
+
+    updateStartDate : function(start) {
+        var dateObj = new Date(start);
+        var unix = dateObj.getTime() / 1000;
+        this.setState({
+            startDate : start,
+            unixStart : unix
+        });
+    },
+
+    updateEndDate : function(end) {
+        var dateObj = new Date(end);
+        var unix = dateObj.getTime() / 1000;
+        this.setState({
+            endDate : end,
+            unixEnd : unix
+        });
+    },
+
+    checkForConflict : function() {
+        return $.getJSON('election/Admin/Election', {
+            command: 'checkConflict',
+            startDate: this.state.unixStart,
+            endDate: this.state.unixEnd,
+            electionId : this.props.electionId
+        });
+    },
+
+    showStartCalendar : function() {
+        $('#start-date').datetimepicker('show');
+    },
+
+    showEndCalendar : function() {
+        $('#end-date').datetimepicker('show');
+    },
+
+    resetBorder : function(node) {
+        $(node.target).removeAttr('style');
     },
 
     load: function() {
@@ -196,7 +285,7 @@ var Election = React.createClass({
                         <div className="col-sm-5">
                             <div className="input-group">
                                 <input placeholder="Voting deadline" ref="endDate" type="text" className="form-control datepicker" id="end-date"
-                                     onFocus={this.resetBorder} onChange={this.changeEndDate} value={this.state.endDate}/>
+                                    onFocus={this.resetBorder} onChange={this.changeEndDate} value={this.state.endDate}/>
                                 <div className="input-group-addon">
                                     <i className="fa fa-calendar" onClick={this.showEndCalendar}></i>
                                 </div>
@@ -219,7 +308,6 @@ var Election = React.createClass({
             );
         }
 
-
         var details = <div className="text-center pad-top"><i className="fa fa-spinner fa-spin fa-5x"></i></div>;
         if (this.state.id) {
             details = (
@@ -230,7 +318,6 @@ var Election = React.createClass({
                 </div>
             );
         }
-
         return (
             <div>
                 {electionTitle}
@@ -241,7 +328,10 @@ var Election = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
+
 });
+
+
 
 ReactDOM.render(<Election/>, document.getElementById('election-dashboard'));
