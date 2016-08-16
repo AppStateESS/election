@@ -8,6 +8,7 @@ namespace election\Controller;
  */
 abstract class Base extends \Http\Controller
 {
+
     public function get(\Request $request)
     {
         $data = array();
@@ -15,4 +16,17 @@ abstract class Base extends \Http\Controller
         $response = new \Response($view);
         return $response;
     }
+
+    protected function getScript($filename)
+    {
+        $root_directory = PHPWS_SOURCE_HTTP . 'mod/election/javascript/dist/';
+        if (ELECTION_REACT_DEV) {
+            $path = $filename . '.dev.js';
+        } else {
+            $path = $filename . '.prod.js';
+        }
+        $script = "<script type='text/javascript' src='{$root_directory}$path'></script>";
+        return $script;
+    }
+
 }
