@@ -10,6 +10,7 @@ use election\Factory\Election as Factory;
  */
 class Election extends \election\Controller\User\Base
 {
+
     public function get(\Request $request)
     {
         $data = array();
@@ -21,16 +22,7 @@ class Election extends \election\Controller\User\Base
     public function getHtmlView($data, \Request $request)
     {
         $script[] = '<script type="text/javascript">var defaultPicture = \'' . PHPWS_SOURCE_HTTP . 'mod/election/img/no-picture.gif\';</script>';
-        if (ELECTION_REACT_DEV) {
-            $script[] = \election\Factory\React::development('Mixin/', 'Mixin.js');
-            $script[] = \election\Factory\React::development('User/', 'Review.js');
-            $script[] = \election\Factory\React::development('User/', 'Referendum.js');
-            $script[] = \election\Factory\React::development('User/', 'Multiple.js');
-            $script[] = \election\Factory\React::development('User/', 'Single.js');
-            $script[] = \election\Factory\React::development('User/', 'Election.js');
-        } else {
-            $script[] = \election\Factory\React::production('User/', 'script.min.js');
-        }
+        $script[] = $this->getScript('user');
         $react = implode("\n", $script);
 
         \Layout::addStyle('election', 'style.css');
@@ -43,7 +35,7 @@ class Election extends \election\Controller\User\Base
 <div id="election"></div>
 $react
 EOF;
-        
+
         $view = new \View\HtmlView($content);
         return $view;
     }
@@ -59,9 +51,10 @@ EOF;
             case 'list':
                 $json = self::getVotingData();
                 break;
-            
+
             case 'message':
-                $json['message'] = \PHPWS_Settings::get('election', 'postVoteMessage');
+                $json['message'] = \PHPWS_Settings::get('election',
+                                'postVoteMessage');
                 break;
         }
         $view = new \View\JsonView($json);
@@ -73,7 +66,7 @@ EOF;
         $election = Factory::getCurrent();
 
         // If there's no election going on, then return empty data
-        if(empty($election)){
+        if (empty($election)) {
             return array(
                 'hasVoted' => false,
                 'election' => null,
@@ -88,7 +81,7 @@ EOF;
         $hasVoted = $this->student->hasVoted($election['id']);
 
         // If already voted, return minimal voting info
-        if($hasVoted){
+        if ($hasVoted) {
             return array(
                 'hasVoted' => true,
                 'election' => $election,
@@ -101,7 +94,8 @@ EOF;
         // Assemble the voting data
         $single = \election\Factory\Single::getListWithTickets($election['id']);
         $multiple = \election\Factory\Multiple::getListWithCandidates($election['id']);
-        $unqualified = \election\Factory\Multiple::filter($multiple, $this->student);
+        $unqualified = \election\Factory\Multiple::filter($multiple,
+                        $this->student);
         $referendum = \election\Factory\Referendum::getList($election['id']);
         $voting_data = array(
             'hasVoted' => false,
@@ -110,7 +104,7 @@ EOF;
             'multiple' => $multiple,
             'referendum' => $referendum,
             'unqualified' => $unqualified,
-            'supportLink'=>\PHPWS_Settings::get('election', 'supportLink')
+            'supportLink' => \PHPWS_Settings::get('election', 'supportLink')
         );
 
         return $voting_data;
