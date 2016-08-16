@@ -48,26 +48,11 @@ class Election extends \election\Controller\Base
     private function edit($electionId)
     {
         javascript('datetimepicker');
-        //$script[] = '<script type="text/javascript" src="' . PHPWS_SOURCE_HTTP . 'mod/election/node_modules/react-dropzone/dist/react-dropzone.js"></script>';
 
         $allowChange = Factory::allowChange($electionId) ? 'true' : 'false';
 
         $script[] = '<script type="text/javascript">var allowChange=' . $allowChange . ';var electionId = ' . $electionId . ';</script>';
-
-        if (ELECTION_REACT_DEV) {
-            $script[] = \election\Factory\React::development('dist',
-                            'election.bundle.js');
-            /*
-              $script[] = \election\Factory\React::development('Mixin/', 'Mixin.js');
-              $script[] = \election\Factory\React::development('Mixin/', 'Date.js');
-              $script[] = \election\Factory\React::development('Admin/Election/', 'script.js');
-             * 
-             */
-        } else {
-            //$script[] = \election\Factory\React::production('Admin/Election/', 'script.min.js');
-            $script[] = \election\Factory\React::development('dist',
-                            'election.bundle.js');
-        }
+        $script[] =  $this->getScript('election');
         $react = implode("\n", $script);
 
         $date_format = '<script type="text/javascript">var dateFormat = "' . ELECTION_DATETIME_FORMAT . '";var tomorrow="' .
@@ -91,18 +76,7 @@ EOF;
         $date_format = '<script type="text/javascript">var admin = ' . $deity . ';var dateFormat = "' . ELECTION_DATETIME_FORMAT . '";var tomorrow="' .
                 strftime('%Y/%m/%d', time() + 86400) . '";</script>';
 
-        if (ELECTION_REACT_DEV) {
-            $script[] = \election\Factory\React::development('dist',
-                            'list.bundle.js');
-
-//            $script[] = \election\Factory\React::development('Mixin/', 'Mixin.js');
-//            $script[] = \election\Factory\React::development('Mixin/', 'Date.js');
-//            $script[] = \election\Factory\React::development('Admin/List/', 'List.js');
-        } else {
-            $script[] = \election\Factory\React::development('dist',
-                            'list.bundle.js');
-//            $script[] = \election\Factory\React::production('Admin/List/', 'script.min.js');
-        }
+        $script[] = $this->getScript('list');
         $react = implode("\n", $script);
         $content = <<<EOF
 $date_format
