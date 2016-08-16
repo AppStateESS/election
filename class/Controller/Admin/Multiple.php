@@ -11,34 +11,15 @@ use election\Factory\Multiple as Factory;
 class Multiple extends \election\Controller\Base
 {
 
+    /**
+     * @deprecated
+     * @param type $data
+     * @param \Request $request
+     * @return string
+     */
     public function getHtmlView($data, \Request $request)
     {
-        javascript('datetimepicker');
-
-        $script[] = '<script type="text/javascript" src="' . PHPWS_SOURCE_HTTP . 'mod/election/node_modules/react-dropzone/dist/react-dropzone.js"></script>';
-
-        if (ELECTION_REACT_DEV) {
-            $script[] = \election\Factory\React::development('Admin/Mixin/', 'Mixin.js');
-            $script[] = \election\Factory\React::development('Admin/Multiple/', 'MultipleBallot.js');
-        } else {
-            $script[] = \election\Factory\React::production('Admin/Multiple/', 'script.min.js');
-        }
-        $react = implode("\n", $script);
-
-        \Layout::addStyle('election', 'Admin/Multiple/style.css');
-        //$settings = \Current_User::isDeity() ? 'true' : 'false';
-
-        $tabs = parent::getTabs('multiple');
-
-        $date_format = '<script type="text/javascript">var dateFormat = "' . ELECTION_DATETIME_FORMAT . '";</script>';
-        $content = <<<EOF
-$tabs
-$date_format
-<div id="multiple-ballot"></div>
-$react
-EOF;
-        $view = new \View\HtmlView($content);
-        return $view;
+        return '';
     }
 
     public function post(\Request $request)

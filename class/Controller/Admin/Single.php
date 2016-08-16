@@ -11,33 +11,15 @@ use election\Factory\Single as Factory;
 class Single extends \election\Controller\Base
 {
 
+    /**
+     * @deprecated
+     * @param type $data
+     * @param \Request $request
+     * @return string
+     */
     public function getHtmlView($data, \Request $request)
     {
-        javascript('datetimepicker');
-        
-        $script[] = '<script type="text/javascript" src="' . PHPWS_SOURCE_HTTP . 'mod/election/node_modules/react-dropzone/dist/react-dropzone.js"></script>';
-        
-        if (ELECTION_REACT_DEV) {
-            $script[] = \election\Factory\React::development('Admin/Mixin/', 'Mixin.js');
-            $script[] = \election\Factory\React::development('Admin/Single/', 'Candidate.js');
-            $script[] = \election\Factory\React::development('Admin/Single/', 'Ticket.js');
-            $script[] = \election\Factory\React::development('Admin/Single/', 'SingleBallot.js');
-        } else {
-            $script[] = \election\Factory\React::production('Admin/Single/', 'script.min.js');
-        }
-        $react = implode("\n", $script);
-
-        $tabs = parent::getTabs('single');
-
-        $date_format = '<script type="text/javascript">var dateFormat = "'. ELECTION_DATETIME_FORMAT .'";</script>';
-        $content = <<<EOF
-$tabs
-$date_format
-<div id="single-ballot"></div>
-$react
-EOF;
-        $view = new \View\HtmlView($content);
-        return $view;
+        return '';
     }
     
     public function post(\Request $request)
