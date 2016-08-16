@@ -1,11 +1,20 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import SingleCandidate from './SingleCandidate.jsx';
+import Panel from '../../Mixin/src/Panel.jsx';
+
 var Review = React.createClass({
     getDefaultProps: function() {
         return {
             election : {},
+            single: [],
+            multiple: [],
+            referendum: [],
             singleVote : [],
             multipleVote : [],
             referendumVote : [],
-            resetStage : null
+            resetStage : null,
+            finalVote: null
         };
     },
 
@@ -297,3 +306,5 @@ var ReferendumResultRow = React.createClass({
     }
 
 });
+
+export default Review;

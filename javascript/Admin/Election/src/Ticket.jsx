@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Candidates from './Candidate.jsx';
-import Panel from './Panel.jsx';
+import Panel from '../../../Mixin/src/Panel.jsx';
 
 var Tickets = React.createClass({
     getInitialState: function() {

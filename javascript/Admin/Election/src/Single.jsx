@@ -1,6 +1,6 @@
 'use strict';
 import React from 'react';
-import Panel from './Panel.jsx';
+import Panel from '../../../Mixin/src/Panel.jsx';
 import Tickets from './Ticket.jsx';
 
 module.exports = React.createClass({

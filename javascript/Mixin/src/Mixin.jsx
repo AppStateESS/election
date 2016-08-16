@@ -1,6 +1,7 @@
 'use strict';
+import React from 'react';
 
-var BreakIt = function(text) {
+export function BreakIt(text) {
     if (typeof text === 'undefined') {
         throw 'BreakIt text parameter is undefined';
     }
@@ -15,7 +16,7 @@ var BreakIt = function(text) {
 }
 
 
-var AbstainButton = function(props) {
+export function AbstainButton(props) {
     return (
         <div className="btn btn-warning btn-lg" onClick={props.handleClick}>
             Abstain from {props.title} <i className="fa fa-arrow-right"></i>

@@ -1,3 +1,6 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 var Referendum = React.createClass({
     getDefaultProps: function() {
         return {
@@ -40,3 +43,5 @@ var Referendum = React.createClass({
     }
 
 });
+
+export default Referendum;

@@ -1,3 +1,6 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 var Multiple = React.createClass({
     getDefaultProps: function() {
         return {
@@ -184,3 +187,5 @@ var MultipleCandidate = React.createClass({
     }
 
 });
+
+export default Multiple;

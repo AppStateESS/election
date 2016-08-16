@@ -1,7 +1,9 @@
 'use strict';
 
 import React from 'react';
-import Panel from './Panel.jsx'
+import Panel from '../../../Mixin/src/Panel.jsx';
+import Candidates from './Candidate.jsx';
+import {electionTypes, categoryTypes} from './types.js';
 
 var Multiple = React.createClass({
     getInitialState: function() {

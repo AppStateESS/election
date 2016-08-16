@@ -10,30 +10,6 @@ import SingleBallot from './Single.jsx';
 import MultipleBallot from './Multiple.jsx';
 import Referendum from './Referendum.jsx';
 
-var electionTypes = {};
-var categoryTypes = {};
-
-var getElectionTypes = function() {
-    $.getJSON('election/Admin/Election', {
-    	command : 'getElectionTypes'
-    }).done(function(data){
-        electionTypes = data;
-        sortCategoryTypes();
-    }.bind(this));
-};
-
-$(document).ready(function(){
-    getElectionTypes();
-});
-
-var sortCategoryTypes = function() {
-    electionTypes.electionTypes.forEach(function(value){
-        value.subcategory.forEach(function(subval){
-            categoryTypes[subval.type] = subval.name;
-        });
-    });
-};
-
 var Election = React.createClass({
     getInitialState: function() {
         return {

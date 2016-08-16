@@ -1,5 +1,13 @@
 'use strict';
 
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import Multiple from './Multiple.jsx';
+import Referendum from './Referendum.jsx';
+import Review from './Review.jsx';
+import Single from './Single.jsx';
+
 var Election = React.createClass({
     getInitialState: function() {
         return {

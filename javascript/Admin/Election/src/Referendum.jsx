@@ -1,5 +1,5 @@
 import React from 'react';
-import Panel from './Panel.jsx'
+import Panel from '../../../Mixin/src/Panel.jsx';
 
 var Referendum = React.createClass({
     getInitialState: function() {
