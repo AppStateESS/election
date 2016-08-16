@@ -7,6 +7,7 @@
 
 define('ELECTION_REACT_DEV', false);
 
+
 // This format works correctly with the Javascript Date class. Alter at your own risk.
 define('ELECTION_DATETIME_FORMAT', 'M d, Y, G:i');
 
@@ -23,6 +24,10 @@ define('ELECTION_LOGIN_DIRECTORY', 'secure/');
 
 // if true, any student who signs in will get the fake account
 define('STUDENT_DATA_TEST', false);
+
+// If true, student will always be eligible to vote.
+// STUDENT_DATA_TEST must also be true.
+define('ELECTION_ALWAYS_ELIGIBLE', false);
 
 // set banner id or user name
 define('TEST_STUDENT_ID', '000000000');

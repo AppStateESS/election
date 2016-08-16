@@ -2,6 +2,10 @@
 
 namespace election\Controller;
 
+if (!defined('ELECTION_ALWAYS_ELIGIBLE')) {
+    define('ELECTION_ALWAYS_ELIGIBLE', false);
+}
+
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Matthew McNaney <mcnaney at gmail dot com>
@@ -51,10 +55,12 @@ class User extends \Http\Controller
             return $controller;
         }
 
-        if (!$student->isEligibleToVote()) {
-            $controller = new User\NotAllowed($this->getModule());
-            $controller->setMessage('No credit hours or not an undergraduate student.');
-            return $controller;
+        if (!STUDENT_DATA_TEST || !ELECTION_ALWAYS_ELIGIBLE) {
+            if (!$student->isEligibleToVote()) {
+                $controller = new User\NotAllowed($this->getModule());
+                $controller->setMessage('No credit hours or not an undergraduate student.');
+                return $controller;
+            }
         }
 
         // If there's an election going on, check to see if this student has already voted in it
