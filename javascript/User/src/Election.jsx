@@ -11,23 +11,23 @@ import Single from './Single.jsx';
 var Election = React.createClass({
     getInitialState: function() {
         return {
-            election : null,
-            currentSingle : 0,
-            currentMultiple : 0,
-            currentReferendum : 0,
-            single : [],
-            multiple : [],
-            referendum : [],
-            ballotCount : 0,
-            referendumCount : 0,
-            stage : 'loading',
-            singleVote : [],
-            multipleVote : [],
-            referendumVote : [],
-            unqualified : [],
-            backToReview : false,
-            surveyLink : null,
-            supportLink : null
+            election: null,
+            currentSingle: 0,
+            currentMultiple: 0,
+            currentReferendum: 0,
+            single: [],
+            multiple: [],
+            referendum: [],
+            ballotCount: 0,
+            referendumCount: 0,
+            stage: 'loading',
+            singleVote: [],
+            multipleVote: [],
+            referendumVote: [],
+            unqualified: [],
+            backToReview: false,
+            surveyLink: null,
+            supportLink: null,
         };
     },
 
@@ -36,17 +36,12 @@ var Election = React.createClass({
     },
 
     load: function() {
-        $.getJSON('election/User/Election', {
-        	command : 'list'
-        }).done(function(data){
+        $.getJSON('election/User/Election', {command: 'list'}).done(function(data) {
             var stage = this.state.stage;
             if (!data.election) {
                 this.setStage('empty');
             } else if (data.hasVoted) {
-                this.setState({
-                    stage : 'finished',
-                    election : data.election
-                });
+                this.setState({stage: 'finished', election: data.election,});
             } else {
                 var singleLength = data.single.length;
                 var multipleLength = data.multiple.length;
@@ -68,32 +63,30 @@ var Election = React.createClass({
                 }
                 var ballotCount = singleLength + multipleLength;
                 this.setState({
-                    stage : stage,
-                    hasVoted : data.hasVoted,
-                    election : data.election,
-                    single : data.single,
-                    multiple : data.multiple,
-                    referendum : data.referendum,
-                    ballotCount : ballotCount,
-                    referendumCount : referendumLength,
-                    unqualified : data.unqualified,
-                    supportLink : data.supportLink
+                    stage: stage,
+                    hasVoted: data.hasVoted,
+                    election: data.election,
+                    single: data.single,
+                    multiple: data.multiple,
+                    referendum: data.referendum,
+                    ballotCount: ballotCount,
+                    referendumCount: referendumLength,
+                    unqualified: data.unqualified,
+                    supportLink: data.supportLink,
                 });
             }
 
         }.bind(this));
     },
 
-    setStage : function(stage) {
-        window.scrollTo(0,0);
-        this.setState({
-            stage : stage
-        });
+    setStage: function(stage) {
+        window.scrollTo(0, 0);
+        this.setState({stage: stage});
     },
 
-    getSingleKey : function(id) {
+    getSingleKey: function(id) {
         var found = 0;
-        $.each(this.state.single, function(index, value){
+        $.each(this.state.single, function(index, value) {
             if (id === value.id) {
                 found = index;
             }
@@ -101,9 +94,9 @@ var Election = React.createClass({
         return found;
     },
 
-    getMultipleKey : function(id) {
+    getMultipleKey: function(id) {
         var found = 0;
-        $.each(this.state.multiple, function(index, value){
+        $.each(this.state.multiple, function(index, value) {
             if (id === value.id) {
                 found = index;
             }
@@ -111,9 +104,9 @@ var Election = React.createClass({
         return found;
     },
 
-    getReferendumKey : function(id) {
+    getReferendumKey: function(id) {
         var found = 0;
-        $.each(this.state.referendum, function(index, value){
+        $.each(this.state.referendum, function(index, value) {
             if (id === value.id) {
                 found = index;
             }
@@ -121,59 +114,52 @@ var Election = React.createClass({
         return found;
     },
 
-    setCurrentSingle : function(id) {
-        this.setState({
-            currentSingle : id
-        });
+    setCurrentSingle: function(id) {
+        this.setState({currentSingle: id});
     },
 
-    setCurrentMultiple : function(id) {
-        this.setState({
-            currentMultiple : id
-        });
+    setCurrentMultiple: function(id) {
+        this.setState({currentMultiple: id});
     },
 
-    setCurrentReferendum : function(id) {
-        this.setState({
-            currentReferendum : id
-        });
+    setCurrentReferendum: function(id) {
+        this.setState({currentReferendum: id});
     },
 
-    resetStage : function(stage, id) {
-        switch(stage) {
+    resetStage: function(stage, id) {
+        switch (stage) {
             case 'single':
-            this.setCurrentSingle(this.getSingleKey(id));
-            break;
+                this.setCurrentSingle(this.getSingleKey(id));
+                break;
 
             case 'multiple':
-            this.setCurrentMultiple(this.getMultipleKey(id));
-            break;
+                this.setCurrentMultiple(this.getMultipleKey(id));
+                break;
 
             case 'referendum':
-            this.setCurrentReferendum(this.getReferendumKey(id));
-            break;
+                this.setCurrentReferendum(this.getReferendumKey(id));
+                break;
         }
-        this.setState({
-            backToReview : true,
-            stage : stage
-        });
+        this.setState({backToReview: true, stage: stage,});
     },
 
-    updateSingleVote : function(ticket) {
+    updateSingleVote: function(ticket) {
         var stage = this.state.stage;
         var current = this.state.currentSingle;
         var nextSingle = current + 1;
         var singleVote = this.state.singleVote;
         var currentVote = singleVote[current];
         currentVote = {
-            single : this.state.single[this.state.currentSingle],
-            ticket : ticket
+            single: this.state.single[this.state.currentSingle],
+            ticket: ticket,
         };
         singleVote[current] = currentVote;
 
         if (this.state.backToReview) {
             stage = 'review';
         } else if (typeof this.state.single[nextSingle] === 'undefined') {
+            stage = 'multiple';
+            /*
             if (this.state.multiple.length > 0) {
                 stage = 'multiple';
             } else if (this.state.referendum.length > 0) {
@@ -181,13 +167,10 @@ var Election = React.createClass({
             } else {
                 stage = 'review';
             }
+            */
         }
-        window.scrollTo(0,0);
-        this.setState({
-            stage : stage,
-            singleVote : singleVote,
-            currentSingle : nextSingle
-        });
+        window.scrollTo(0, 0);
+        this.setState({stage: stage, singleVote: singleVote, currentSingle: nextSingle,});
     },
 
     updateMultipleVote: function(chairs) {
@@ -198,13 +181,13 @@ var Election = React.createClass({
         var currentVote = multipleVote[current];
 
         currentVote = {
-            multiple : this.state.multiple[current],
-            chairs : chairs
+            multiple: this.state.multiple[current],
+            chairs: chairs,
         };
 
         multipleVote[current] = currentVote;
 
-        window.scrollTo(0,0);
+        window.scrollTo(0, 0);
         if (this.state.backToReview) {
             stage = 'review';
         } else if (typeof this.state.multiple[nextMultiple] === 'undefined') {
@@ -215,14 +198,10 @@ var Election = React.createClass({
             }
         }
 
-        this.setState({
-            stage : stage,
-            multipleVote : multipleVote,
-            currentMultiple : nextMultiple
-        });
+        this.setState({stage: stage, multipleVote: multipleVote, currentMultiple: nextMultiple,});
     },
 
-    updateReferendumVote : function(vote) {
+    updateReferendumVote: function(vote) {
         var stage = this.state.stage;
         var current = this.state.currentReferendum;
         var nextReferendum = current + 1;
@@ -230,77 +209,57 @@ var Election = React.createClass({
         var currentVote = referendumVote[current];
 
         currentVote = {
-            referendum : this.state.referendum[current],
-            answer : vote
+            referendum: this.state.referendum[current],
+            answer: vote,
         };
 
         referendumVote[current] = currentVote;
 
-        window.scrollTo(0,0);
+        window.scrollTo(0, 0);
         if (this.state.backToReview) {
             stage = 'review';
         } else if (typeof this.state.referendum[nextReferendum] === 'undefined') {
             stage = 'review';
         }
 
-        this.setState({
-            stage : stage,
-            referendumVote : referendumVote,
-            currentReferendum : nextReferendum
-        });
+        this.setState({stage: stage, referendumVote: referendumVote, currentReferendum: nextReferendum,});
     },
 
-    finalVote : function() {
+    finalVote: function() {
         var singleResult = [];
-        $.each(this.state.singleVote, function(index, value){
-            if (value.single && typeof value.single.id !== 'undefined' &&
-                value.ticket && typeof value.ticket.id !== 'undefined') {
-                singleResult.push({
-                    singleId : value.single.id,
-                    ticketId : value.ticket.id
-                });
+        $.each(this.state.singleVote, function(index, value) {
+            if (value.single && typeof value.single.id !== 'undefined' && value.ticket && typeof value.ticket.id !== 'undefined') {
+                singleResult.push({singleId: value.single.id, ticketId: value.ticket.id,});
             }
         });
 
         var multipleResult = [];
-        $.each(this.state.multipleVote, function(index, value){
-            multipleResult.push({
-                multipleId : value.multiple.id,
-                chairs : value.chairs
+        // do not record if no multiple to vote on
+        if (this.state.multiple.length > 0) {
+            $.each(this.state.multipleVote, function(index, value) {
+                multipleResult.push({multipleId: value.multiple.id, chairs: value.chairs,});
             });
-        });
+        }
 
         var referendumResult = [];
-        $.each(this.state.referendumVote, function(index, value){
-            referendumResult.push({
-                referendumId : value.referendum.id,
-                answer : value.answer
-            });
+        $.each(this.state.referendumVote, function(index, value) {
+            referendumResult.push({referendumId: value.referendum.id, answer: value.answer,});
         });
         $.post('election/User/Vote', {
-            command : 'save',
-            electionId : this.state.election.id,
-            single : singleResult,
-            multiple : multipleResult,
-            referendum : referendumResult
-        }, null, 'json')
-            .done(function(data){
-                if (data.success === true) {
-                    this.setState({
-                        backToReview : false,
-                        stage : 'finished',
-                        surveyLink : data.surveyLink
-                    });
-                } else {
-                    this.setState({
-                        backToReview : false,
-                        stage : 'failure'
-                    });
-                }
-            }.bind(this))
-            .fail(function(data){
-                this.setStage('failure');
-            }.bind(this));
+            command: 'save',
+            electionId: this.state.election.id,
+            single: singleResult,
+            multiple: multipleResult,
+            referendum: referendumResult,
+        }, null, 'json').done(function(data) {
+            if (data.success === true) {
+                this.setState({backToReview: false, stage: 'finished', surveyLink: data.surveyLink,});
+            } else {
+                this.setState({backToReview: false, stage: 'failure',});
+            }
+        }.bind(this)).fail(function(data) {
+            this.setStage('failure');
+        }.bind(this));
     },
 
     render: function() {
@@ -308,65 +267,77 @@ var Election = React.createClass({
         var review = null;
 
         if (this.state.backToReview) {
-            review = <button className="btn btn-lg btn-block btn-info" onClick={this.setStage.bind(null, 'review')}>Return to review without saving</button>
+            review = <button
+                className="btn btn-lg btn-block btn-info"
+                onClick={this.setStage.bind(null, 'review')}>Return to review without saving</button>
         }
 
         switch (this.state.stage) {
             case 'loading':
-            content = <div className="text-center pad-top"><i className="fa fa-spinner fa-spin fa-5x"></i></div>;
-            break;
+                content = <div className="text-center pad-top">
+                    <i className="fa fa-spinner fa-spin fa-5x"></i>
+                </div>;
+                break;
 
             case 'empty':
-            content = <Empty />;
-            break;
+                content = <Empty/>;
+                break;
 
             case 'finished':
-            content = <Finished election={this.state.election} surveyLink={this.state.surveyLink}/>;
-            break;
+                content = <Finished election={this.state.election} surveyLink={this.state.surveyLink}/>;
+                break;
 
             case 'single':
-            content = <Single election={this.state.election}
-                ballot={this.state.single[this.state.currentSingle]}
-                updateVote={this.updateSingleVote} vote={this.state.singleVote}/>;
-            break;
+                content = <Single
+                    election={this.state.election}
+                    ballot={this.state.single[this.state.currentSingle]}
+                    updateVote={this.updateSingleVote}
+                    vote={this.state.singleVote}/>;
+                break;
 
             case 'multiple':
-            content = <Multiple election={this.state.election}
-                ballot={this.state.multiple[this.state.currentMultiple]}
-                updateVote={this.updateMultipleVote} vote={this.state.multipleVote}
-                unqualified={this.state.unqualified} supportLink={this.state.supportLink}/>
-            break;
+                content = <Multiple
+                    election={this.state.election}
+                    ballot={this.state.multiple[this.state.currentMultiple]}
+                    updateVote={this.updateMultipleVote}
+                    vote={this.state.multipleVote}
+                    unqualified={this.state.unqualified}
+                    supportLink={this.state.supportLink}/>
+                break;
 
             case 'referendum':
-            content = <Referendum election={this.state.election}
-                referendum={this.state.referendum[this.state.currentReferendum]}
-                updateVote={this.updateReferendumVote} vote={this.state.referendumVote}/>
-            break;
+                content = <Referendum
+                    election={this.state.election}
+                    referendum={this.state.referendum[this.state.currentReferendum]}
+                    updateVote={this.updateReferendumVote}
+                    vote={this.state.referendumVote}/>
+                break;
 
             case 'failure':
-                content = <Failure />;
-            break;
+                content = <Failure/>;
+                break;
 
             case 'review':
-            review = null;
-            content = <Review election={this.state.election}
-                single={this.state.single}
-                multiple={this.state.multiple}
-                referendum={this.state.referendum}
-                singleVote={this.state.singleVote}
-                multipleVote={this.state.multipleVote}
-                referendumVote={this.state.referendumVote}
-                finalVote={this.finalVote}
-                resetStage={this.resetStage}/>
-            break;
+                review = null;
+                content = <Review
+                    election={this.state.election}
+                    single={this.state.single}
+                    multiple={this.state.multiple}
+                    referendum={this.state.referendum}
+                    singleVote={this.state.singleVote}
+                    multipleVote={this.state.multipleVote}
+                    referendumVote={this.state.referendumVote}
+                    finalVote={this.finalVote}
+                    resetStage={this.resetStage}/>
+                break;
         }
 
         var countdown = null;
 
-        if (this.state.stage === 'single' && this.state.singleVote.length === 0
-            && this.state.multipleVote.length === 0
-            && this.state.referendumVote.length === 0) {
-            countdown = (<Countdown ballotCount={this.state.ballotCount} referendumCount={this.state.referendumCount}/>);
+        if (this.state.stage === 'single' && this.state.singleVote.length === 0 && this.state.multipleVote.length === 0 && this.state.referendumVote.length === 0) {
+            countdown = (<Countdown
+                ballotCount={this.state.ballotCount}
+                referendumCount={this.state.referendumCount}/>);
         }
 
         return (
@@ -376,8 +347,7 @@ var Election = React.createClass({
                 {content}
             </div>
         );
-    }
-
+    },
 });
 
 var Empty = function() {
@@ -390,10 +360,7 @@ var Empty = function() {
 
 var Finished = React.createClass({
     getDefaultProps: function() {
-        return {
-            election : {},
-            surveyLink : null
-        };
+        return {election: {}, surveyLink: null,};
     },
 
     render: function() {
@@ -403,30 +370,27 @@ var Finished = React.createClass({
                     <div className="well text-center">
                         <h2>{this.props.election.title}</h2>
                         <h3>Thank you for voting! Watch SGA for results.</h3>
-                        <a href="./index.php?module=users&action=user&command=logout" className="btn btn-lg btn-primary">Sign out</a>
-                        <hr />
-                        <p>What do you think about the voting process? <a href={this.props.surveyLink}>Let us know!</a></p>
+                        <a
+                            href="./index.php?module=users&action=user&command=logout"
+                            className="btn btn-lg btn-primary">Sign out</a>
+                        <hr/>
+                        <p>What do you think about the voting process?&nbsp;
+                            <a href={this.props.surveyLink}>Let us know!</a>
+                        </p>
                     </div>
                 </div>
             </div>
         );
-    }
-
+    },
 });
 
 var Countdown = React.createClass({
     getInitialState: function() {
-        return {
-            seen : false
-        };
+        return {seen: false};
     },
 
     getDefaultProps: function() {
-        return {
-            ballotCount : 0,
-            referendumCount : 0,
-            vote : null
-        };
+        return {ballotCount: 0, referendumCount: 0, vote: null,};
     },
 
     plural: function(item, single, plural) {
@@ -436,7 +400,9 @@ var Countdown = React.createClass({
         if (typeof plural === 'undefined' || plural.length === 0) {
             plural = 's';
         }
-        return (item != 1 ? plural : single);
+        return (item != 1
+            ? plural
+            : single);
     },
 
     render: function() {
@@ -466,11 +432,15 @@ var Countdown = React.createClass({
 
         return (
             <div className="alert alert-info">
-                There {isAre} currently {ballots} {and} {referendum} for you to vote on. We will review all your selections later, before your votes are submitted.
+                There {isAre}
+                currently {ballots}
+                {and}
+                {referendum}
+                for you to vote on. We will review all your selections later, before your votes
+                are submitted.
             </div>
         );
-    }
-
+    },
 });
 
 var Failure = React.createClass({
@@ -485,4 +455,5 @@ var Failure = React.createClass({
 
 });
 
-ReactDOM.render(<Election/>, document.getElementById('election'));
+ReactDOM.render(
+    <Election/>, document.getElementById('election'));

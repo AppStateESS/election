@@ -2,10 +2,20 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Modal from '../../../Mixin/src/Modal.jsx';
 
 var ElectionList = React.createClass({
     getInitialState: function() {
-        return {elections: [], showForm: false};
+        return {
+            elections: [],
+            showForm: false,
+            currentElectionId: 0,
+            studentFound: null,
+            foundName: null,
+            resetOpen: false,
+            currentStudent: 0,
+            message: null
+        };
     },
 
     componentDidMount: function() {
@@ -26,20 +36,90 @@ var ElectionList = React.createClass({
         this.setState({showForm: false});
     },
 
-    render: function() {
-        var rows = this.state.elections.map(function(value, key) {
-            return <ElectionRow key={key} {...value} hideForm={this.hideForm} reload={this.load}/>;
+    closeModal: function() {
+        $('#reactModal').modal('hide');
+        this.setState({
+            studentFound: null,
+            foundName: null,
+            currentElectionId: 0,
+            currentStudent: 0,
+            resetOpen: false,
+            currentStudent: 0
+        });
+    },
+
+    showResetForm: function(electionId) {
+        this.setState({currentElectionId: electionId, resetOpen: true});
+        $('#reactModal').modal('show');
+
+    },
+
+    searchVotes: function(searchFor) {
+        $.getJSON('election/Admin/Election', {
+            command: 'findVote',
+            electionId: this.state.currentElectionId,
+            searchFor: searchFor
+        }).done(function(data) {
+            if (data === null) {
+                this.setState({studentFound: false, foundName: null,});
+            } else {
+                this.setState({studentFound: true, foundName: data['student'], currentStudent: searchFor,})
+            }
         }.bind(this));
-        var form = <button className="btn btn-success" onClick={this.showForm}>
-            <i className="fa fa-plus"></i>&nbsp;
-                Add Election
+    },
+
+    resetVote: function() {
+        $.post('election/Admin/Election', {
+            command: 'resetVote',
+            electionId: this.state.currentElectionId,
+            bannerId: this.state.currentStudent
+        }).done(function(data) {
+            this.setState({message: 'Vote reset'});
+            this.closeModal();
+        }.bind(this), 'json');
+    },
+
+    render: function() {
+        let rows = this.state.elections.map(function(value, key) {
+            return <ElectionRow
+                key={key}
+                {...value}
+                hideForm={this.hideForm}
+                reload={this.load}
+                showResetForm={this.showResetForm}/>;
+        }.bind(this));
+        let form = <button className="btn btn-success" onClick={this.showForm}>
+            <i className="fa fa-plus"></i>&nbsp; Add Election
         </button>;
         if (this.state.showForm) {
             form = <ElectionForm hideForm={this.hideForm} load={this.load}/>;
         }
+
+        let message = null;
+        if (this.state.message != null) {
+            message = <div className="alert alert-success">
+                <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {this.state.message}
+            </div>;
+            setTimeout(function(){
+                this.setState({message:null});
+            }.bind(this), 4000);
+        }
+
+        let modalBody = (<ResetForm
+            searchVotes={this.searchVotes}
+            studentFound={this.state.studentFound}
+            foundName={this.state.foundName}
+            resetOpen={this.state.resetOpen}
+            resetVote={this.resetVote}/>);
+        let modal = <Modal body={modalBody} header='Reset student vote' onClose={this.closeModal}/>;
         return (
             <div>
+                {message}
                 {form}
+                {modal}
                 <table className="table table-striped pad-top">
                     <tbody>
                         <tr>
@@ -56,6 +136,80 @@ var ElectionList = React.createClass({
     }
 });
 
+var ResetForm = React.createClass({
+    getInitialState: function() {
+        return {search: '', checking: false}
+    },
+
+    getDefaultProps: function() {
+        return {
+            searchVotes: null,
+            studentFound: null,
+            studentName: null,
+            resetOpen: false,
+            resetVote: null,
+        };
+    },
+
+    updateSearch: function(event) {
+        let value = event.target.value.replace(/[^\d]/, '');
+        this.setState({search: value});
+    },
+
+    componentWillReceiveProps: function(nextProps) {
+        if (nextProps.studentFound != null) {
+            this.setState({checking: false});
+        }
+        if (nextProps.resetOpen == false) {
+            this.setState({search: ''});
+        }
+    },
+
+    sendSearch: function() {
+        this.setState({checking: true});
+        this.props.searchVotes(this.state.search);
+    },
+
+    render: function() {
+        let message = null;
+        if (this.state.checking) {
+            message = (
+                <div className="alert alert-default">
+                    <i className="fa fa-spinner fa-spin fa-2x fa-fw"></i>Searching for vote...</div>
+            );
+        } else if (this.props.studentFound == false) {
+            message = <div className="alert alert-warning">Vote banner id not found</div>;
+        } else if (this.props.studentFound == true) {
+            message = (
+                <div className="alert alert-danger">
+                    Are you sure you want to reset&nbsp;<strong>{this.props.foundName}'s</strong>&nbsp;vote?&nbsp;
+                    <button className="btn btn-success" onClick={this.props.resetVote}>
+                        <i className="fa fa-check"></i>&nbsp;Yes</button>&nbsp;
+                    <button className="btn btn-warning" data-dismiss="modal">
+                        <i className="fa fa-times"></i>&nbsp;No</button>
+                </div>
+            );
+        }
+        return (
+            <div>
+                <div className="input-group">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter student banner id"
+                        onChange={this.updateSearch}
+                        value={this.state.search}/>
+                    <span className="input-group-btn">
+                        <button className="btn btn-success" type="button" onClick={this.sendSearch}>Search</button>
+                    </span>
+
+                </div>
+                <div>{message}</div>
+            </div>
+        );
+    }
+});
+
 var ElectionRow = React.createClass({
 
     getDefaultProps: function() {
@@ -67,7 +221,8 @@ var ElectionRow = React.createClass({
             totalVotes: 0,
             past: false,
             edit: false,
-            reload: null
+            reload: null,
+            showResetForm: null,
         };
     },
 
@@ -82,35 +237,40 @@ var ElectionRow = React.createClass({
         }
     },
 
+    showForm: function() {
+        this.props.showResetForm(this.props.id);
+    },
+
     render: function() {
         var buttons = null;
         // admin defined in <head> by Admin/Election class.
         if (this.props.past && admin) {
             buttons = <button className="btn btn-danger" onClick={this.delete}>
-                <i className="fa fa-trash-o"></i>&nbsp;
-                Delete</button>;
+                <i className="fa fa-trash-o"></i>&nbsp; Delete</button>;
         } else {
             var href = 'election/Admin/?command=edit&electionId=' + this.props.id;
-            var buttons = <a href={href} className="btn btn-primary">
-                <i className="fa fa-edit"></i>
-                Edit</a>;
+            var buttons = (
+                <span>
+                    <a href={href} className="btn btn-primary">
+                        <i className="fa fa-edit"></i>&nbsp;Edit</a>&nbsp;
+                    <button className="btn btn-warning" onClick={this.showForm}>
+                        <i className="fa fa-refresh"></i>&nbsp;Reset vote</button>
+                </span>
+            );
         }
         var reportHref = 'election/Admin/Report/?command=show&electionId=' + this.props.id;
         return (
             <tr>
                 <td>{this.props.title}</td>
-                <td>{this.props.startDateFormatted}
-                    - {this.props.endDateFormatted}</td>
+                <td>{this.props.startDateFormatted}&nbsp;-&nbsp;{this.props.endDateFormatted}</td>
                 <td>{this.props.totalVotes}</td>
                 <td>{buttons}&nbsp;
                     <a href={reportHref} className="btn btn-info">
-                        <i className="fa fa-envelope"></i>&nbsp;
-                        Report</a>
+                        <i className="fa fa-envelope"></i>&nbsp;Report</a>
                 </td>
             </tr>
         );
     }
-
 });
 
 var ElectionForm = React.createClass({
@@ -183,12 +343,28 @@ var ElectionForm = React.createClass({
     },
 
     render: function() {
-        var title = (<input ref="electionTitle" type="text" className="form-control" defaultValue={this.props.title} id="election-title" onFocus={this.resetBorder} onChange={this.updateTitle} placeholder='Title (e.g. Fall 2016 Election)'/>);
+        var title = (<input
+            ref="electionTitle"
+            type="text"
+            className="form-control"
+            defaultValue={this.props.title}
+            id="election-title"
+            onFocus={this.resetBorder}
+            onChange={this.updateTitle}
+            placeholder='Title (e.g. Fall 2016 Election)'/>);
         var date = (
             <div className="row pad-top">
                 <div className="col-sm-6">
                     <div className="input-group">
-                        <input placeholder="Voting start date and time" ref="startDate" type="text" className="form-control datepicker" id="start-date" onFocus={this.resetBorder} onChange={this.changeStartDate} value={this.state.startDate}/>
+                        <input
+                            placeholder="Voting start date and time"
+                            ref="startDate"
+                            type="text"
+                            className="form-control datepicker"
+                            id="start-date"
+                            onFocus={this.resetBorder}
+                            onChange={this.changeStartDate}
+                            value={this.state.startDate}/>
                         <div className="input-group-addon">
                             <i className="fa fa-calendar" onClick={this.showStartCalendar}></i>
                         </div>
@@ -196,7 +372,15 @@ var ElectionForm = React.createClass({
                 </div>
                 <div className="col-sm-6">
                     <div className="input-group">
-                        <input placeholder="Voting deadline" ref="endDate" type="text" className="form-control datepicker" id="end-date" onFocus={this.resetBorder} onChange={this.changeEndDate} value={this.state.endDate}/>
+                        <input
+                            placeholder="Voting deadline"
+                            ref="endDate"
+                            type="text"
+                            className="form-control datepicker"
+                            id="end-date"
+                            onFocus={this.resetBorder}
+                            onChange={this.changeEndDate}
+                            value={this.state.endDate}/>
                         <div className="input-group-addon">
                             <i className="fa fa-calendar" onClick={this.showEndCalendar}></i>
                         </div>
@@ -229,7 +413,6 @@ var ElectionForm = React.createClass({
 
         return (<Panel type="info" heading={heading}/>);
     }
-
 });
 
 ReactDOM.render(

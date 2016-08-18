@@ -59,13 +59,28 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
+	var _Modal = __webpack_require__(/*! ../../../Mixin/src/Modal.jsx */ 190);
+	
+	var _Modal2 = _interopRequireDefault(_Modal);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	var ElectionList = _react2.default.createClass({
 	    displayName: 'ElectionList',
 	
 	    getInitialState: function getInitialState() {
-	        return { elections: [], showForm: false };
+	        return {
+	            elections: [],
+	            showForm: false,
+	            currentElectionId: 0,
+	            studentFound: null,
+	            foundName: null,
+	            resetOpen: false,
+	            currentStudent: 0,
+	            message: null
+	        };
 	    },
 	
 	    componentDidMount: function componentDidMount() {
@@ -86,9 +101,55 @@
 	        this.setState({ showForm: false });
 	    },
 	
+	    closeModal: function closeModal() {
+	        $('#reactModal').modal('hide');
+	        this.setState(_defineProperty({
+	            studentFound: null,
+	            foundName: null,
+	            currentElectionId: 0,
+	            currentStudent: 0,
+	            resetOpen: false
+	        }, 'currentStudent', 0));
+	    },
+	
+	    showResetForm: function showResetForm(electionId) {
+	        this.setState({ currentElectionId: electionId, resetOpen: true });
+	        $('#reactModal').modal('show');
+	    },
+	
+	    searchVotes: function searchVotes(searchFor) {
+	        $.getJSON('election/Admin/Election', {
+	            command: 'findVote',
+	            electionId: this.state.currentElectionId,
+	            searchFor: searchFor
+	        }).done(function (data) {
+	            if (data === null) {
+	                this.setState({ studentFound: false, foundName: null });
+	            } else {
+	                this.setState({ studentFound: true, foundName: data['student'], currentStudent: searchFor });
+	            }
+	        }.bind(this));
+	    },
+	
+	    resetVote: function resetVote() {
+	        $.post('election/Admin/Election', {
+	            command: 'resetVote',
+	            electionId: this.state.currentElectionId,
+	            bannerId: this.state.currentStudent
+	        }).done(function (data) {
+	            this.setState({ message: 'Vote reset' });
+	            this.closeModal();
+	        }.bind(this), 'json');
+	    },
+	
 	    render: function render() {
 	        var rows = this.state.elections.map(function (value, key) {
-	            return _react2.default.createElement(ElectionRow, _extends({ key: key }, value, { hideForm: this.hideForm, reload: this.load }));
+	            return _react2.default.createElement(ElectionRow, _extends({
+	                key: key
+	            }, value, {
+	                hideForm: this.hideForm,
+	                reload: this.load,
+	                showResetForm: this.showResetForm }));
 	        }.bind(this));
 	        var form = _react2.default.createElement(
 	            'button',
@@ -99,10 +160,41 @@
 	        if (this.state.showForm) {
 	            form = _react2.default.createElement(ElectionForm, { hideForm: this.hideForm, load: this.load });
 	        }
+	
+	        var message = null;
+	        if (this.state.message != null) {
+	            message = _react2.default.createElement(
+	                'div',
+	                { className: 'alert alert-success' },
+	                _react2.default.createElement(
+	                    'button',
+	                    { type: 'button', className: 'close', 'data-dismiss': 'alert', 'aria-label': 'Close' },
+	                    _react2.default.createElement(
+	                        'span',
+	                        { 'aria-hidden': 'true' },
+	                        '×'
+	                    )
+	                ),
+	                this.state.message
+	            );
+	            setTimeout(function () {
+	                this.setState({ message: null });
+	            }.bind(this), 4000);
+	        }
+	
+	        var modalBody = _react2.default.createElement(ResetForm, {
+	            searchVotes: this.searchVotes,
+	            studentFound: this.state.studentFound,
+	            foundName: this.state.foundName,
+	            resetOpen: this.state.resetOpen,
+	            resetVote: this.resetVote });
+	        var modal = _react2.default.createElement(_Modal2.default, { body: modalBody, header: 'Reset student vote', onClose: this.closeModal });
 	        return _react2.default.createElement(
 	            'div',
 	            null,
+	            message,
 	            form,
+	            modal,
 	            _react2.default.createElement(
 	                'table',
 	                { className: 'table table-striped pad-top' },
@@ -140,6 +232,115 @@
 	    }
 	});
 	
+	var ResetForm = _react2.default.createClass({
+	    displayName: 'ResetForm',
+	
+	    getInitialState: function getInitialState() {
+	        return { search: '', checking: false };
+	    },
+	
+	    getDefaultProps: function getDefaultProps() {
+	        return {
+	            searchVotes: null,
+	            studentFound: null,
+	            studentName: null,
+	            resetOpen: false,
+	            resetVote: null
+	        };
+	    },
+	
+	    updateSearch: function updateSearch(event) {
+	        var value = event.target.value.replace(/[^\d]/, '');
+	        this.setState({ search: value });
+	    },
+	
+	    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	        if (nextProps.studentFound != null) {
+	            this.setState({ checking: false });
+	        }
+	        if (nextProps.resetOpen == false) {
+	            this.setState({ search: '' });
+	        }
+	    },
+	
+	    sendSearch: function sendSearch() {
+	        this.setState({ checking: true });
+	        this.props.searchVotes(this.state.search);
+	    },
+	
+	    render: function render() {
+	        var message = null;
+	        if (this.state.checking) {
+	            message = _react2.default.createElement(
+	                'div',
+	                { className: 'alert alert-default' },
+	                _react2.default.createElement('i', { className: 'fa fa-spinner fa-spin fa-2x fa-fw' }),
+	                'Searching for vote...'
+	            );
+	        } else if (this.props.studentFound == false) {
+	            message = _react2.default.createElement(
+	                'div',
+	                { className: 'alert alert-warning' },
+	                'Vote banner id not found'
+	            );
+	        } else if (this.props.studentFound == true) {
+	            message = _react2.default.createElement(
+	                'div',
+	                { className: 'alert alert-danger' },
+	                'Are you sure you want to reset ',
+	                _react2.default.createElement(
+	                    'strong',
+	                    null,
+	                    this.props.foundName,
+	                    '\'s'
+	                ),
+	                ' vote? ',
+	                _react2.default.createElement(
+	                    'button',
+	                    { className: 'btn btn-success', onClick: this.props.resetVote },
+	                    _react2.default.createElement('i', { className: 'fa fa-check' }),
+	                    ' Yes'
+	                ),
+	                ' ',
+	                _react2.default.createElement(
+	                    'button',
+	                    { className: 'btn btn-warning', 'data-dismiss': 'modal' },
+	                    _react2.default.createElement('i', { className: 'fa fa-times' }),
+	                    ' No'
+	                )
+	            );
+	        }
+	        return _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'input-group' },
+	                _react2.default.createElement('input', {
+	                    type: 'text',
+	                    className: 'form-control',
+	                    placeholder: 'Enter student banner id',
+	                    onChange: this.updateSearch,
+	                    value: this.state.search }),
+	                _react2.default.createElement(
+	                    'span',
+	                    { className: 'input-group-btn' },
+	                    _react2.default.createElement(
+	                        'button',
+	                        { className: 'btn btn-success', type: 'button', onClick: this.sendSearch },
+	                        'Search'
+	                    )
+	                )
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                null,
+	                message
+	            )
+	        );
+	    }
+	});
+	
 	var ElectionRow = _react2.default.createClass({
 	    displayName: 'ElectionRow',
 	
@@ -153,7 +354,8 @@
 	            totalVotes: 0,
 	            past: false,
 	            edit: false,
-	            reload: null
+	            reload: null,
+	            showResetForm: null
 	        };
 	    },
 	
@@ -166,6 +368,10 @@
 	                this.props.reload();
 	            }.bind(this));
 	        }
+	    },
+	
+	    showForm: function showForm() {
+	        this.props.showResetForm(this.props.id);
 	    },
 	
 	    render: function render() {
@@ -181,10 +387,21 @@
 	        } else {
 	            var href = 'election/Admin/?command=edit&electionId=' + this.props.id;
 	            var buttons = _react2.default.createElement(
-	                'a',
-	                { href: href, className: 'btn btn-primary' },
-	                _react2.default.createElement('i', { className: 'fa fa-edit' }),
-	                'Edit'
+	                'span',
+	                null,
+	                _react2.default.createElement(
+	                    'a',
+	                    { href: href, className: 'btn btn-primary' },
+	                    _react2.default.createElement('i', { className: 'fa fa-edit' }),
+	                    ' Edit'
+	                ),
+	                ' ',
+	                _react2.default.createElement(
+	                    'button',
+	                    { className: 'btn btn-warning', onClick: this.showForm },
+	                    _react2.default.createElement('i', { className: 'fa fa-refresh' }),
+	                    ' Reset vote'
+	                )
 	            );
 	        }
 	        var reportHref = 'election/Admin/Report/?command=show&electionId=' + this.props.id;
@@ -200,7 +417,7 @@
 	                'td',
 	                null,
 	                this.props.startDateFormatted,
-	                '- ',
+	                ' - ',
 	                this.props.endDateFormatted
 	            ),
 	            _react2.default.createElement(
@@ -217,12 +434,11 @@
 	                    'a',
 	                    { href: reportHref, className: 'btn btn-info' },
 	                    _react2.default.createElement('i', { className: 'fa fa-envelope' }),
-	                    '  Report'
+	                    ' Report'
 	                )
 	            )
 	        );
 	    }
-	
 	});
 	
 	var ElectionForm = _react2.default.createClass({
@@ -297,7 +513,15 @@
 	    },
 	
 	    render: function render() {
-	        var title = _react2.default.createElement('input', { ref: 'electionTitle', type: 'text', className: 'form-control', defaultValue: this.props.title, id: 'election-title', onFocus: this.resetBorder, onChange: this.updateTitle, placeholder: 'Title (e.g. Fall 2016 Election)' });
+	        var title = _react2.default.createElement('input', {
+	            ref: 'electionTitle',
+	            type: 'text',
+	            className: 'form-control',
+	            defaultValue: this.props.title,
+	            id: 'election-title',
+	            onFocus: this.resetBorder,
+	            onChange: this.updateTitle,
+	            placeholder: 'Title (e.g. Fall 2016 Election)' });
 	        var date = _react2.default.createElement(
 	            'div',
 	            { className: 'row pad-top' },
@@ -307,7 +531,15 @@
 	                _react2.default.createElement(
 	                    'div',
 	                    { className: 'input-group' },
-	                    _react2.default.createElement('input', { placeholder: 'Voting start date and time', ref: 'startDate', type: 'text', className: 'form-control datepicker', id: 'start-date', onFocus: this.resetBorder, onChange: this.changeStartDate, value: this.state.startDate }),
+	                    _react2.default.createElement('input', {
+	                        placeholder: 'Voting start date and time',
+	                        ref: 'startDate',
+	                        type: 'text',
+	                        className: 'form-control datepicker',
+	                        id: 'start-date',
+	                        onFocus: this.resetBorder,
+	                        onChange: this.changeStartDate,
+	                        value: this.state.startDate }),
 	                    _react2.default.createElement(
 	                        'div',
 	                        { className: 'input-group-addon' },
@@ -321,7 +553,15 @@
 	                _react2.default.createElement(
 	                    'div',
 	                    { className: 'input-group' },
-	                    _react2.default.createElement('input', { placeholder: 'Voting deadline', ref: 'endDate', type: 'text', className: 'form-control datepicker', id: 'end-date', onFocus: this.resetBorder, onChange: this.changeEndDate, value: this.state.endDate }),
+	                    _react2.default.createElement('input', {
+	                        placeholder: 'Voting deadline',
+	                        ref: 'endDate',
+	                        type: 'text',
+	                        className: 'form-control datepicker',
+	                        id: 'end-date',
+	                        onFocus: this.resetBorder,
+	                        onChange: this.changeEndDate,
+	                        value: this.state.endDate }),
 	                    _react2.default.createElement(
 	                        'div',
 	                        { className: 'input-group-addon' },
@@ -365,7 +605,6 @@
 	
 	        return _react2.default.createElement(Panel, { type: 'info', heading: heading });
 	    }
-	
 	});
 	
 	_reactDom2.default.render(_react2.default.createElement(ElectionList, null), document.getElementById('election-listing'));
@@ -22297,6 +22536,114 @@
 	var ReactMount = __webpack_require__(/*! ./ReactMount */ 167);
 	
 	module.exports = ReactMount.renderSubtreeIntoContainer;
+
+/***/ },
+/* 175 */,
+/* 176 */,
+/* 177 */,
+/* 178 */,
+/* 179 */,
+/* 180 */,
+/* 181 */,
+/* 182 */,
+/* 183 */,
+/* 184 */,
+/* 185 */,
+/* 186 */,
+/* 187 */,
+/* 188 */,
+/* 189 */,
+/* 190 */
+/*!****************************************!*\
+  !*** ./javascript/Mixin/src/Modal.jsx ***!
+  \****************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(/*! react-dom */ 35);
+	
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var Modal = _react2.default.createClass({
+	    displayName: 'Modal',
+	
+	    getInitialState: function getInitialState() {
+	        return { header: null, body: null, footer: null };
+	    },
+	
+	    getDefaultProps: function getDefaultProps() {
+	        return { header: null, body: null, footer: null, modalId: 'reactModal', onClose: null };
+	    },
+	
+	    componentDidMount: function componentDidMount() {
+	        if (this.props.onClose) {
+	            $('#' + this.props.modalId).on('hidden.bs.modal', function (e) {
+	                this.props.onClose();
+	            }.bind(this));
+	        }
+	    },
+	
+	    render: function render() {
+	        return _react2.default.createElement(
+	            'div',
+	            { id: this.props.modalId, className: 'modal fade', tabIndex: '-1', role: 'dialog' },
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'modal-dialog' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'modal-content' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-header' },
+	                        _react2.default.createElement(
+	                            'button',
+	                            { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
+	                            _react2.default.createElement(
+	                                'span',
+	                                { 'aria-hidden': 'true' },
+	                                '×'
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            'h4',
+	                            { className: 'modal-title' },
+	                            this.props.header
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-body' },
+	                        this.props.body
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-footer' },
+	                        this.props.footer,
+	                        _react2.default.createElement(
+	                            'button',
+	                            { type: 'button', className: 'btn btn-default', 'data-dismiss': 'modal' },
+	                            'Close'
+	                        )
+	                    )
+	                )
+	            )
+	        );
+	    }
+	});
+	
+	exports.default = Modal;
 
 /***/ }
 /******/ ]);

@@ -57,19 +57,19 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _Multiple = __webpack_require__(/*! ./Multiple.jsx */ 190);
+	var _Multiple = __webpack_require__(/*! ./Multiple.jsx */ 191);
 	
 	var _Multiple2 = _interopRequireDefault(_Multiple);
 	
-	var _Referendum = __webpack_require__(/*! ./Referendum.jsx */ 191);
+	var _Referendum = __webpack_require__(/*! ./Referendum.jsx */ 192);
 	
 	var _Referendum2 = _interopRequireDefault(_Referendum);
 	
-	var _Review = __webpack_require__(/*! ./Review.jsx */ 192);
+	var _Review = __webpack_require__(/*! ./Review.jsx */ 194);
 	
 	var _Review2 = _interopRequireDefault(_Review);
 	
-	var _Single = __webpack_require__(/*! ./Single.jsx */ 193);
+	var _Single = __webpack_require__(/*! ./Single.jsx */ 196);
 	
 	var _Single2 = _interopRequireDefault(_Single);
 	
@@ -105,17 +105,12 @@
 	    },
 	
 	    load: function load() {
-	        $.getJSON('election/User/Election', {
-	            command: 'list'
-	        }).done(function (data) {
+	        $.getJSON('election/User/Election', { command: 'list' }).done(function (data) {
 	            var stage = this.state.stage;
 	            if (!data.election) {
 	                this.setStage('empty');
 	            } else if (data.hasVoted) {
-	                this.setState({
-	                    stage: 'finished',
-	                    election: data.election
-	                });
+	                this.setState({ stage: 'finished', election: data.election });
 	            } else {
 	                var singleLength = data.single.length;
 	                var multipleLength = data.multiple.length;
@@ -154,9 +149,7 @@
 	
 	    setStage: function setStage(stage) {
 	        window.scrollTo(0, 0);
-	        this.setState({
-	            stage: stage
-	        });
+	        this.setState({ stage: stage });
 	    },
 	
 	    getSingleKey: function getSingleKey(id) {
@@ -190,21 +183,15 @@
 	    },
 	
 	    setCurrentSingle: function setCurrentSingle(id) {
-	        this.setState({
-	            currentSingle: id
-	        });
+	        this.setState({ currentSingle: id });
 	    },
 	
 	    setCurrentMultiple: function setCurrentMultiple(id) {
-	        this.setState({
-	            currentMultiple: id
-	        });
+	        this.setState({ currentMultiple: id });
 	    },
 	
 	    setCurrentReferendum: function setCurrentReferendum(id) {
-	        this.setState({
-	            currentReferendum: id
-	        });
+	        this.setState({ currentReferendum: id });
 	    },
 	
 	    resetStage: function resetStage(stage, id) {
@@ -221,10 +208,7 @@
 	                this.setCurrentReferendum(this.getReferendumKey(id));
 	                break;
 	        }
-	        this.setState({
-	            backToReview: true,
-	            stage: stage
-	        });
+	        this.setState({ backToReview: true, stage: stage });
 	    },
 	
 	    updateSingleVote: function updateSingleVote(ticket) {
@@ -242,6 +226,8 @@
 	        if (this.state.backToReview) {
 	            stage = 'review';
 	        } else if (typeof this.state.single[nextSingle] === 'undefined') {
+	            stage = 'multiple';
+	            /*
 	            if (this.state.multiple.length > 0) {
 	                stage = 'multiple';
 	            } else if (this.state.referendum.length > 0) {
@@ -249,13 +235,10 @@
 	            } else {
 	                stage = 'review';
 	            }
+	            */
 	        }
 	        window.scrollTo(0, 0);
-	        this.setState({
-	            stage: stage,
-	            singleVote: singleVote,
-	            currentSingle: nextSingle
-	        });
+	        this.setState({ stage: stage, singleVote: singleVote, currentSingle: nextSingle });
 	    },
 	
 	    updateMultipleVote: function updateMultipleVote(chairs) {
@@ -283,11 +266,7 @@
 	            }
 	        }
 	
-	        this.setState({
-	            stage: stage,
-	            multipleVote: multipleVote,
-	            currentMultiple: nextMultiple
-	        });
+	        this.setState({ stage: stage, multipleVote: multipleVote, currentMultiple: nextMultiple });
 	    },
 	
 	    updateReferendumVote: function updateReferendumVote(vote) {
@@ -311,38 +290,28 @@
 	            stage = 'review';
 	        }
 	
-	        this.setState({
-	            stage: stage,
-	            referendumVote: referendumVote,
-	            currentReferendum: nextReferendum
-	        });
+	        this.setState({ stage: stage, referendumVote: referendumVote, currentReferendum: nextReferendum });
 	    },
 	
 	    finalVote: function finalVote() {
 	        var singleResult = [];
 	        $.each(this.state.singleVote, function (index, value) {
 	            if (value.single && typeof value.single.id !== 'undefined' && value.ticket && typeof value.ticket.id !== 'undefined') {
-	                singleResult.push({
-	                    singleId: value.single.id,
-	                    ticketId: value.ticket.id
-	                });
+	                singleResult.push({ singleId: value.single.id, ticketId: value.ticket.id });
 	            }
 	        });
 	
 	        var multipleResult = [];
-	        $.each(this.state.multipleVote, function (index, value) {
-	            multipleResult.push({
-	                multipleId: value.multiple.id,
-	                chairs: value.chairs
+	        // do not record if no multiple to vote on
+	        if (this.state.multiple.length > 0) {
+	            $.each(this.state.multipleVote, function (index, value) {
+	                multipleResult.push({ multipleId: value.multiple.id, chairs: value.chairs });
 	            });
-	        });
+	        }
 	
 	        var referendumResult = [];
 	        $.each(this.state.referendumVote, function (index, value) {
-	            referendumResult.push({
-	                referendumId: value.referendum.id,
-	                answer: value.answer
-	            });
+	            referendumResult.push({ referendumId: value.referendum.id, answer: value.answer });
 	        });
 	        $.post('election/User/Vote', {
 	            command: 'save',
@@ -352,16 +321,9 @@
 	            referendum: referendumResult
 	        }, null, 'json').done(function (data) {
 	            if (data.success === true) {
-	                this.setState({
-	                    backToReview: false,
-	                    stage: 'finished',
-	                    surveyLink: data.surveyLink
-	                });
+	                this.setState({ backToReview: false, stage: 'finished', surveyLink: data.surveyLink });
 	            } else {
-	                this.setState({
-	                    backToReview: false,
-	                    stage: 'failure'
-	                });
+	                this.setState({ backToReview: false, stage: 'failure' });
 	            }
 	        }.bind(this)).fail(function (data) {
 	            this.setStage('failure');
@@ -375,7 +337,9 @@
 	        if (this.state.backToReview) {
 	            review = _react2.default.createElement(
 	                'button',
-	                { className: 'btn btn-lg btn-block btn-info', onClick: this.setStage.bind(null, 'review') },
+	                {
+	                    className: 'btn btn-lg btn-block btn-info',
+	                    onClick: this.setStage.bind(null, 'review') },
 	                'Return to review without saving'
 	            );
 	        }
@@ -398,22 +362,29 @@
 	                break;
 	
 	            case 'single':
-	                content = _react2.default.createElement(_Single2.default, { election: this.state.election,
+	                content = _react2.default.createElement(_Single2.default, {
+	                    election: this.state.election,
 	                    ballot: this.state.single[this.state.currentSingle],
-	                    updateVote: this.updateSingleVote, vote: this.state.singleVote });
+	                    updateVote: this.updateSingleVote,
+	                    vote: this.state.singleVote });
 	                break;
 	
 	            case 'multiple':
-	                content = _react2.default.createElement(_Multiple2.default, { election: this.state.election,
+	                content = _react2.default.createElement(_Multiple2.default, {
+	                    election: this.state.election,
 	                    ballot: this.state.multiple[this.state.currentMultiple],
-	                    updateVote: this.updateMultipleVote, vote: this.state.multipleVote,
-	                    unqualified: this.state.unqualified, supportLink: this.state.supportLink });
+	                    updateVote: this.updateMultipleVote,
+	                    vote: this.state.multipleVote,
+	                    unqualified: this.state.unqualified,
+	                    supportLink: this.state.supportLink });
 	                break;
 	
 	            case 'referendum':
-	                content = _react2.default.createElement(_Referendum2.default, { election: this.state.election,
+	                content = _react2.default.createElement(_Referendum2.default, {
+	                    election: this.state.election,
 	                    referendum: this.state.referendum[this.state.currentReferendum],
-	                    updateVote: this.updateReferendumVote, vote: this.state.referendumVote });
+	                    updateVote: this.updateReferendumVote,
+	                    vote: this.state.referendumVote });
 	                break;
 	
 	            case 'failure':
@@ -422,7 +393,8 @@
 	
 	            case 'review':
 	                review = null;
-	                content = _react2.default.createElement(_Review2.default, { election: this.state.election,
+	                content = _react2.default.createElement(_Review2.default, {
+	                    election: this.state.election,
 	                    single: this.state.single,
 	                    multiple: this.state.multiple,
 	                    referendum: this.state.referendum,
@@ -437,7 +409,9 @@
 	        var countdown = null;
 	
 	        if (this.state.stage === 'single' && this.state.singleVote.length === 0 && this.state.multipleVote.length === 0 && this.state.referendumVote.length === 0) {
-	            countdown = _react2.default.createElement(Countdown, { ballotCount: this.state.ballotCount, referendumCount: this.state.referendumCount });
+	            countdown = _react2.default.createElement(Countdown, {
+	                ballotCount: this.state.ballotCount,
+	                referendumCount: this.state.referendumCount });
 	        }
 	
 	        return _react2.default.createElement(
@@ -448,7 +422,6 @@
 	            content
 	        );
 	    }
-	
 	});
 	
 	var Empty = function Empty() {
@@ -467,10 +440,7 @@
 	    displayName: 'Finished',
 	
 	    getDefaultProps: function getDefaultProps() {
-	        return {
-	            election: {},
-	            surveyLink: null
-	        };
+	        return { election: {}, surveyLink: null };
 	    },
 	
 	    render: function render() {
@@ -495,14 +465,16 @@
 	                    ),
 	                    _react2.default.createElement(
 	                        'a',
-	                        { href: './index.php?module=users&action=user&command=logout', className: 'btn btn-lg btn-primary' },
+	                        {
+	                            href: './index.php?module=users&action=user&command=logout',
+	                            className: 'btn btn-lg btn-primary' },
 	                        'Sign out'
 	                    ),
 	                    _react2.default.createElement('hr', null),
 	                    _react2.default.createElement(
 	                        'p',
 	                        null,
-	                        'What do you think about the voting process? ',
+	                        'What do you think about the voting process? ',
 	                        _react2.default.createElement(
 	                            'a',
 	                            { href: this.props.surveyLink },
@@ -513,24 +485,17 @@
 	            )
 	        );
 	    }
-	
 	});
 	
 	var Countdown = _react2.default.createClass({
 	    displayName: 'Countdown',
 	
 	    getInitialState: function getInitialState() {
-	        return {
-	            seen: false
-	        };
+	        return { seen: false };
 	    },
 	
 	    getDefaultProps: function getDefaultProps() {
-	        return {
-	            ballotCount: 0,
-	            referendumCount: 0,
-	            vote: null
-	        };
+	        return { ballotCount: 0, referendumCount: 0, vote: null };
 	    },
 	
 	    plural: function plural(item, single, _plural) {
@@ -573,16 +538,13 @@
 	            { className: 'alert alert-info' },
 	            'There ',
 	            isAre,
-	            ' currently ',
+	            'currently ',
 	            ballots,
-	            ' ',
 	            and,
-	            ' ',
 	            referendum,
-	            ' for you to vote on. We will review all your selections later, before your votes are submitted.'
+	            'for you to vote on. We will review all your selections later, before your votes are submitted.'
 	        );
 	    }
-	
 	});
 	
 	var Failure = _react2.default.createClass({
@@ -23484,7 +23446,8 @@
 /* 187 */,
 /* 188 */,
 /* 189 */,
-/* 190 */
+/* 190 */,
+/* 191 */
 /*!******************************************!*\
   !*** ./javascript/User/src/Multiple.jsx ***!
   \******************************************/
@@ -23523,11 +23486,49 @@
 	    },
 	
 	    render: function render() {
-	        return _react2.default.createElement(MultipleBallot, _extends({ multipleId: this.props.ballot.id
+	        if (Object.keys(this.props.ballot).length == 0) {
+	            return _react2.default.createElement(EmptyMultiple, {
+	                unqualified: this.props.unqualified,
+	                update: this.props.updateVote });
+	        }
+	        return _react2.default.createElement(MultipleBallot, _extends({
+	            multipleId: this.props.ballot.id
 	        }, this.props.ballot, {
 	            updateVote: this.props.updateVote,
 	            vote: this.props.vote,
-	            unqualified: this.props.unqualified, supportLink: this.props.supportLink }));
+	            unqualified: this.props.unqualified,
+	            supportLink: this.props.supportLink }));
+	    }
+	});
+	
+	var EmptyMultiple = _react2.default.createClass({
+	    displayName: 'EmptyMultiple',
+	
+	    getDefaultProps: function getDefaultProps() {
+	        return { unqualified: [] };
+	    },
+	
+	    render: function render() {
+	        return _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(
+	                'h2',
+	                null,
+	                'No senate seats to vote on'
+	            ),
+	            _react2.default.createElement(Unqualified, {
+	                unqualified: this.props.unqualified,
+	                supportLink: this.props.supportLink }),
+	            _react2.default.createElement(
+	                'button',
+	                {
+	                    className: 'pull-right btn btn-success btn-lg',
+	                    onClick: this.props.update },
+	                'Continue ',
+	                _react2.default.createElement('i', { className: 'fa fa-arrow-right' })
+	            )
+	        );
 	    }
 	});
 	
@@ -23535,10 +23536,7 @@
 	    displayName: 'MultipleBallot',
 	
 	    getInitialState: function getInitialState() {
-	        return {
-	            selectedRows: [],
-	            totalSelected: 0
-	        };
+	        return { selectedRows: [], totalSelected: 0 };
 	    },
 	
 	    getDefaultProps: function getDefaultProps() {
@@ -23571,18 +23569,12 @@
 	            selectedRows.splice(found, 1);
 	        }
 	
-	        this.setState({
-	            selectedRows: selectedRows,
-	            totalSelected: totalSelected
-	        });
+	        this.setState({ selectedRows: selectedRows, totalSelected: totalSelected });
 	    },
 	
 	    saveVotes: function saveVotes() {
 	        this.props.updateVote(this.state.selectedRows);
-	        this.setState({
-	            selectedRows: [],
-	            totalSelected: 0
-	        });
+	        this.setState({ selectedRows: [], totalSelected: 0 });
 	    },
 	
 	    render: function render() {
@@ -23593,15 +23585,18 @@
 	            } else {
 	                var selected = false;
 	            }
-	            return _react2.default.createElement(MultipleCandidate, _extends({ key: value.id }, value, {
-	                selected: selected, select: this.select.bind(null, value.id) }));
+	            return _react2.default.createElement(MultipleCandidate, _extends({
+	                key: value.id
+	            }, value, {
+	                selected: selected,
+	                select: this.select.bind(null, value.id) }));
 	        }.bind(this));
 	
 	        if (this.state.totalSelected > 0) {
 	            var button = _react2.default.createElement(
 	                'button',
-	                { className: 'pull-right btn btn-success', onClick: this.saveVotes },
-	                'Continue ',
+	                { className: 'pull-right btn btn-success btn-lg', onClick: this.saveVotes },
+	                'Continue ',
 	                _react2.default.createElement('i', { className: 'fa fa-arrow-right' })
 	            );
 	        } else {
@@ -23610,97 +23605,17 @@
 	                { className: 'pull-right btn btn-warning', onClick: this.saveVotes },
 	                'Abstain from ',
 	                this.props.title,
-	                ' ',
+	                ' ',
 	                _react2.default.createElement('i', { className: 'fa fa-arrow-right' })
 	            );
 	        }
 	
 	        var unqualified = null;
 	        if (this.props.unqualified.length > 0) {
-	            var supportLink = 'mailto:' + this.props.supportLink;
-	            unqualified = _react2.default.createElement(
-	                'div',
-	                { className: 'row' },
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'col-sm-6' },
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        _react2.default.createElement(
-	                            'strong',
-	                            null,
-	                            'You were not qualified to vote in the following ballots because of your class, college, or organizational affiliation.'
-	                        )
-	                    ),
-	                    _react2.default.createElement(
-	                        'div',
-	                        { style: { height: '300px', overflow: 'auto' } },
-	                        _react2.default.createElement(
-	                            'table',
-	                            { className: 'table table-striped' },
-	                            _react2.default.createElement(
-	                                'tbody',
-	                                null,
-	                                this.props.unqualified.map(function (value, key) {
-	                                    return _react2.default.createElement(
-	                                        'tr',
-	                                        { key: key },
-	                                        _react2.default.createElement(
-	                                            'td',
-	                                            null,
-	                                            value
-	                                        )
-	                                    );
-	                                })
-	                            )
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'col-sm-6 well' },
-	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'alert alert-danger' },
-	                        _react2.default.createElement(
-	                            'strong',
-	                            null,
-	                            'Is there ballot you should be able to vote on?'
-	                        )
-	                    ),
-	                    _react2.default.createElement(
-	                        'ol',
-	                        null,
-	                        _react2.default.createElement(
-	                            'li',
-	                            null,
-	                            'STOP! Do not complete your vote'
-	                        ),
-	                        _react2.default.createElement(
-	                            'li',
-	                            null,
-	                            _react2.default.createElement(
-	                                'a',
-	                                { href: supportLink },
-	                                _react2.default.createElement(
-	                                    'strong',
-	                                    null,
-	                                    'click here'
-	                                ),
-	                                ' and email your ASU username and the missing ballot name.'
-	                            )
-	                        )
-	                    ),
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        'We will check your account and get back to you.'
-	                    )
-	                )
-	            );
+	            unqualified = _react2.default.createElement(Unqualified, {
+	                unqualified: this.props.unqualified,
+	                supportLink: this.props.supportLink });
 	        }
-	
 	        return _react2.default.createElement(
 	            'div',
 	            { className: 'multiple-ticket-vote' },
@@ -23715,9 +23630,9 @@
 	                button,
 	                'You have selected ',
 	                this.state.totalSelected,
-	                ' of the allowed ',
+	                'of the allowed ',
 	                this.props.seatNumber,
-	                ' seat',
+	                'seat',
 	                this.props.seatNumber === '1' ? null : 's',
 	                '.'
 	            ),
@@ -23734,8 +23649,107 @@
 	            ),
 	            _react2.default.createElement(
 	                'div',
-	                { style: { clear: 'both' } },
+	                { style: {
+	                        clear: 'both'
+	                    } },
 	                unqualified
+	            )
+	        );
+	    }
+	});
+	
+	var Unqualified = _react2.default.createClass({
+	    displayName: 'Unqualified',
+	
+	    getDefaultProps: function getDefaultProps() {
+	        return { unqualified: [] };
+	    },
+	
+	    render: function render() {
+	        var supportLink = 'mailto:' + this.props.supportLink;
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'col-sm-6' },
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    _react2.default.createElement(
+	                        'strong',
+	                        null,
+	                        'You were not qualified to vote in the following ballots because of your class, college, or organizational affiliation.'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    {
+	                        style: {
+	                            height: '300px',
+	                            overflow: 'auto'
+	                        } },
+	                    _react2.default.createElement(
+	                        'table',
+	                        { className: 'table table-striped' },
+	                        _react2.default.createElement(
+	                            'tbody',
+	                            null,
+	                            this.props.unqualified.map(function (value, key) {
+	                                return _react2.default.createElement(
+	                                    'tr',
+	                                    { key: key },
+	                                    _react2.default.createElement(
+	                                        'td',
+	                                        null,
+	                                        value
+	                                    )
+	                                );
+	                            })
+	                        )
+	                    )
+	                )
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'col-sm-6 well' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'alert alert-danger' },
+	                    _react2.default.createElement(
+	                        'strong',
+	                        null,
+	                        'Is there ballot you should be able to vote on?'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'ol',
+	                    null,
+	                    _react2.default.createElement(
+	                        'li',
+	                        null,
+	                        'STOP! Do not complete your vote'
+	                    ),
+	                    _react2.default.createElement(
+	                        'li',
+	                        null,
+	                        _react2.default.createElement(
+	                            'a',
+	                            { href: supportLink },
+	                            _react2.default.createElement(
+	                                'strong',
+	                                null,
+	                                'click here'
+	                            ),
+	                            '  and email your ASU username and the missing ballot name.'
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    'We will check your account and get back to you.'
+	                )
 	            )
 	        );
 	    }
@@ -23766,7 +23780,7 @@
 	                'button',
 	                { className: 'pull-right btn btn-default btn-lg' },
 	                _react2.default.createElement('i', { className: 'fa fa-check' }),
-	                ' Selected'
+	                '  Selected'
 	            );
 	        } else {
 	            var _className = 'list-group-item pointer';
@@ -23797,17 +23811,16 @@
 	            icon,
 	            picture,
 	            this.props.firstName,
-	            ' ',
+	            '  ',
 	            this.props.lastName
 	        );
 	    }
-	
 	});
 	
 	exports.default = Multiple;
 
 /***/ },
-/* 191 */
+/* 192 */
 /*!********************************************!*\
   !*** ./javascript/User/src/Referendum.jsx ***!
   \********************************************/
@@ -23826,6 +23839,12 @@
 	var _reactDom = __webpack_require__(/*! react-dom */ 35);
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
+	
+	var _Mixin = __webpack_require__(/*! ../../Mixin/src/Mixin.jsx */ 193);
+	
+	var _Panel = __webpack_require__(/*! ../../Mixin/src/Panel.jsx */ 185);
+	
+	var _Panel2 = _interopRequireDefault(_Panel);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -23847,7 +23866,7 @@
 	            null,
 	            this.props.referendum.title
 	        );
-	        var body = BreakIt(this.props.referendum.description);
+	        var body = (0, _Mixin.BreakIt)(this.props.referendum.description);
 	        var footer = _react2.default.createElement(
 	            'div',
 	            { className: 'row' },
@@ -23885,7 +23904,7 @@
 	            )
 	        );
 	
-	        return _react2.default.createElement(Panel, { heading: title, body: body, footer: footer });
+	        return _react2.default.createElement(_Panel2.default, { heading: title, body: body, footer: footer });
 	    }
 	
 	});
@@ -23893,7 +23912,54 @@
 	exports.default = Referendum;
 
 /***/ },
-/* 192 */
+/* 193 */
+/*!****************************************!*\
+  !*** ./javascript/Mixin/src/Mixin.jsx ***!
+  \****************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.BreakIt = BreakIt;
+	exports.AbstainButton = AbstainButton;
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function BreakIt(text) {
+	    if (typeof text === 'undefined') {
+	        throw 'BreakIt text parameter is undefined';
+	    }
+	    var broken = text.split("\n").map(function (item, i) {
+	        return _react2.default.createElement(
+	            'span',
+	            { key: i },
+	            item,
+	            _react2.default.createElement('br', null)
+	        );
+	    });
+	    return broken;
+	}
+	
+	function AbstainButton(props) {
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'btn btn-warning btn-lg', onClick: props.handleClick },
+	        'Abstain from ',
+	        props.title,
+	        ' ',
+	        _react2.default.createElement('i', { className: 'fa fa-arrow-right' })
+	    );
+	}
+
+/***/ },
+/* 194 */
 /*!****************************************!*\
   !*** ./javascript/User/src/Review.jsx ***!
   \****************************************/
@@ -23950,12 +24016,16 @@
 	
 	        var multipleResult = null;
 	        if (this.props.multipleVote.length > 0) {
-	            multipleResult = _react2.default.createElement(MultipleResult, { vote: this.props.multipleVote, resetStage: this.props.resetStage });
+	            multipleResult = _react2.default.createElement(MultipleResult, {
+	                vote: this.props.multipleVote,
+	                resetStage: this.props.resetStage });
 	        }
 	
 	        var referendumResult = null;
 	        if (this.props.referendumVote.length > 0) {
-	            referendumResult = _react2.default.createElement(ReferendumResult, { vote: this.props.referendumVote, resetStage: this.props.resetStage });
+	            referendumResult = _react2.default.createElement(ReferendumResult, {
+	                vote: this.props.referendumVote,
+	                resetStage: this.props.resetStage });
 	        }
 	
 	        return _react2.default.createElement(
@@ -23985,7 +24055,9 @@
 	                { className: 'text-center' },
 	                _react2.default.createElement(
 	                    'button',
-	                    { className: 'btn btn-lg btn-block btn-success', onClick: this.props.finalVote },
+	                    {
+	                        className: 'btn btn-lg btn-block btn-success',
+	                        onClick: this.props.finalVote },
 	                    'Place my Vote'
 	                )
 	            ),
@@ -24006,28 +24078,29 @@
 	                { className: 'text-center' },
 	                _react2.default.createElement(
 	                    'button',
-	                    { className: 'btn btn-lg btn-block btn-success', onClick: this.props.finalVote },
+	                    {
+	                        className: 'btn btn-lg btn-block btn-success',
+	                        onClick: this.props.finalVote },
 	                    'Place my Vote'
 	                )
 	            )
 	        );
 	    }
-	
 	});
 	
 	var SingleResult = _react2.default.createClass({
 	    displayName: 'SingleResult',
 	
 	    getDefaultProps: function getDefaultProps() {
-	        return {
-	            vote: [],
-	            resetStage: null
-	        };
+	        return { vote: [], resetStage: null };
 	    },
 	
 	    render: function render() {
 	        var rows = this.props.vote.map(function (value, key) {
-	            return _react2.default.createElement(SingleResultRow, _extends({ key: key }, value, { resetStage: this.props.resetStage.bind(null, 'single', value.single.id) }));
+	            return _react2.default.createElement(SingleResultRow, _extends({
+	                key: key
+	            }, value, {
+	                resetStage: this.props.resetStage.bind(null, 'single', value.single.id) }));
 	        }.bind(this));
 	
 	        return _react2.default.createElement(
@@ -24042,12 +24115,7 @@
 	    displayName: 'SingleResultRow',
 	
 	    getDefaultProps: function getDefaultProps() {
-	        return {
-	            vote: {},
-	            resetStage: null,
-	            single: {},
-	            ticket: {}
-	        };
+	        return { vote: {}, resetStage: null, single: {}, ticket: {} };
 	    },
 	
 	    render: function render() {
@@ -24068,10 +24136,11 @@
 	                { className: 'col-xs-2' },
 	                _react2.default.createElement(
 	                    'button',
-	                    { className: 'btn btn-block btn-default',
+	                    {
+	                        className: 'btn btn-block btn-default',
 	                        onClick: this.props.resetStage.bind(null, 'single', this.props.single.id) },
 	                    _react2.default.createElement('i', { className: 'fa fa-pencil' }),
-	                    ' Edit'
+	                    'Edit'
 	                )
 	            )
 	        );
@@ -24124,10 +24193,7 @@
 	    displayName: 'MultipleResult',
 	
 	    getDefaultProps: function getDefaultProps() {
-	        return {
-	            vote: [],
-	            resetStage: null
-	        };
+	        return { vote: [], resetStage: null };
 	    },
 	
 	    render: function render() {
@@ -24155,11 +24221,7 @@
 	    displayName: 'MultipleResultRow',
 	
 	    getDefaultProps: function getDefaultProps() {
-	        return {
-	            chairs: [],
-	            multiple: {},
-	            resetStage: null
-	        };
+	        return { chairs: [], multiple: {}, resetStage: null };
 	    },
 	
 	    render: function render() {
@@ -24180,14 +24242,26 @@
 	                { className: 'col-xs-2' },
 	                _react2.default.createElement(
 	                    'button',
-	                    { className: 'btn btn-default btn-block',
+	                    {
+	                        disabled: this.props.multiple.candidates === undefined,
+	                        className: 'btn btn-default btn-block',
 	                        onClick: this.props.resetStage.bind(null, 'multiple', this.props.multiple.id) },
 	                    _react2.default.createElement('i', { className: 'fa fa-pencil' }),
-	                    ' Edit'
+	                    'Edit'
 	                )
 	            )
 	        );
-	        if (this.props.chairs.length === 0) {
+	        if (this.props.multiple.candidates === undefined) {
+	            var candidates = _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'h4',
+	                    null,
+	                    'No seats to vote on.'
+	                )
+	            );
+	        } else if (this.props.chairs.length === 0) {
 	            var candidates = _react2.default.createElement(
 	                'div',
 	                null,
@@ -24222,18 +24296,13 @@
 	        );
 	        return _react2.default.createElement(_Panel2.default, { heading: heading, body: body });
 	    }
-	
 	});
 	
 	var MultipleCandidateRow = _react2.default.createClass({
 	    displayName: 'MultipleCandidateRow',
 	
 	    getDefaultProps: function getDefaultProps() {
-	        return {
-	            firstName: '',
-	            lastName: '',
-	            picture: ''
-	        };
+	        return { firstName: '', lastName: '', picture: '' };
 	    },
 	
 	    render: function render() {
@@ -24259,21 +24328,16 @@
 	            icon,
 	            picture,
 	            this.props.firstName,
-	            ' ',
 	            this.props.lastName
 	        );
 	    }
-	
 	});
 	
 	var ReferendumResult = _react2.default.createClass({
 	    displayName: 'ReferendumResult',
 	
 	    getDefaultProps: function getDefaultProps() {
-	        return {
-	            vote: [],
-	            resetStage: null
-	        };
+	        return { vote: [], resetStage: null };
 	    },
 	
 	    getInitialState: function getInitialState() {
@@ -24316,7 +24380,7 @@
 	                    'span',
 	                    { className: 'text-success' },
 	                    _react2.default.createElement('i', { className: 'fa fa-check-circle' }),
-	                    ' Yes'
+	                    'Yes'
 	                );
 	                break;
 	
@@ -24325,7 +24389,7 @@
 	                    'span',
 	                    { className: 'text-danger' },
 	                    _react2.default.createElement('i', { className: 'fa fa-times-circle' }),
-	                    ' No'
+	                    'No'
 	                );
 	                break;
 	
@@ -24334,7 +24398,7 @@
 	                    'span',
 	                    { className: 'text-primary' },
 	                    _react2.default.createElement('i', { className: 'fa fa-question-circle' }),
-	                    ' Abstain'
+	                    'Abstain'
 	                );
 	                break;
 	        }
@@ -24357,21 +24421,108 @@
 	                { className: 'col-sm-3' },
 	                _react2.default.createElement(
 	                    'button',
-	                    { className: 'btn btn-block btn-default',
+	                    {
+	                        className: 'btn btn-block btn-default',
 	                        onClick: this.props.resetStage.bind(null, 'referendum', this.props.referendum.id) },
 	                    _react2.default.createElement('i', { className: 'fa fa-pencil' }),
-	                    ' Edit'
+	                    'Edit'
 	                )
+	            )
+	        );
+	    }
+	});
+	
+	exports.default = Review;
+
+/***/ },
+/* 195 */
+/*!*************************************************!*\
+  !*** ./javascript/User/src/SingleCandidate.jsx ***!
+  \*************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(/*! react-dom */ 35);
+	
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var SingleCandidate = _react2.default.createClass({
+	    displayName: 'SingleCandidate',
+	
+	    getInitialState: function getInitialState() {
+	        return {};
+	    },
+	
+	    getDefaultProps: function getDefaultProps() {
+	        return {
+	            firstName: '',
+	            lastName: '',
+	            picture: '',
+	            title: '',
+	            candidateLength: 1
+	        };
+	    },
+	
+	    render: function render() {
+	        switch (this.props.candidateLength) {
+	            case 1:
+	                var colSize = 'col-sm-6';
+	                break;
+	            case 2:
+	                var colSize = 'col-sm-3';
+	        }
+	        return _react2.default.createElement(
+	            'div',
+	            { className: colSize },
+	            _react2.default.createElement(
+	                'div',
+	                null,
+	                this.props.picture.length > 0 ? _react2.default.createElement(
+	                    'div',
+	                    { className: 'photo-matte' },
+	                    _react2.default.createElement('span', { className: 'helper' }),
+	                    _react2.default.createElement('img', { src: this.props.picture, className: 'img-responsive candidate' })
+	                ) : _react2.default.createElement(
+	                    'div',
+	                    { className: 'no-picture text-muted' },
+	                    _react2.default.createElement('i', { className: 'fa fa-user fa-5x' }),
+	                    _react2.default.createElement('br', null),
+	                    'No picture'
+	                )
+	            ),
+	            _react2.default.createElement(
+	                'p',
+	                null,
+	                _react2.default.createElement(
+	                    'strong',
+	                    null,
+	                    this.props.firstName,
+	                    ' ',
+	                    this.props.lastName
+	                ),
+	                _react2.default.createElement('br', null),
+	                this.props.title
 	            )
 	        );
 	    }
 	
 	});
 	
-	exports.default = Review;
+	exports.default = SingleCandidate;
 
 /***/ },
-/* 193 */
+/* 196 */
 /*!****************************************!*\
   !*** ./javascript/User/src/Single.jsx ***!
   \****************************************/
@@ -24393,7 +24544,7 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _Mixin = __webpack_require__(/*! ../../Mixin/src/Mixin.jsx */ 194);
+	var _Mixin = __webpack_require__(/*! ../../Mixin/src/Mixin.jsx */ 193);
 	
 	var _Panel = __webpack_require__(/*! ../../Mixin/src/Panel.jsx */ 185);
 	
@@ -24554,140 +24705,6 @@
 	});
 	
 	exports.default = Single;
-
-/***/ },
-/* 194 */
-/*!****************************************!*\
-  !*** ./javascript/Mixin/src/Mixin.jsx ***!
-  \****************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.BreakIt = BreakIt;
-	exports.AbstainButton = AbstainButton;
-	
-	var _react = __webpack_require__(/*! react */ 1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function BreakIt(text) {
-	    if (typeof text === 'undefined') {
-	        throw 'BreakIt text parameter is undefined';
-	    }
-	    var broken = text.split("\n").map(function (item, i) {
-	        return _react2.default.createElement(
-	            'span',
-	            { key: i },
-	            item,
-	            _react2.default.createElement('br', null)
-	        );
-	    });
-	    return broken;
-	}
-	
-	function AbstainButton(props) {
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'btn btn-warning btn-lg', onClick: props.handleClick },
-	        'Abstain from ',
-	        props.title,
-	        ' ',
-	        _react2.default.createElement('i', { className: 'fa fa-arrow-right' })
-	    );
-	}
-
-/***/ },
-/* 195 */
-/*!*************************************************!*\
-  !*** ./javascript/User/src/SingleCandidate.jsx ***!
-  \*************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _react = __webpack_require__(/*! react */ 1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactDom = __webpack_require__(/*! react-dom */ 35);
-	
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var SingleCandidate = _react2.default.createClass({
-	    displayName: 'SingleCandidate',
-	
-	    getInitialState: function getInitialState() {
-	        return {};
-	    },
-	
-	    getDefaultProps: function getDefaultProps() {
-	        return {
-	            firstName: '',
-	            lastName: '',
-	            picture: '',
-	            title: '',
-	            candidateLength: 1
-	        };
-	    },
-	
-	    render: function render() {
-	        switch (this.props.candidateLength) {
-	            case 1:
-	                var colSize = 'col-sm-6';
-	                break;
-	            case 2:
-	                var colSize = 'col-sm-3';
-	        }
-	        return _react2.default.createElement(
-	            'div',
-	            { className: colSize },
-	            _react2.default.createElement(
-	                'div',
-	                null,
-	                this.props.picture.length > 0 ? _react2.default.createElement(
-	                    'div',
-	                    { className: 'photo-matte' },
-	                    _react2.default.createElement('span', { className: 'helper' }),
-	                    _react2.default.createElement('img', { src: this.props.picture, className: 'img-responsive candidate' })
-	                ) : _react2.default.createElement(
-	                    'div',
-	                    { className: 'no-picture text-muted' },
-	                    _react2.default.createElement('i', { className: 'fa fa-user fa-5x' }),
-	                    _react2.default.createElement('br', null),
-	                    'No picture'
-	                )
-	            ),
-	            _react2.default.createElement(
-	                'p',
-	                null,
-	                _react2.default.createElement(
-	                    'strong',
-	                    null,
-	                    this.props.firstName,
-	                    ' ',
-	                    this.props.lastName
-	                ),
-	                _react2.default.createElement('br', null),
-	                this.props.title
-	            )
-	        );
-	    }
-	
-	});
-	
-	exports.default = SingleCandidate;
 
 /***/ }
 /******/ ]);

@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {BreakIt} from '../../Mixin/src/Mixin.jsx';
+import Panel from '../../Mixin/src/Panel.jsx';
 
 var Referendum = React.createClass({
     getDefaultProps: function() {
