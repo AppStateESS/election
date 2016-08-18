@@ -11,6 +11,7 @@ define('EMAIL_USERNAME_SUFFIX', '@appstate.edu');
  */
 class Student
 {
+
     const UNDERGRAD = 'ugrad';
     const GRADUATE = 'grad';
     const GRADUATE2 = 'grad2';
@@ -34,6 +35,7 @@ class Student
     private $creditHours;
     private $clubTypes; // Array of club types for voting eligibility
     private $greekOrgs;
+    private $preferredName;
 
     public function __construct()
     {
@@ -96,7 +98,7 @@ class Student
         $greekLife = $this->getGreekList();
 
         // Put the lists together
-        return array('Class' => $classCategory, 'College' => $collegeCategory, 'Club Affiliation' => $clubAffiliation, 
+        return array('Class' => $classCategory, 'College' => $collegeCategory, 'Club Affiliation' => $clubAffiliation,
             'Greek Life' => $greekLife, 'Student Type' => $this->getStudentType());
     }
 
@@ -159,7 +161,7 @@ class Student
     {
         return $this->studentType;
     }
-    
+
     public function setBannerId($id)
     {
         $this->bannerId = $id;
@@ -180,9 +182,25 @@ class Student
         $this->firstName = $firstName;
     }
 
+    public function setPreferredName($name)
+    {
+        $this->preferredName = $name;
+    }
+
     public function setLastName($lastName)
     {
         $this->lastName = $lastName;
+    }
+
+    public function getFullName()
+    {
+        if (!empty($this->preferredName)) {
+            $first_name = $this->preferredName;
+        } else {
+            $first_name = $this->firstName;
+        }
+
+        return $first_name . ' ' . $this->lastName;
     }
 
     public function setLevel($level)
@@ -246,4 +264,5 @@ class Student
     {
         return $this->username . EMAIL_USERNAME_SUFFIX;
     }
+
 }
