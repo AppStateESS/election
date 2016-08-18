@@ -5,6 +5,9 @@ namespace election\Factory;
 if (!defined('STUDENT_DATA_TEST')) {
     define('STUDENT_DATA_TEST', false);
 }
+if (!defined('ELECTION_FAKE_STUDENT')) {
+    define('ELECTION_FAKE_STUDENT', false);
+}
 
 /**
  * StudentDataProviderFactory
@@ -12,7 +15,8 @@ if (!defined('STUDENT_DATA_TEST')) {
  * @author Jeremy Booker
  * @package election
  */
-class StudentProviderFactory {
+class StudentProviderFactory
+{
 
     /**
      * Returns a concrete instance of a StudenDataProvider object,
@@ -22,10 +26,15 @@ class StudentProviderFactory {
      */
     public static function getProvider()
     {
-        if(STUDENT_DATA_TEST){
-            return new TestStudentProvider();
+        if (STUDENT_DATA_TEST) {
+            if (ELECTION_FAKE_STUDENT) {
+                return new FakeStudentProvider();
+            } else {
+                return new TestStudentProvider();
+            }
         }
-        
+
         return new BannerStudentProvider();
     }
+
 }
