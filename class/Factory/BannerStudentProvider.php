@@ -30,7 +30,7 @@ class BannerStudentProvider extends StudentProvider
     const GRADUATE2 = 'G2';
     const DOCTORAL = 'D';
     const POSTDOC = 'P'; // Guessing at the name here, not sure what 'P' really is
-    const FRESHMEN = 'Freshmen';
+    const FRESHMEN = 'Freshman';
     const SOPHOMORE = 'Sophomore';
     const JUNIOR = 'Junior';
     const SENIOR = 'Senior';
@@ -83,7 +83,7 @@ class BannerStudentProvider extends StudentProvider
 
     protected function sendRequest($studentId)
     {
-        $request = $this->client->get($studentId, null, array('timeout' => 3)); //NB: URL is relative to the base URL from the module's settings
+        $request = $this->client->get($studentId, null, array('timeout' => 4)); //NB: URL is relative to the base URL from the module's settings
 
         $response = $request->send();
 
@@ -107,6 +107,7 @@ class BannerStudentProvider extends StudentProvider
 
         $student->setFirstName($data['firstName']);
         $student->setLastName($data['lastName']);
+        $student->setPreferredName($data['preferredName']);
 
         /**
          * Academic Info
