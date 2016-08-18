@@ -23630,9 +23630,9 @@
 	                button,
 	                'You have selected ',
 	                this.state.totalSelected,
-	                'of the allowed ',
+	                ' of the allowed ',
 	                this.props.seatNumber,
-	                'seat',
+	                ' seat',
 	                this.props.seatNumber === '1' ? null : 's',
 	                '.'
 	            ),
@@ -24328,6 +24328,7 @@
 	            icon,
 	            picture,
 	            this.props.firstName,
+	            ' ',
 	            this.props.lastName
 	        );
 	    }
@@ -24508,7 +24509,7 @@
 	                    'strong',
 	                    null,
 	                    this.props.firstName,
-	                    ' ',
+	                    ' ',
 	                    this.props.lastName
 	                ),
 	                _react2.default.createElement('br', null),

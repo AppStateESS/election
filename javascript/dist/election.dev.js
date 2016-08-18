@@ -23262,32 +23262,20 @@
 	    displayName: 'Candidates',
 	
 	    getInitialState: function getInitialState() {
-	        return {
-	            currentForm: 0
-	        };
+	        return { currentForm: 0 };
 	    },
 	
 	    getDefaultProps: function getDefaultProps() {
-	        return {
-	            candidates: [],
-	            ticketId: 0,
-	            multipleId: 0,
-	            type: 'ticket',
-	            showAdd: true
-	        };
+	        return { candidates: [], ticketId: 0, multipleId: 0, type: 'ticket', showAdd: true };
 	    },
 	
 	    load: function load() {
 	        this.props.reload();
-	        this.setState({
-	            currentForm: 0
-	        });
+	        this.setState({ currentForm: 0 });
 	    },
 	
 	    setCurrentForm: function setCurrentForm(id) {
-	        this.setState({
-	            currentForm: id
-	        });
+	        this.setState({ currentForm: id });
 	    },
 	
 	    delete: function _delete(candidateId) {
@@ -23309,52 +23297,61 @@
 	                return _react2.default.createElement(
 	                    'div',
 	                    { key: value.id, className: 'col-sm-4 col-xs-6 pad-bottom' },
-	                    _react2.default.createElement(CandidateForm, _extends({}, this.props, value, { candidateId: value.id, reload: this.load,
+	                    _react2.default.createElement(CandidateForm, _extends({}, this.props, value, {
+	                        candidateId: value.id,
+	                        reload: this.load,
 	                        reset: this.setCurrentForm.bind(null, 0) }))
 	                );
 	            } else {
-	                return _react2.default.createElement(CandidateProfile, _extends({ key: value.id }, value, {
+	                return _react2.default.createElement(CandidateProfile, _extends({
+	                    key: value.id
+	                }, value, {
 	                    'delete': this.delete.bind(null, value.id),
 	                    edit: this.setCurrentForm.bind(null, value.id) }));
 	            }
 	        }.bind(this));
 	
-	        if (this.state.currentForm === 0 && this.props.showAdd && allowChange) {
-	            var form = _react2.default.createElement(
-	                'div',
-	                null,
+	        var form = null;
+	        var allowButton = this.state.currentForm == 0 && this.props.showAdd && allowChange;
+	        var button = null;
+	        if (allowButton) {
+	            button = _react2.default.createElement(
+	                'button',
+	                {
+	                    className: 'btn btn-block btn-primary',
+	                    onClick: this.setCurrentForm.bind(null, -1) },
+	                _react2.default.createElement('i', { className: 'fa fa-user-plus fa-2x' }),
+	                ' ',
 	                _react2.default.createElement(
-	                    'button',
-	                    { className: 'btn btn-primary', onClick: this.setCurrentForm.bind(null, -1) },
-	                    _react2.default.createElement('i', { className: 'fa fa-user-plus fa-5x' }),
-	                    _react2.default.createElement('br', null),
+	                    'span',
+	                    { style: {
+	                            fontSize: '1.5em'
+	                        } },
 	                    'Add candidate'
 	                )
 	            );
-	        } else if (this.state.currentForm === -1) {
-	            var form = _react2.default.createElement(CandidateForm, _extends({}, this.props, { reload: this.load, reset: this.setCurrentForm.bind(null, 0) }));
+	        }
+	        if (this.state.currentForm === -1) {
+	            form = _react2.default.createElement(CandidateForm, _extends({}, this.props, {
+	                reload: this.load,
+	                reset: this.setCurrentForm.bind(null, 0) }));
 	        }
 	
 	        return _react2.default.createElement(
 	            'div',
 	            null,
 	            candidates,
-	            form
+	            form,
+	            button
 	        );
 	    }
-	
 	});
 	
 	var CandidateProfile = _react2.default.createClass({
 	    displayName: 'CandidateProfile',
 	
 	    getDefaultProps: function getDefaultProps() {
-	        return {
-	            firstName: null,
-	            lastName: null,
-	            title: null,
-	            picture: null
-	        };
+	        return { firstName: null, lastName: null, title: null, picture: null };
 	    },
 	
 	    render: function render() {
@@ -23391,35 +23388,37 @@
 	                        this.props.lastName
 	                    ),
 	                    _react2.default.createElement('br', null),
+	                    ' ',
 	                    this.props.title
 	                ),
 	                _react2.default.createElement(
 	                    'button',
-	                    { className: 'btn btn-primary', title: 'Edit candidate', onClick: this.props.edit },
+	                    {
+	                        className: 'btn btn-primary',
+	                        title: 'Edit candidate',
+	                        onClick: this.props.edit },
 	                    _react2.default.createElement('i', { className: 'fa fa-edit' })
 	                ),
 	                ' ',
 	                _react2.default.createElement(
 	                    'button',
-	                    { className: 'btn btn-danger', disabled: !allowChange, onClick: this.props.delete, title: 'Delete candidate' },
+	                    {
+	                        className: 'btn btn-danger',
+	                        disabled: !allowChange,
+	                        onClick: this.props.delete,
+	                        title: 'Delete candidate' },
 	                    _react2.default.createElement('i', { className: 'fa fa-times' })
 	                )
 	            )
 	        );
 	    }
-	
 	});
 	
 	var CandidateForm = _react2.default.createClass({
 	    displayName: 'CandidateForm',
 	
 	    getInitialState: function getInitialState() {
-	        return {
-	            firstName: '',
-	            lastName: '',
-	            title: '',
-	            photo: []
-	        };
+	        return { firstName: '', lastName: '', title: '', photo: [] };
 	    },
 	
 	    getDefaultProps: function getDefaultProps() {
@@ -23439,37 +23438,24 @@
 	
 	    componentWillMount: function componentWillMount() {
 	        if (this.props.candidateId > 0) {
-	            this.setState({
-	                firstName: this.props.firstName,
-	                lastName: this.props.lastName,
-	                picture: this.props.picture,
-	                title: this.props.title
-	            });
+	            this.setState({ firstName: this.props.firstName, lastName: this.props.lastName, picture: this.props.picture, title: this.props.title });
 	        }
 	    },
 	
 	    updateFirstName: function updateFirstName(e) {
-	        this.setState({
-	            firstName: e.target.value
-	        });
+	        this.setState({ firstName: e.target.value });
 	    },
 	
 	    updateLastName: function updateLastName(e) {
-	        this.setState({
-	            lastName: e.target.value
-	        });
+	        this.setState({ lastName: e.target.value });
 	    },
 	
 	    updatePhoto: function updatePhoto(photo) {
-	        this.setState({
-	            photo: photo
-	        });
+	        this.setState({ photo: photo });
 	    },
 	
 	    updateTitle: function updateTitle(e) {
-	        this.setState({
-	            title: e.target.value
-	        });
+	        this.setState({ title: e.target.value });
 	    },
 	
 	    save: function save() {
@@ -23514,34 +23500,49 @@
 	        var saveButton = null;
 	        var disabledButton = this.state.firstName.length === 0 || this.state.lastName.length === 0;
 	
-	        var props = { firstName: this.state.firstName, lastName: this.state.lastName };
+	        var props = {
+	            firstName: this.state.firstName,
+	            lastName: this.state.lastName
+	        };
 	        return _react2.default.createElement(
 	            'div',
 	            { className: 'candidate-form text-center' },
-	            _react2.default.createElement(Photo, { photo: this.state.photo, update: this.updatePhoto, picture: this.state.picture }),
-	            _react2.default.createElement(CandidateInfo, _extends({ updateFirstName: this.updateFirstName, updateLastName: this.updateLastName,
-	                updateTitle: this.updateTitle }, this.state, {
+	            _react2.default.createElement(Photo, {
+	                photo: this.state.photo,
+	                update: this.updatePhoto,
+	                picture: this.state.picture }),
+	            _react2.default.createElement(CandidateInfo, _extends({
+	                updateFirstName: this.updateFirstName,
+	                updateLastName: this.updateLastName,
+	                updateTitle: this.updateTitle
+	            }, this.state, {
 	                useTitle: this.props.type == 'ticket' })),
 	            _react2.default.createElement(
 	                'div',
 	                { className: 'pad-top' },
 	                _react2.default.createElement(
 	                    'button',
-	                    { className: 'btn btn-success btn-sm', title: 'Save candidate', onClick: this.save, disabled: disabledButton },
+	                    {
+	                        className: 'btn btn-success btn-sm',
+	                        title: 'Save candidate',
+	                        onClick: this.save,
+	                        disabled: disabledButton },
 	                    _react2.default.createElement('i', { className: 'fa fa-save' }),
-	                    ' Save'
+	                    'Save'
 	                ),
 	                ' ',
 	                _react2.default.createElement(
 	                    'button',
-	                    { className: 'btn btn-danger btn-sm', title: 'Cancel', onClick: this.props.reset },
+	                    {
+	                        className: 'btn btn-danger btn-sm',
+	                        title: 'Cancel',
+	                        onClick: this.props.reset },
 	                    _react2.default.createElement('i', { className: 'fa fa-times' }),
-	                    ' Clear'
+	                    'Clear'
 	                )
 	            )
 	        );
 	    }
-	
 	});
 	
 	var CandidateInfo = _react2.default.createClass({
@@ -23549,42 +23550,52 @@
 	
 	
 	    getDefaultProps: function getDefaultProps() {
-	        return {
-	            firstName: null,
-	            lastName: null,
-	            title: null,
-	            useTitle: true
-	        };
+	        return { firstName: null, lastName: null, title: null, useTitle: true };
 	    },
 	
 	    render: function render() {
 	        var title = null;
 	        if (this.props.useTitle) {
-	            title = _react2.default.createElement('input', _defineProperty({ type: 'text', className: 'form-control', name: 'title', value: this.props.title, placeholder: 'Position title',
-	                onChange: this.props.updateTitle }, 'value', this.props.title));
+	            title = _react2.default.createElement('input', _defineProperty({
+	                type: 'text',
+	                className: 'form-control',
+	                name: 'title',
+	                value: this.props.title,
+	                placeholder: 'Position title',
+	                onChange: this.props.updateTitle
+	            }, 'value', this.props.title));
 	        }
 	
 	        return _react2.default.createElement(
 	            'div',
 	            null,
-	            _react2.default.createElement('input', _defineProperty({ type: 'text', className: 'form-control', name: 'firstName', value: this.props.firstName, placeholder: 'First name',
-	                onChange: this.props.updateFirstName }, 'value', this.props.firstName)),
-	            _react2.default.createElement('input', _defineProperty({ type: 'text', className: 'form-control', name: 'lastName', value: this.props.lastName, placeholder: 'Last name',
-	                onChange: this.props.updateLastName }, 'value', this.props.lastName)),
+	            _react2.default.createElement('input', _defineProperty({
+	                type: 'text',
+	                className: 'form-control',
+	                name: 'firstName',
+	                value: this.props.firstName,
+	                placeholder: 'First name',
+	                onChange: this.props.updateFirstName
+	            }, 'value', this.props.firstName)),
+	            _react2.default.createElement('input', _defineProperty({
+	                type: 'text',
+	                className: 'form-control',
+	                name: 'lastName',
+	                value: this.props.lastName,
+	                placeholder: 'Last name',
+	                onChange: this.props.updateLastName
+	            }, 'value', this.props.lastName)),
+	            ' ',
 	            title
 	        );
 	    }
-	
 	});
 	
 	var Photo = _react2.default.createClass({
 	    displayName: 'Photo',
 	
 	    getDefaultProps: function getDefaultProps() {
-	        return {
-	            photo: [],
-	            picture: ''
-	        };
+	        return { photo: [], picture: '' };
 	    },
 	
 	    onDrop: function onDrop(photo) {

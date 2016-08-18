@@ -9,7 +9,7 @@ var Multiple = React.createClass({
             vote: [],
             ballot: {},
             unqualified: [],
-            supportLink: null
+            supportLink: null,
         };
     },
 
@@ -26,7 +26,7 @@ var Multiple = React.createClass({
             vote={this.props.vote}
             unqualified={this.props.unqualified}
             supportLink={this.props.supportLink}/>;
-    }
+    },
 });
 
 var EmptyMultiple = React.createClass({
@@ -48,12 +48,12 @@ var EmptyMultiple = React.createClass({
                 </button>
             </div>
         );
-    }
+    },
 });
 
 var MultipleBallot = React.createClass({
     getInitialState: function() {
-        return {selectedRows: [], totalSelected: 0};
+        return {selectedRows: [], totalSelected: 0,};
     },
 
     getDefaultProps: function() {
@@ -64,7 +64,7 @@ var MultipleBallot = React.createClass({
             candidates: [],
             vote: null,
             multipleId: 0,
-            supportLink: null
+            supportLink: null,
         };
     },
 
@@ -86,12 +86,12 @@ var MultipleBallot = React.createClass({
             selectedRows.splice(found, 1);
         }
 
-        this.setState({selectedRows: selectedRows, totalSelected: totalSelected});
+        this.setState({selectedRows: selectedRows, totalSelected: totalSelected,});
     },
 
     saveVotes: function() {
         this.props.updateVote(this.state.selectedRows);
-        this.setState({selectedRows: [], totalSelected: 0});
+        this.setState({selectedRows: [], totalSelected: 0,});
     },
 
     render: function() {
@@ -129,9 +129,7 @@ var MultipleBallot = React.createClass({
             <div className="multiple-ticket-vote">
                 <h2>{this.props.title}</h2>
                 <div className="container remaining-seats alert alert-success">
-                    {button}You have selected {this.state.totalSelected}
-                    of the allowed {this.props.seatNumber}
-                    seat{this.props.seatNumber === '1'
+                    {button}You have selected {this.state.totalSelected}&nbsp;of the allowed {this.props.seatNumber}&nbsp;seat{this.props.seatNumber === '1'
                         ? null
                         : 's'}.
                 </div>
@@ -149,7 +147,7 @@ var MultipleBallot = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 var Unqualified = React.createClass({
@@ -169,7 +167,7 @@ var Unqualified = React.createClass({
                     <div
                         style={{
                         height: '300px',
-                        overflow: 'auto'
+                        overflow: 'auto',
                     }}>
                         <table className="table table-striped">
                             <tbody>
@@ -197,7 +195,7 @@ var Unqualified = React.createClass({
                 </div>
             </div>
         );
-    },
+    }
 });
 
 var MultipleCandidate = React.createClass({
@@ -212,7 +210,7 @@ var MultipleCandidate = React.createClass({
             picture: '',
             title: '',
             selected: false,
-            select: null
+            select: null,
         };
     },
 
@@ -241,7 +239,7 @@ var MultipleCandidate = React.createClass({
                 {this.props.firstName}&nbsp; {this.props.lastName}
             </li>
         );
-    }
+    },
 });
 
 export default Multiple;

@@ -14,7 +14,7 @@ var Review = React.createClass({
             multipleVote: [],
             referendumVote: [],
             resetStage: null,
-            finalVote: null,
+            finalVote: null
         };
     },
 
@@ -63,12 +63,12 @@ var Review = React.createClass({
                 </div>
             </div>
         );
-    },
+    }
 });
 
 var SingleResult = React.createClass({
     getDefaultProps: function() {
-        return {vote: [], resetStage: null,};
+        return {vote: [], resetStage: null};
     },
 
     render: function() {
@@ -84,12 +84,12 @@ var SingleResult = React.createClass({
                 {rows}
             </div>
         );
-    },
+    }
 });
 
 var SingleResultRow = React.createClass({
     getDefaultProps: function() {
-        return {vote: {}, resetStage: null, single: {}, ticket: {},};
+        return {vote: {}, resetStage: null, single: {}, ticket: {}};
     },
 
     render: function() {
@@ -136,12 +136,12 @@ var SingleResultRow = React.createClass({
         );
 
         return <Panel heading={heading} body={body}/>;
-    },
+    }
 });
 
 var MultipleResult = React.createClass({
     getDefaultProps: function() {
-        return {vote: [], resetStage: null,};
+        return {vote: [], resetStage: null};
     },
 
     render: function() {
@@ -160,12 +160,12 @@ var MultipleResult = React.createClass({
         );
 
         return (<Panel heading={heading} body={body}/>);
-    },
+    }
 });
 
 var MultipleResultRow = React.createClass({
     getDefaultProps: function() {
-        return {chairs: [], multiple: {}, resetStage: null,};
+        return {chairs: [], multiple: {}, resetStage: null};
     },
 
     render: function() {
@@ -213,12 +213,12 @@ var MultipleResultRow = React.createClass({
             </div>
         );
         return <Panel heading={heading} body={body}/>;
-    },
+    }
 });
 
 var MultipleCandidateRow = React.createClass({
     getDefaultProps: function() {
-        return {firstName: '', lastName: '', picture: '',};
+        return {firstName: '', lastName: '', picture: ''};
     },
 
     render: function() {
@@ -236,16 +236,15 @@ var MultipleCandidateRow = React.createClass({
             <li className="list-group-item" onClick={this.props.select}>
                 {icon}
                 {picture}
-                {this.props.firstName}
-                {this.props.lastName}
+                {this.props.firstName}&nbsp;{this.props.lastName}
             </li>
         );
-    },
+    }
 });
 
 var ReferendumResult = React.createClass({
     getDefaultProps: function() {
-        return {vote: [], resetStage: null,};
+        return {vote: [], resetStage: null};
     },
 
     getInitialState: function() {
@@ -268,7 +267,7 @@ var ReferendumResult = React.createClass({
         );
 
         return <Panel heading={heading} body={body}/>;
-    },
+    }
 });
 
 var ReferendumResultRow = React.createClass({
@@ -312,7 +311,7 @@ var ReferendumResultRow = React.createClass({
                 </div>
             </div>
         );
-    },
+    }
 });
 
 export default Review;

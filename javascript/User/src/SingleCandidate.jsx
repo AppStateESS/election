@@ -37,7 +37,7 @@ var SingleCandidate = React.createClass({
                             <div className="no-picture text-muted"><i className="fa fa-user fa-5x"></i><br />No picture</div>
                     )}
                 </div>
-                <p><strong>{this.props.firstName} {this.props.lastName}</strong><br />
+                <p><strong>{this.props.firstName}&nbsp;{this.props.lastName}</strong><br />
                     {this.props.title}</p>
             </div>
         );
