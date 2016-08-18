@@ -2,8 +2,8 @@
 
 namespace election\Controller;
 
-if (!defined('ELECTION_ALWAYS_ELIGIBLE')) {
-    define('ELECTION_ALWAYS_ELIGIBLE', false);
+if (!defined('ELECTION_FAKE_STUDENT')) {
+    define('ELECTION_FAKE_STUDENT', false);
 }
 
 /**
@@ -55,12 +55,10 @@ class User extends \Http\Controller
             return $controller;
         }
 
-        if (!STUDENT_DATA_TEST || !ELECTION_ALWAYS_ELIGIBLE) {
-            if (!$student->isEligibleToVote()) {
-                $controller = new User\NotAllowed($this->getModule());
-                $controller->setMessage('No credit hours or not an undergraduate student.');
-                return $controller;
-            }
+        if (!$student->isEligibleToVote()) {
+            $controller = new User\NotAllowed($this->getModule());
+            $controller->setMessage('No credit hours or not an undergraduate student.');
+            return $controller;
         }
 
         // If there's an election going on, check to see if this student has already voted in it
