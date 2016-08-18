@@ -13,7 +13,8 @@ class Election extends Base
 
     public static function post()
     {
-        $election = self::build(self::pullPostInteger('electionId'), new Resource);
+        $election = self::build(self::pullPostInteger('electionId'),
+                        new Resource);
 
         $election->setTitle(self::pullPostString('title'));
         $election->setStartDate(self::pullPostInteger('startDate'), false);
@@ -40,12 +41,14 @@ class Election extends Base
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_election');
         $tbl2 = $db->addTable('elect_vote_complete', null, false);
-        $exp = $db->getExpression('count(' . $tbl2->getField('electionId') . ')', 'totalVotes');
+        $exp = $db->getExpression('count(' . $tbl2->getField('electionId') . ')',
+                'totalVotes');
         $db->addExpression($exp);
         $tbl->addOrderBy('endDate', 'desc');
         $tbl->addFieldConditional('active', 1);
 
-        $join_conditional = $db->createConditional($tbl->getField('id'), $tbl2->getField('electionId'));
+        $join_conditional = $db->createConditional($tbl->getField('id'),
+                $tbl2->getField('electionId'));
         $db->joinResources($tbl, $tbl2, $join_conditional, 'left');
         $db->setGroupBy($tbl->getField('id'));
         $result = $db->select();
@@ -68,8 +71,10 @@ class Election extends Base
     public static function plugExtraValues(&$val)
     {
         $now = time();
-        $val['startDateFormatted'] = date(ELECTION_DATETIME_FORMAT, $val['startDate']);
-        $val['endDateFormatted'] = date(ELECTION_DATETIME_FORMAT, $val['endDate']);
+        $val['startDateFormatted'] = date(ELECTION_DATETIME_FORMAT,
+                $val['startDate']);
+        $val['endDateFormatted'] = date(ELECTION_DATETIME_FORMAT,
+                $val['endDate']);
         $val['past'] = $now > $val['endDate'];
     }
 
@@ -132,16 +137,65 @@ class Election extends Base
         $currentElection = self::getCurrent();
         return !($currentElection && (int) $currentElection['id'] == (int) $electionId);
     }
-    
+
     public static function getTotalVotes($electionId)
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_vote_complete', null, false);
         $tbl->addFieldConditional('electionId', $electionId);
-        $expression = new \Database\Expression('count(' .$tbl->getField('bannerId') . ')');
+        $expression = new \Database\Expression('count(' . $tbl->getField('bannerId') . ')');
         $db->addExpression($expression, 'count');
         $count = $db->selectColumn();
         return $count;
+    }
+
+    /**
+     * Returns array with student's full name
+     * @param integer $electionId
+     * @param integer $bannerId
+     * @return type
+     */
+    public static function getStudentVoteInformation($electionId, $bannerId)
+    {
+        $db = \phpws2\Database::getDB();
+        $vc = $db->addTable('elect_vote_complete');
+        $vc->addFieldConditional('electionId', $electionId);
+        $vc->addFieldConditional('bannerId', $bannerId);
+        $result = $db->select();
+        if (empty($result)) {
+            return null;
+        }
+
+        $student = StudentFactory::getStudentByBannerId($bannerId);
+        return array('student' => $student->getFullName());
+    }
+
+    public static function getSingleBallotIds($electionId)
+    {
+        $db = \phpws2\Database::getDB();
+        $tbl = $db->addTable('elect_single');
+        $tbl->addFieldConditional('electionId', $electionId);
+        $tbl->addField('id');
+        return $db->select();
+    }
+
+    public static function getMultipleBallotIds($electionId)
+    {
+        $db = \phpws2\Database::getDB();
+        $tbl = $db->addTable('elect_multiple');
+        $tbl->addFieldConditional('electionId', $electionId);
+        $tbl->addField('id');
+        return $db->select();
+        
+    }
+
+    public static function getReferendumIds($electionId)
+    {
+         $db = \phpws2\Database::getDB();
+        $tbl = $db->addTable('elect_referendum');
+        $tbl->addFieldConditional('electionId', $electionId);
+        $tbl->addField('id');
+        return $db->select();
     }
 
 }

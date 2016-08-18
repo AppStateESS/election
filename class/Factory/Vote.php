@@ -39,25 +39,28 @@ class Vote extends Base
 
         if ($request->isVar('referendum')) {
             $referendum_result = $request->getVar('referendum');
-            self::saveReferendumResult($election_id, $referendum_result, $student);
+            self::saveReferendumResult($election_id, $referendum_result,
+                    $student);
         }
 
         self::complete($election_id, $student->getBannerId());
         $db->commit();
         self::emailStudent($student, $election);
-        
+
         $json['surveyLink'] = \PHPWS_Settings::get('election', 'surveyLink');
         $json['supportLink'] = \PHPWS_Settings::get('election', 'surveyLink');
         $json['success'] = true;
         return $json;
     }
 
-    private static function saveSingleResult($election_id, array $single_result, \election\Resource\Student $student)
+    private static function saveSingleResult($election_id, array $single_result,
+            \election\Resource\Student $student)
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_single_chair_vote');
         foreach ($single_result as $vote) {
-            $voter_hash = StudentFactory::getVoteHash($vote['singleId'], $student->getBannerId());
+            $voter_hash = StudentFactory::getVoteHash($vote['singleId'],
+                            $student->getBannerId());
             $tbl->addValue('voterHash', $voter_hash);
             $tbl->addValue('electionId', $election_id);
             $tbl->addValue('singleId', $vote['singleId']);
@@ -66,8 +69,9 @@ class Vote extends Base
             $tbl->resetValues();
         }
     }
-    
-    private static function emailStudent(\election\Resource\Student $student, array $election)
+
+    private static function emailStudent(\election\Resource\Student $student,
+            array $election)
     {
         if (STUDENT_DATA_TEST) {
             $email_address = TEST_STUDENT_EMAIL;
@@ -75,23 +79,24 @@ class Vote extends Base
             $email_address = $student->getEmail();
         }
         $transport = \Swift_MailTransport::newInstance();
-        
+
         $template = new \Template;
         $template->setModuleTemplate('election', 'Admin/VoteSuccess.html');
         $template->add('title', $election['title']);
         $content = $template->get();
-        
+
         $message = \Swift_Message::newInstance();
         $message->setSubject('Vote complete');
         $message->setFrom(\PHPWS_Settings::get('election', 'fromAddress'));
         $message->setTo($email_address);
         $message->setBody($content, 'text/html');
-        
+
         $mailer = \Swift_Mailer::newInstance($transport);
         $mailer->send($message);
     }
 
-    private static function saveMultipleResult($election_id, $multiple_result, \election\Resource\Student $student)
+    private static function saveMultipleResult($election_id, $multiple_result,
+            \election\Resource\Student $student)
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_multi_chair_vote');
@@ -101,9 +106,11 @@ class Vote extends Base
                 continue;
             }
             $voted = array();
-            $multiple = Multiple::build($vote['multipleId'], new \election\Resource\Multiple());
+            $multiple = Multiple::build($vote['multipleId'],
+                            new \election\Resource\Multiple());
             $seatNumber = $multiple->getSeatNumber();
-            $voter_hash = StudentFactory::getVoteHash($vote['multipleId'], $student->getBannerId());
+            $voter_hash = StudentFactory::getVoteHash($vote['multipleId'],
+                            $student->getBannerId());
             // Remove previous votes on this hash. We do this because we can't use the
             // unique index to prevent duplicates.
             $tbl->addFieldConditional('voterHash', $voter_hash);
@@ -133,13 +140,15 @@ class Vote extends Base
         }
     }
 
-    private static function saveReferendumResult($election_id, $referendum_result, \election\Resource\Student $student)
+    private static function saveReferendumResult($election_id,
+            $referendum_result, \election\Resource\Student $student)
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('elect_referendum_vote');
 
         foreach ($referendum_result as $vote) {
-            $voter_hash = StudentFactory::getVoteHash($vote['referendumId'], $student->getBannerId());
+            $voter_hash = StudentFactory::getVoteHash($vote['referendumId'],
+                            $student->getBannerId());
 
             $tbl->addValue('voterHash', $voter_hash);
             $tbl->addValue('electionId', $election_id);
@@ -196,6 +205,75 @@ class Vote extends Base
         $db->setGroupBy(array($referendum, $answer));
         $result = $db->select();
         return $result;
+    }
+
+    public static function resetVote($electionId, $bannerId)
+    {
+        self::resetSingleBallot($electionId, $bannerId);
+        self::resetMultipleBallot($electionId, $bannerId);
+        self::resetReferendum($electionId, $bannerId);
+        $db = \phpws2\Database::getDB();
+        $tbl = $db->addTable('elect_vote_complete');
+        $tbl->addFieldConditional('bannerId', $bannerId);
+        $tbl->addFieldConditional('electionId', $electionId);
+        $db->delete();
+    }
+
+    public static function resetSingleBallot($electionId, $bannerId)
+    {
+        $singleIds = Election::getSingleBallotIds($electionId);
+        if (empty($singleIds)) {
+            return;
+        }
+        $db = \phpws2\Database::getDB();
+        $tbl = $db->addTable('elect_single_chair_vote');
+        foreach ($singleIds as $var) {
+            $id = $var['id'];
+            $hash = StudentFactory::getVoteHash($id, $bannerId);
+            $tbl->addFieldConditional('voterHash', $hash);
+            $tbl->addFieldConditional('singleId', $id);
+            $tbl->addFieldConditional('electionId', $electionId);
+            $db->delete();
+            $db->clearConditional();
+        }
+    }
+
+    public static function resetMultipleBallot($electionId, $bannerId)
+    {
+        $multipleIds = Election::getMultipleBallotIds($electionId);
+        if (empty($multipleIds)) {
+            return;
+        }
+        $db = \phpws2\Database::getDB();
+        $tbl = $db->addTable('elect_multi_chair_vote');
+        foreach ($multipleIds as $var) {
+            $id = $var['id'];
+            $hash = StudentFactory::getVoteHash($id, $bannerId);
+            $tbl->addFieldConditional('voterHash', $hash);
+            $tbl->addFieldConditional('multipleId', $id);
+            $tbl->addFieldConditional('electionId', $electionId);
+            $db->delete();
+            $db->clearConditional();
+        }
+    }
+
+    public static function resetReferendum($electionId, $bannerId)
+    {
+        $referendumIds = Election::getReferendumIds($electionId);
+        if (empty($referendumIds)) {
+            return;
+        }
+        $db = \phpws2\Database::getDB();
+        $tbl = $db->addTable('elect_referendum_vote');
+        foreach ($referendumIds as $var) {
+            $id = $var['id'];
+            $hash = StudentFactory::getVoteHash($id, $bannerId);
+            $tbl->addFieldConditional('voterHash', $hash);
+            $tbl->addFieldConditional('referendumId', $id);
+            $tbl->addFieldConditional('electionId', $electionId);
+            $db->delete();
+            $db->clearConditional();
+        }
     }
 
 }

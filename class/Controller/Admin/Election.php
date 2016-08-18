@@ -52,7 +52,7 @@ class Election extends \election\Controller\Base
         $allowChange = Factory::allowChange($electionId) ? 'true' : 'false';
 
         $script[] = '<script type="text/javascript">var allowChange=' . $allowChange . ';var electionId = ' . $electionId . ';</script>';
-        $script[] =  $this->getScript('election');
+        $script[] = $this->getScript('election');
         $react = implode("\n", $script);
 
         $date_format = '<script type="text/javascript">var dateFormat = "' . ELECTION_DATETIME_FORMAT . '";var tomorrow="' .
@@ -114,6 +114,11 @@ EOF;
                 $this->saveDates();
                 break;
 
+            case 'resetVote':
+                \election\Factory\Vote::resetVote(Factory::pullPostInteger('electionId'),
+                        Factory::pullPostInteger('bannerId'));
+                break;
+
             default:
                 throw new \Exception('Unknown Election command');
         }
@@ -149,6 +154,11 @@ EOF;
                 $json = Factory::checkForConflict(Factory::pullGetInteger('startDate'),
                                 Factory::pullGetInteger('endDate'),
                                 Factory::pullGetInteger('electionId'));
+                break;
+
+            case 'findVote':
+                $json = Factory::getStudentVoteInformation(Factory::pullGetInteger('electionId'),
+                                Factory::pullGetInteger('searchFor'));
                 break;
         }
         $view = new \View\JsonView($json);
