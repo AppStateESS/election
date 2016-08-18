@@ -28,6 +28,8 @@ define('STUDENT_DATA_TEST', false);
 /**
  * If STUDENT_DATA_TEST is true, and below is true, a default student
  * will be pulled from code and not from banner
+ * NOTE: code that relies on retrieving student information (e.g. name) will
+ * pull fake student data regardless of inputed banner id number
  */
 define('ELECTION_FAKE_STUDENT', false);
 
