@@ -3,6 +3,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Modal from '../../../Mixin/src/Modal.jsx';
+import Panel from '../../../Mixin/src/Panel.jsx';
+import DateMixin from '../../../Mixin/src/Date.jsx';
 
 var ElectionList = React.createClass({
     getInitialState: function() {
@@ -14,7 +16,7 @@ var ElectionList = React.createClass({
             foundName: null,
             resetOpen: false,
             currentStudent: 0,
-            message: null
+            message: null,
         };
     },
 
@@ -44,12 +46,12 @@ var ElectionList = React.createClass({
             currentElectionId: 0,
             currentStudent: 0,
             resetOpen: false,
-            currentStudent: 0
+            currentStudent: 0,
         });
     },
 
     showResetForm: function(electionId) {
-        this.setState({currentElectionId: electionId, resetOpen: true});
+        this.setState({currentElectionId: electionId, resetOpen: true,});
         $('#reactModal').modal('show');
 
     },
@@ -58,12 +60,12 @@ var ElectionList = React.createClass({
         $.getJSON('election/Admin/Election', {
             command: 'findVote',
             electionId: this.state.currentElectionId,
-            searchFor: searchFor
+            searchFor: searchFor,
         }).done(function(data) {
             if (data === null) {
-                this.setState({studentFound: false, foundName: null,});
+                this.setState({studentFound: false, foundName: null});
             } else {
-                this.setState({studentFound: true, foundName: data['student'], currentStudent: searchFor,})
+                this.setState({studentFound: true, foundName: data['student'], currentStudent: searchFor})
             }
         }.bind(this));
     },
@@ -72,10 +74,11 @@ var ElectionList = React.createClass({
         $.post('election/Admin/Election', {
             command: 'resetVote',
             electionId: this.state.currentElectionId,
-            bannerId: this.state.currentStudent
+            bannerId: this.state.currentStudent,
         }).done(function(data) {
             this.setState({message: 'Vote reset'});
             this.closeModal();
+            this.load();
         }.bind(this), 'json');
     },
 
@@ -103,8 +106,8 @@ var ElectionList = React.createClass({
                 </button>
                 {this.state.message}
             </div>;
-            setTimeout(function(){
-                this.setState({message:null});
+            setTimeout(function() {
+                this.setState({message: null});
             }.bind(this), 4000);
         }
 
@@ -133,22 +136,16 @@ var ElectionList = React.createClass({
                 </table>
             </div>
         );
-    }
+    },
 });
 
 var ResetForm = React.createClass({
     getInitialState: function() {
-        return {search: '', checking: false}
+        return {search: '', checking: false,}
     },
 
     getDefaultProps: function() {
-        return {
-            searchVotes: null,
-            studentFound: null,
-            studentName: null,
-            resetOpen: false,
-            resetVote: null,
-        };
+        return {searchVotes: null, studentFound: null, studentName: null, resetOpen: false, resetVote: null};
     },
 
     updateSearch: function(event) {
@@ -207,7 +204,7 @@ var ResetForm = React.createClass({
                 <div>{message}</div>
             </div>
         );
-    }
+    },
 });
 
 var ElectionRow = React.createClass({
@@ -222,7 +219,7 @@ var ElectionRow = React.createClass({
             past: false,
             edit: false,
             reload: null,
-            showResetForm: null,
+            showResetForm: null
         };
     },
 
@@ -230,7 +227,7 @@ var ElectionRow = React.createClass({
         if (prompt('Are you sure you want to delete this election? Type Y-E-S if sure.') == 'YES') {
             $.post('election/Admin/Election', {
                 command: 'delete',
-                electionId: this.props.id
+                electionId: this.props.id,
             }, null, 'json').done(function(data) {
                 this.props.reload();
             }.bind(this));
@@ -251,9 +248,9 @@ var ElectionRow = React.createClass({
             var href = 'election/Admin/?command=edit&electionId=' + this.props.id;
             var buttons = (
                 <span>
-                    <a href={href} className="btn btn-primary">
+                    <a href={href} className="btn btn-primary btn-sm">
                         <i className="fa fa-edit"></i>&nbsp;Edit</a>&nbsp;
-                    <button className="btn btn-warning" onClick={this.showForm}>
+                    <button className="btn btn-warning btn-sm" onClick={this.showForm}>
                         <i className="fa fa-refresh"></i>&nbsp;Reset vote</button>
                 </span>
             );
@@ -265,44 +262,53 @@ var ElectionRow = React.createClass({
                 <td>{this.props.startDateFormatted}&nbsp;-&nbsp;{this.props.endDateFormatted}</td>
                 <td>{this.props.totalVotes}</td>
                 <td>{buttons}&nbsp;
-                    <a href={reportHref} className="btn btn-info">
+                    <a href={reportHref} className="btn btn-info btn-sm">
                         <i className="fa fa-envelope"></i>&nbsp;Report</a>
                 </td>
             </tr>
         );
-    }
+    },
 });
 
-var ElectionForm = React.createClass({
-    getInitialState: function() {
-        return {title: '', startDate: '', endDate: '', unixStart: 0, unixEnd: 0};
-    },
+class ElectionForm extends DateMixin {
+    constructor(props) {
+        super(props);
+        this.state = {
+            title: '',
+            startDate: '',
+            endDate: '',
+            unixStart: 0,
+            unixEnd: 0,
+        };
 
-    getDefaultProps: function() {
-        return {electionId: 0, title: '', startDate: '', endDate: '', hideForm: null};
-    },
+    }
 
-    componentDidMount: function() {
-        console.log('I am working');
+    componentDidMount() {
         this.initStartDate();
         this.initEndDate();
-    },
+    }
 
-    componentWillMount: function() {
+    componentWillMount() {
         if (this.props.electionId) {
             this.copyPropsToState();
         }
-    },
+    }
 
-    copyPropsToState: function() {
-        this.setState({title: this.props.title, startDate: this.props.startDateFormatted, endDate: this.props.endDateFormatted, unixStart: this.props.startDate, unixEnd: this.props.endDate});
-    },
+    copyPropsToState() {
+        this.setState({
+            title: this.props.title,
+            startDate: this.props.startDateFormatted,
+            endDate: this.props.endDateFormatted,
+            unixStart: this.props.startDate,
+            unixEnd: this.props.endDate,
+        });
+    }
 
-    updateTitle: function(e) {
+    updateTitle(e) {
         this.setState({title: e.target.value});
-    },
+    }
 
-    checkForErrors: function() {
+    checkForErrors() {
         var error = false;
         if (this.state.title.length === 0) {
             $(this.refs.electionTitle).css('borderColor', 'red').attr('placeholder', 'Please enter a title');
@@ -314,9 +320,9 @@ var ElectionForm = React.createClass({
         }
 
         return error;
-    },
+    }
 
-    save: function() {
+    save() {
         var error = this.checkForErrors();
         if (error === false) {
             var conflict = this.checkForConflict();
@@ -327,7 +333,7 @@ var ElectionForm = React.createClass({
                         electionId: this.props.electionId,
                         title: this.state.title,
                         startDate: this.state.unixStart,
-                        endDate: this.state.unixEnd
+                        endDate: this.state.unixEnd,
                     }, null, 'json').done(function(data) {
                         this.props.load();
                     }.bind(this)).always(function() {
@@ -336,21 +342,21 @@ var ElectionForm = React.createClass({
                 } else {
                     $(this.refs.startDate).css('borderColor', 'red').attr('placeholder', 'Date conflict');
                     $(this.refs.endDate).css('borderColor', 'red').attr('placeholder', 'Date conflict');
-                    this.setState({startDate: '', unixStart: 0, endDate: '', unixEnd: 0});
+                    this.setState({startDate: '', unixStart: 0, endDate: '', unixEnd: 0,});
                 }
             }.bind(this));
         }
-    },
+    }
 
-    render: function() {
+    render() {
         var title = (<input
             ref="electionTitle"
             type="text"
             className="form-control"
             defaultValue={this.props.title}
             id="election-title"
-            onFocus={this.resetBorder}
-            onChange={this.updateTitle}
+            onFocus={this.resetBorder.bind(this)}
+            onChange={this.updateTitle.bind(this)}
             placeholder='Title (e.g. Fall 2016 Election)'/>);
         var date = (
             <div className="row pad-top">
@@ -366,7 +372,7 @@ var ElectionForm = React.createClass({
                             onChange={this.changeStartDate}
                             value={this.state.startDate}/>
                         <div className="input-group-addon">
-                            <i className="fa fa-calendar" onClick={this.showStartCalendar}></i>
+                            <i className="fa fa-calendar" onClick={this.showStartCalendar.bind(this)}></i>
                         </div>
                     </div>
                 </div>
@@ -382,7 +388,7 @@ var ElectionForm = React.createClass({
                             onChange={this.changeEndDate}
                             value={this.state.endDate}/>
                         <div className="input-group-addon">
-                            <i className="fa fa-calendar" onClick={this.showEndCalendar}></i>
+                            <i className="fa fa-calendar" onClick={this.showEndCalendar.bind(this)}></i>
                         </div>
                     </div>
                 </div>
@@ -390,12 +396,12 @@ var ElectionForm = React.createClass({
         );
         var buttons = (
             <div>
-                <button className="btn btn-primary btn-block" onClick={this.save}>
-                    <i className="fa fa-save"></i>
-                    Save election</button>
+                <button className="btn btn-primary btn-block" onClick={this.save.bind(this)}>
+                    <i className="fa fa-save"></i>&nbsp;
+                Save election</button>
                 <button className="btn btn-danger btn-block" onClick={this.props.hideForm}>
-                    <i className="fa fa-times"></i>
-                    Cancel</button>
+                    <i className="fa fa-times"></i>&nbsp;
+                Cancel</button>
             </div>
         );
 
@@ -413,7 +419,14 @@ var ElectionForm = React.createClass({
 
         return (<Panel type="info" heading={heading}/>);
     }
-});
+};
+ElectionForm.defaultProps = {
+    electionId: 0,
+    title: '',
+    startDate: '',
+    endDate: '',
+    hideForm: null,
+}
 
 ReactDOM.render(
     <ElectionList/>, document.getElementById('election-listing'));
