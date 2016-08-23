@@ -1,6 +1,18 @@
 {
     "electionTypes": [
         {
+            "category": "Everyone",
+            "subcategory": [
+                {
+                    "name": "All may vote",
+                    "type": "everyone",
+                    "matchName": "Everyone",
+                    "matchValue": "Everyone"
+                }
+            ],
+            "unqualified": ""
+        },
+        {
             "category": "Class",
             "subcategory": [
                 {
