@@ -159,15 +159,15 @@ var Election = React.createClass({
             stage = 'review';
         } else if (typeof this.state.single[nextSingle] === 'undefined') {
             stage = 'multiple';
-            /*
-            if (this.state.multiple.length > 0) {
+
+            if (this.state.multiple.length > 0 || this.state.unqualified.length > 0) {
                 stage = 'multiple';
             } else if (this.state.referendum.length > 0) {
                 stage = 'referendum';
             } else {
                 stage = 'review';
             }
-            */
+
         }
         window.scrollTo(0, 0);
         this.setState({stage: stage, singleVote: singleVote, currentSingle: nextSingle,});
@@ -409,35 +409,31 @@ var Countdown = React.createClass({
         var ballots = null;
         var referendum = null;
         var totalItems = 0;
-        var isAre = 'are';
+        var isAre = 'are ';
         var and = '';
 
         if (this.props.ballotCount > 0) {
             totalItems += this.props.ballotCount;
-            ballots = this.props.ballotCount + ' ballot' + this.plural(this.props.ballotCount);
+            ballots = this.props.ballotCount + ' ballot' + this.plural(this.props.ballotCount) + ' ';
         }
 
         if (this.props.referendumCount > 0) {
             totalItems += this.props.referendumCount;
-            referendum = this.props.referendumCount + ' referend' + this.plural(this.props.referendumCount, 'um', 'a')
+            referendum = this.props.referendumCount + ' referend' + this.plural(this.props.referendumCount, 'um ', 'a ')
         }
 
         if (totalItems < 2) {
-            isAre = 'is';
+            isAre = 'is ';
         }
 
         if (this.props.ballotCount > 0 && this.props.referendumCount > 0) {
-            and = 'and';
+            and = 'and ';
         }
 
         return (
             <div className="alert alert-info">
-                There {isAre}
-                currently {ballots}
-                {and}
-                {referendum}
-                for you to vote on. We will review all your selections later, before your votes
-                are submitted.
+                There {isAre}currently {ballots}{and}{referendum}for you to vote on.
+                We will review all your selections later, before your votes are submitted.
             </div>
         );
     },
