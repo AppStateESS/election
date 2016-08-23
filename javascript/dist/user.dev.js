@@ -57,19 +57,19 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _Multiple = __webpack_require__(/*! ./Multiple.jsx */ 191);
+	var _Multiple = __webpack_require__(/*! ./Multiple.jsx */ 205);
 	
 	var _Multiple2 = _interopRequireDefault(_Multiple);
 	
-	var _Referendum = __webpack_require__(/*! ./Referendum.jsx */ 192);
+	var _Referendum = __webpack_require__(/*! ./Referendum.jsx */ 206);
 	
 	var _Referendum2 = _interopRequireDefault(_Referendum);
 	
-	var _Review = __webpack_require__(/*! ./Review.jsx */ 194);
+	var _Review = __webpack_require__(/*! ./Review.jsx */ 208);
 	
 	var _Review2 = _interopRequireDefault(_Review);
 	
-	var _Single = __webpack_require__(/*! ./Single.jsx */ 196);
+	var _Single = __webpack_require__(/*! ./Single.jsx */ 210);
 	
 	var _Single2 = _interopRequireDefault(_Single);
 	
@@ -227,15 +227,14 @@
 	            stage = 'review';
 	        } else if (typeof this.state.single[nextSingle] === 'undefined') {
 	            stage = 'multiple';
-	            /*
-	            if (this.state.multiple.length > 0) {
+	
+	            if (this.state.multiple.length > 0 || this.state.unqualified.length > 0) {
 	                stage = 'multiple';
 	            } else if (this.state.referendum.length > 0) {
 	                stage = 'referendum';
 	            } else {
 	                stage = 'review';
 	            }
-	            */
 	        }
 	        window.scrollTo(0, 0);
 	        this.setState({ stage: stage, singleVote: singleVote, currentSingle: nextSingle });
@@ -512,25 +511,25 @@
 	        var ballots = null;
 	        var referendum = null;
 	        var totalItems = 0;
-	        var isAre = 'are';
+	        var isAre = 'are ';
 	        var and = '';
 	
 	        if (this.props.ballotCount > 0) {
 	            totalItems += this.props.ballotCount;
-	            ballots = this.props.ballotCount + ' ballot' + this.plural(this.props.ballotCount);
+	            ballots = this.props.ballotCount + ' ballot' + this.plural(this.props.ballotCount) + ' ';
 	        }
 	
 	        if (this.props.referendumCount > 0) {
 	            totalItems += this.props.referendumCount;
-	            referendum = this.props.referendumCount + ' referend' + this.plural(this.props.referendumCount, 'um', 'a');
+	            referendum = this.props.referendumCount + ' referend' + this.plural(this.props.referendumCount, 'um ', 'a ');
 	        }
 	
 	        if (totalItems < 2) {
-	            isAre = 'is';
+	            isAre = 'is ';
 	        }
 	
 	        if (this.props.ballotCount > 0 && this.props.referendumCount > 0) {
-	            and = 'and';
+	            and = 'and ';
 	        }
 	
 	        return _react2.default.createElement(
@@ -23447,7 +23446,21 @@
 /* 188 */,
 /* 189 */,
 /* 190 */,
-/* 191 */
+/* 191 */,
+/* 192 */,
+/* 193 */,
+/* 194 */,
+/* 195 */,
+/* 196 */,
+/* 197 */,
+/* 198 */,
+/* 199 */,
+/* 200 */,
+/* 201 */,
+/* 202 */,
+/* 203 */,
+/* 204 */,
+/* 205 */
 /*!******************************************!*\
   !*** ./javascript/User/src/Multiple.jsx ***!
   \******************************************/
@@ -23741,7 +23754,7 @@
 	                                null,
 	                                'click here'
 	                            ),
-	                            '  and email your ASU username and the missing ballot name.'
+	                            ' and email your ASU username and the missing ballot name.'
 	                        )
 	                    )
 	                ),
@@ -23820,7 +23833,7 @@
 	exports.default = Multiple;
 
 /***/ },
-/* 192 */
+/* 206 */
 /*!********************************************!*\
   !*** ./javascript/User/src/Referendum.jsx ***!
   \********************************************/
@@ -23840,7 +23853,7 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _Mixin = __webpack_require__(/*! ../../Mixin/src/Mixin.jsx */ 193);
+	var _Mixin = __webpack_require__(/*! ../../Mixin/src/Mixin.jsx */ 207);
 	
 	var _Panel = __webpack_require__(/*! ../../Mixin/src/Panel.jsx */ 185);
 	
@@ -23912,7 +23925,7 @@
 	exports.default = Referendum;
 
 /***/ },
-/* 193 */
+/* 207 */
 /*!****************************************!*\
   !*** ./javascript/Mixin/src/Mixin.jsx ***!
   \****************************************/
@@ -23959,7 +23972,7 @@
 	}
 
 /***/ },
-/* 194 */
+/* 208 */
 /*!****************************************!*\
   !*** ./javascript/User/src/Review.jsx ***!
   \****************************************/
@@ -23981,7 +23994,7 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _SingleCandidate = __webpack_require__(/*! ./SingleCandidate.jsx */ 195);
+	var _SingleCandidate = __webpack_require__(/*! ./SingleCandidate.jsx */ 209);
 	
 	var _SingleCandidate2 = _interopRequireDefault(_SingleCandidate);
 	
@@ -24436,7 +24449,7 @@
 	exports.default = Review;
 
 /***/ },
-/* 195 */
+/* 209 */
 /*!*************************************************!*\
   !*** ./javascript/User/src/SingleCandidate.jsx ***!
   \*************************************************/
@@ -24523,7 +24536,7 @@
 	exports.default = SingleCandidate;
 
 /***/ },
-/* 196 */
+/* 210 */
 /*!****************************************!*\
   !*** ./javascript/User/src/Single.jsx ***!
   \****************************************/
@@ -24545,13 +24558,13 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _Mixin = __webpack_require__(/*! ../../Mixin/src/Mixin.jsx */ 193);
+	var _Mixin = __webpack_require__(/*! ../../Mixin/src/Mixin.jsx */ 207);
 	
 	var _Panel = __webpack_require__(/*! ../../Mixin/src/Panel.jsx */ 185);
 	
 	var _Panel2 = _interopRequireDefault(_Panel);
 	
-	var _SingleCandidate = __webpack_require__(/*! ./SingleCandidate.jsx */ 195);
+	var _SingleCandidate = __webpack_require__(/*! ./SingleCandidate.jsx */ 209);
 	
 	var _SingleCandidate2 = _interopRequireDefault(_SingleCandidate);
 	
