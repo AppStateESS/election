@@ -162,13 +162,13 @@ var Unqualified = React.createClass({
                 <div className="col-sm-6">
                     <p>
                         <strong>You were not qualified to vote in the following ballots because of your
-                            class, college, or organizational affiliation.</strong>
+                        class, college, or organizational affiliation.</strong>
                     </p>
                     <div
                         style={{
-                        height: '300px',
-                        overflow: 'auto',
-                    }}>
+                            height: '300px',
+                            overflow: 'auto',
+                        }}>
                         <table className="table table-striped">
                             <tbody>
                                 {this.props.unqualified.map(function(value, key) {
@@ -188,7 +188,7 @@ var Unqualified = React.createClass({
                         <li>STOP! Do not complete your vote</li>
                         <li>
                             <a href={supportLink}>
-                                <strong>click here</strong>&nbsp; and email your ASU username and the missing ballot name.</a>
+                                <strong>click here</strong>&nbsp;and email your ASU username and the missing ballot name.</a>
                         </li>
                     </ol>
                     <p>We will check your account and get back to you.</p>
