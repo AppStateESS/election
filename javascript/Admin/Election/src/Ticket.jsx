@@ -86,9 +86,9 @@ var Tickets = React.createClass({
 var TicketForm = React.createClass({
     getInitialState: function() {
         return {
-            title : null,
-            siteAddress : null,
-            platform : null,
+            title : '',
+            siteAddress : '',
+            platform : '',
             siteAddressError : false
         };
     },
