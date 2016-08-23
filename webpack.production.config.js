@@ -1,6 +1,7 @@
 var webpack = require('webpack');
 var WebpackStripLoader = require('strip-loader');
 var path = require('path');
+var Promise = require('es6-promise').polyfill();
 
 var APP_DIR = path.resolve(__dirname, 'javascript');
 
@@ -23,6 +24,9 @@ module.exports = {
             test: [/\.js$/, /\.es6$/, /\.jsx$/],
             exclude: /node_modules/,
             loader: WebpackStripLoader.loader('console.log')
+        }, {
+            test: /\.css$/,
+            loader: "style-loader!css-loader"
         }]
     },
     plugins: [

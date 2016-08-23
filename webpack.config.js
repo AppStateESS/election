@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
+var Promise = require('es6-promise').polyfill();
 
 var APP_DIR = path.resolve(__dirname, 'javascript');
 
@@ -18,6 +19,9 @@ module.exports = {
             test: /\.jsx?/,
             include: APP_DIR,
             loader: 'babel'
+        }, {
+            test: /\.css$/,
+            loader: "style-loader!css-loader"
         }]
     },
     devtool: 'source-map'
