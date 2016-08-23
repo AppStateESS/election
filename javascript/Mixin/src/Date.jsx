@@ -1,35 +1,33 @@
-var DateMixin = {
-    initStartDate : function() {
+import React from 'react';
+
+class DateMixin extends React.Component {
+    initStartDate() {
         $('#start-date').datetimepicker({
             minDate: tomorrow,
-            value : this.state.startDate,
-            format : dateFormat,
-            onChangeDateTime : function(ct, i) {
+            value: this.state.startDate,
+            format: dateFormat,
+            onChangeDateTime: function(ct, i) {
                 this.updateStartDate(this.refs.startDate.value);
             }.bind(this)
         });
-    },
-
-    initEndDate : function() {
+    }
+    initEndDate() {
         $('#end-date').datetimepicker({
-            minDate:0,
-            format : dateFormat,
-            value : this.state.endDate,
-            onChangeDateTime : function(ct, i) {
+            minDate: 0,
+            format: dateFormat,
+            value: this.state.endDate,
+            onChangeDateTime: function(ct, i) {
                 this.updateEndDate(this.refs.endDate.value);
             }.bind(this)
         });
-    },
-
-    changeStartDate: function(e) {
+    }
+    changeStartDate(e) {
         this.updateStartDate(e.target.value);
-    },
-
-    changeEndDate: function(e) {
+    }
+    changeEndDate(e) {
         this.updateEndDate(e.target.value);
-    },
-
-    hasDateErrors : function() {
+    }
+    hasDateErrors() {
         var error = false;
 
         if (this.state.startDate.length === 0) {
@@ -37,10 +35,7 @@ var DateMixin = {
             error = true;
         } else if (this.state.unixStart > this.state.unixEnd) {
             $(this.refs.endDate).css('borderColor', 'red').attr('placeholder', 'End date must be greater').val('');
-            this.setState({
-                endDate : '',
-                unixEnd : 0
-            });
+            this.setState({endDate: '', unixEnd: 0});
             error = true;
         }
 
@@ -50,44 +45,34 @@ var DateMixin = {
         }
 
         return error;
-    },
-
-    updateStartDate : function(start) {
+    }
+    updateStartDate(start) {
         var dateObj = new Date(start);
         var unix = dateObj.getTime() / 1000;
-        this.setState({
-            startDate : start,
-            unixStart : unix
-        });
-    },
-
-    updateEndDate : function(end) {
+        this.setState({startDate: start, unixStart: unix});
+    }
+    updateEndDate(end) {
         var dateObj = new Date(end);
         var unix = dateObj.getTime() / 1000;
-        this.setState({
-            endDate : end,
-            unixEnd : unix
-        });
-    },
-
-    checkForConflict : function() {
+        this.setState({endDate: end, unixEnd: unix});
+    }
+    checkForConflict() {
         return $.getJSON('election/Admin/Election', {
             command: 'checkConflict',
             startDate: this.state.unixStart,
             endDate: this.state.unixEnd,
-            electionId : this.props.electionId
+            electionId: this.props.electionId
         });
-    },
-
-    showStartCalendar : function() {
+    }
+    showStartCalendar() {
         $('#start-date').datetimepicker('show');
-    },
-
-    showEndCalendar : function() {
+    }
+    showEndCalendar() {
         $('#end-date').datetimepicker('show');
-    },
-
-    resetBorder : function(node) {
+    }
+    resetBorder(node) {
         $(node.target).removeAttr('style');
-    },
+    }
 };
+
+export default DateMixin;
