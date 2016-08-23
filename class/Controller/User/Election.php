@@ -94,8 +94,12 @@ EOF;
         // Assemble the voting data
         $single = \election\Factory\Single::getListWithTickets($election['id']);
         $multiple = \election\Factory\Multiple::getListWithCandidates($election['id']);
-        $unqualified = \election\Factory\Multiple::filter($multiple,
-                        $this->student);
+        if (!empty($multiple)) {
+            $unqualified = \election\Factory\Multiple::filter($multiple,
+                            $this->student);
+        } else {
+            $unqualified = array();
+        }
         $referendum = \election\Factory\Referendum::getList($election['id']);
         $voting_data = array(
             'hasVoted' => false,
