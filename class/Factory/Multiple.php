@@ -13,7 +13,8 @@ class Multiple extends Ballot
 
     public static function post()
     {
-        $multiple = self::build(self::pullPostInteger('multipleId'), new Resource);
+        $multiple = self::build(self::pullPostInteger('multipleId'),
+                        new Resource);
 
         $multiple->setTitle(self::pullPostString('title'));
         $seatNumber = self::pullPostInteger('seatNumber');
@@ -65,40 +66,57 @@ class Multiple extends Ballot
         $categoryListByType = self::categoryListingByType();
         $studentCategories = $student->getVotingCategories();
         foreach ($multiple as $key => $ballot) {
+            $matchFound = false;
+            $subunquals = array();
             // ballots without candidates skipped
             if (empty($ballot['candidates'])) {
                 unset($multiple[$key]);
             }
-            $categoryType = $ballot['category'];
-            if (!isset($categoryListByType[$categoryType])) {
-                throw new \Exception('Bad category type');
-            }
-            $category = $categoryListByType[$categoryType];
-            $reason = ' - ' . $category['unqualified'];
-            
-            if (isset($studentCategories[$category['matchName']])) {
-                $match = $studentCategories[$category['matchName']];
-                if (is_array($match)) {
-                    $matchValue = $category['matchValue'];
-                    if (is_array($matchValue)) {
-                        $intersect = array_intersect($matchValue, $match);
-                        if (empty($intersect)) {
-                            unset($multiple[$key]);
-                            $unqualified[] = $ballot['title'] . $reason;
+            // get an array of all the categories associated with this
+            // multiple ballot
+            $categoryTypes = explode(',', $ballot['category']);
+
+            // Go through each category and see if the student falls within
+            foreach ($categoryTypes as $categoryType) {
+                if (!isset($categoryListByType[$categoryType])) {
+                    throw new \Exception('Bad category type');
+                }
+                $category = $categoryListByType[$categoryType];
+                /*
+                 * The 'everyone' category lets anyone vote
+                 */
+                if ($category['type'] === 'everyone') {
+                    $matchFound = true;
+                    break;
+                }
+                $subunquals[md5($category['unqualified'])] = $category['unqualified'];
+
+                if (isset($studentCategories[$category['matchName']])) {
+                    $match = $studentCategories[$category['matchName']];
+                    if (is_array($match)) {
+                        $matchValue = $category['matchValue'];
+                        if (is_array($matchValue)) {
+                            $intersect = array_intersect($matchValue, $match);
+                            if (!empty($intersect)) {
+                                $matchFound = true;
+                            }
+                        } elseif (in_array($matchValue, $match)) {
+                            $matchFound = true;
                         }
-                    } elseif (!in_array($matchValue, $match)) {
-                        unset($multiple[$key]);
-                        $unqualified[] = $ballot['title'] . $reason;
-                    }
-                } else {
-                    if ($category['matchValue'] !== $match) {
-                        unset($multiple[$key]);
-                        $unqualified[] = $ballot['title'] . $reason;
+                    } else {
+                        if ($category['matchValue'] === $match) {
+                            $matchFound = true;
+                        }
                     }
                 }
-            } else {
+                if ($matchFound == true) {
+                    break;
+                }
+            }
+            if (!$matchFound) {
                 unset($multiple[$key]);
-                $unqualified[] = $ballot['title'] . $reason;
+                $unqualified[] = $ballot['title'] . ': ' . implode('</li><li>',
+                                $subunquals);
             }
         }
         //reset index
@@ -113,7 +131,7 @@ class Multiple extends Ballot
             throw new \Exception('Missing election types');
         }
         $types = json_decode($json, true);
-        
+
         foreach ($types['electionTypes'] as $cat) {
             foreach ($cat['subcategory'] as $sub) {
                 $sub['unqualified'] = $cat['unqualified'];
