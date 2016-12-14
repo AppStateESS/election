@@ -9,12 +9,12 @@ namespace election\Resource;
 class Candidate extends Base
 {
     /**
-     * @var \Variable\String
+     * @var \Variable\CanopyString
      */
     protected $firstName;
 
     /**
-     * @var \Variable\String
+     * @var \Variable\CanopyString
      */
     protected $lastName;
 
@@ -24,7 +24,7 @@ class Candidate extends Base
     protected $picture;
 
     /**
-     * @var \Variable\String
+     * @var \Variable\CanopyString
      */
     protected $title;
 
@@ -52,16 +52,16 @@ class Candidate extends Base
     {
         parent::__construct();
 
-        $this->firstName = new \Variable\String(null, 'firstName');
+        $this->firstName = new \phpws2\Variable\CanopyString(null, 'firstName');
         $this->firstName->setLimit(50);
-        $this->lastName = new \Variable\String(null, 'lastName');
+        $this->lastName = new \phpws2\Variable\CanopyString(null, 'lastName');
         $this->lastName->setLimit(50);
-        $this->title = new \Variable\String('', 'title');
+        $this->title = new \phpws2\Variable\CanopyString('', 'title');
         $this->title->setLimit(100);
-        $this->picture = new \Variable\File(null, 'picture');
-        $this->ticketId = new \Variable\Integer(0, 'ticketId');
-        $this->multipleId = new \Variable\Integer(0, 'multipleId');
-        $this->active = new \Variable\Bool(true, 'active');
+        $this->picture = new \phpws2\Variable\File(null, 'picture');
+        $this->ticketId = new \phpws2\Variable\Integer(0, 'ticketId');
+        $this->multipleId = new \phpws2\Variable\Integer(0, 'multipleId');
+        $this->active = new \phpws2\Variable\Bool(true, 'active');
     }
 
     public function setFirstName($var)

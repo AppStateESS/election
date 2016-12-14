@@ -15,17 +15,17 @@ class Ticket extends Base
     protected $singleId;
 
     /**
-     * @var \Variable\String
+     * @var \Variable\CanopyString
      */
     protected $title;
 
     /**
-     * @var \Variable\String
+     * @var \Variable\CanopyString
      */
     protected $platform;
 
     /**
-     * @var \Variable\String
+     * @var \Variable\CanopyString
      */
     protected $siteAddress;
 
@@ -37,13 +37,13 @@ class Ticket extends Base
     public function __construct()
     {
         parent::__construct();
-        $this->singleId = new \Variable\Integer(0, 'singleId');
-        $this->title = new \Variable\String(null, 'title');
+        $this->singleId = new \phpws2\Variable\Integer(0, 'singleId');
+        $this->title = new \phpws2\Variable\CanopyString(null, 'title');
         $this->title->setLimit(100);
-        $this->platform = new \Variable\String(null, 'platform');
+        $this->platform = new \phpws2\Variable\CanopyString(null, 'platform');
         $this->platform->allowNull(true);
         $this->platform->setLimit(500);
-        $this->siteAddress = new \Variable\Url(null, 'siteAddress');
+        $this->siteAddress = new \phpws2\Variable\Url(null, 'siteAddress');
         $this->siteAddress->allowNull(true);
     }
 

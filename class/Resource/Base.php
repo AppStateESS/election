@@ -16,7 +16,7 @@ abstract class Base extends \Resource
     public function __construct()
     {
         parent::__construct();
-        $this->active = new \Variable\Bool(true, 'active');
+        $this->active = new \phpws2\Variable\Bool(true, 'active');
     }
     
     public function setActive($var)

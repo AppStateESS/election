@@ -16,7 +16,7 @@ class Multiple extends Ballot
 
     /**
      *
-     * @var \Variable\String
+     * @var \Variable\CanopyString
      */
     protected $category;
 
@@ -28,8 +28,8 @@ class Multiple extends Ballot
     public function __construct()
     {
         parent::__construct();
-        $this->seatNumber = new \Variable\Integer(2, 'seatNumber');
-        $this->category = new \Variable\String(null, 'category');
+        $this->seatNumber = new \phpws2\Variable\Integer(2, 'seatNumber');
+        $this->category = new \phpws2\Variable\CanopyString(null, 'category');
         $this->category->setLimit(255);
     }
 

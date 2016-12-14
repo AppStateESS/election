@@ -61,7 +61,7 @@ class Ticket extends Base
             $url = 'http://' . $url;
         }
         try {
-            $i = new \Variable\Url($url);
+            $i = new \phpws2\Variable\Url($url);
             return true;
         } catch (\Exception $e) {
             return false;
