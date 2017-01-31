@@ -61,7 +61,7 @@ class Candidate extends Base
         $this->picture = new \phpws2\Variable\File(null, 'picture');
         $this->ticketId = new \phpws2\Variable\Integer(0, 'ticketId');
         $this->multipleId = new \phpws2\Variable\Integer(0, 'multipleId');
-        $this->active = new \phpws2\Variable\Bool(true, 'active');
+        $this->active = new \phpws2\Variable\Boolean(true, 'active');
     }
 
     public function setFirstName($var)
