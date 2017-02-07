@@ -9,32 +9,32 @@ namespace election\Resource;
 class Candidate extends Base
 {
     /**
-     * @var \Variable\CanopyString
+     * @var \Variable\StringVar
      */
     protected $firstName;
 
     /**
-     * @var \Variable\CanopyString
+     * @var \Variable\StringVar
      */
     protected $lastName;
 
     /**
-     * @var \Variable\File
+     * @var \Variable\FileVar
      */
     protected $picture;
 
     /**
-     * @var \Variable\CanopyString
+     * @var \Variable\StringVar
      */
     protected $title;
 
     /**
-     * @var \Variable\Integer
+     * @var \Variable\IntegerVar
      */
     protected $ticketId;
 
     /**
-     * @var \Variable\Integer
+     * @var \Variable\IntegerVar
      */
     protected $multipleId;
 
@@ -52,16 +52,16 @@ class Candidate extends Base
     {
         parent::__construct();
 
-        $this->firstName = new \phpws2\Variable\CanopyString(null, 'firstName');
+        $this->firstName = new \phpws2\Variable\StringVar(null, 'firstName');
         $this->firstName->setLimit(50);
-        $this->lastName = new \phpws2\Variable\CanopyString(null, 'lastName');
+        $this->lastName = new \phpws2\Variable\StringVar(null, 'lastName');
         $this->lastName->setLimit(50);
-        $this->title = new \phpws2\Variable\CanopyString('', 'title');
+        $this->title = new \phpws2\Variable\StringVar('', 'title');
         $this->title->setLimit(100);
-        $this->picture = new \phpws2\Variable\File(null, 'picture');
-        $this->ticketId = new \phpws2\Variable\Integer(0, 'ticketId');
-        $this->multipleId = new \phpws2\Variable\Integer(0, 'multipleId');
-        $this->active = new \phpws2\Variable\Boolean(true, 'active');
+        $this->picture = new \phpws2\Variable\FileVar(null, 'picture');
+        $this->ticketId = new \phpws2\Variable\IntegerVar(0, 'ticketId');
+        $this->multipleId = new \phpws2\Variable\IntegerVar(0, 'multipleId');
+        $this->active = new \phpws2\Variable\BooleanVar(true, 'active');
     }
 
     public function setFirstName($var)

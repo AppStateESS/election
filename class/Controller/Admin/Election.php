@@ -12,7 +12,7 @@ use election\Resource\Election as Resource;
 class Election extends \election\Controller\Base
 {
 
-    public function getHtmlView($data, \Request $request)
+    public function getHtmlView($data, \Canopy\Request $request)
     {
         \Layout::addStyle('election', 'style.css');
         if (!$request->isVar('command')) {
@@ -86,7 +86,7 @@ EOF;
         return $content;
     }
 
-    public function post(\Request $request)
+    public function post(\Canopy\Request $request)
     {
         if (!$request->isVar('command')) {
             throw new \Exception('Unknown Election command');
@@ -128,7 +128,7 @@ EOF;
         return $response;
     }
 
-    protected function getJsonView($data, \Request $request)
+    protected function getJsonView($data, \Canopy\Request $request)
     {
         if (!$request->isVar('command')) {
             throw new \Exception('Unknown Election command');

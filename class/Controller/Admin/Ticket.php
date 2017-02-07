@@ -10,7 +10,7 @@ use election\Factory\Ticket as Factory;
  */
 class Ticket extends \election\Controller\Base
 {
-    protected function getJsonView($data, \Request $request)
+    protected function getJsonView($data, \Canopy\Request $request)
     {
         if (!$request->isVar('command')) {
             throw new \Exception('Unknown Ticket command');
@@ -32,7 +32,7 @@ class Ticket extends \election\Controller\Base
     }
     
     
-    public function post(\Request $request)
+    public function post(\Canopy\Request $request)
     {
         if (!$request->isVar('command')) {
             throw new \Exception('Unknown Ticket command');

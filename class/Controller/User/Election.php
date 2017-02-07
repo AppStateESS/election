@@ -11,7 +11,7 @@ use election\Factory\Election as Factory;
 class Election extends \election\Controller\User\Base
 {
 
-    public function get(\Request $request)
+    public function get(\Canopy\Request $request)
     {
         $data = array();
         $view = $this->getView($data, $request);
@@ -19,7 +19,7 @@ class Election extends \election\Controller\User\Base
         return $response;
     }
 
-    public function getHtmlView($data, \Request $request)
+    public function getHtmlView($data, \Canopy\Request $request)
     {
         $script[] = '<script type="text/javascript">var defaultPicture = \'' . PHPWS_SOURCE_HTTP . 'mod/election/img/no-picture.gif\';</script>';
         $script[] = $this->getScript('user');
@@ -40,7 +40,7 @@ EOF;
         return $view;
     }
 
-    protected function getJsonView($data, \Request $request)
+    protected function getJsonView($data, \Canopy\Request $request)
     {
         if (!$request->isVar('command')) {
             throw new \Exception('Unknown Election command');

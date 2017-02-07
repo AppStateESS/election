@@ -9,7 +9,7 @@ namespace election\Controller\User;
 class AlreadyVoted extends \election\Controller\User\Base
 {
 
-    public function getHtmlView($data, \Request $request)
+    public function getHtmlView($data, \Canopy\Request $request)
     {
         \Layout::addStyle('election', 'User/style.css');
 

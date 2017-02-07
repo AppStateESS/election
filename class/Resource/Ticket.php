@@ -10,22 +10,22 @@ class Ticket extends Base
 {
     /**
      * The ticket is attached to this ballot
-     * @var \Variable\Integer
+     * @var \Variable\IntegerVar
      */
     protected $singleId;
 
     /**
-     * @var \Variable\CanopyString
+     * @var \Variable\StringVar
      */
     protected $title;
 
     /**
-     * @var \Variable\CanopyString
+     * @var \Variable\StringVar
      */
     protected $platform;
 
     /**
-     * @var \Variable\CanopyString
+     * @var \Variable\StringVar
      */
     protected $siteAddress;
 
@@ -37,10 +37,10 @@ class Ticket extends Base
     public function __construct()
     {
         parent::__construct();
-        $this->singleId = new \phpws2\Variable\Integer(0, 'singleId');
-        $this->title = new \phpws2\Variable\CanopyString(null, 'title');
+        $this->singleId = new \phpws2\Variable\IntegerVar(0, 'singleId');
+        $this->title = new \phpws2\Variable\StringVar(null, 'title');
         $this->title->setLimit(100);
-        $this->platform = new \phpws2\Variable\CanopyString(null, 'platform');
+        $this->platform = new \phpws2\Variable\StringVar(null, 'platform');
         $this->platform->allowNull(true);
         $this->platform->setLimit(500);
         $this->siteAddress = new \phpws2\Variable\Url(null, 'siteAddress');

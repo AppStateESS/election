@@ -10,7 +10,7 @@ class Election extends Base
 {
     /**
      * Name of the ballot
-     * @var \Variable\CanopyString 
+     * @var \Variable\StringVar 
      */
     protected $title;
 
@@ -30,7 +30,7 @@ class Election extends Base
     public function __construct()
     {
         parent::__construct();
-        $this->title = new \phpws2\Variable\CanopyString(null, 'title');
+        $this->title = new \phpws2\Variable\StringVar(null, 'title');
         $this->title->setLimit(100);
         $this->title->allowEmpty(false);
         $this->startDate = new \phpws2\Variable\DateTime(null, 'startDate');

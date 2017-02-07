@@ -10,22 +10,22 @@ class Ballot extends Base
 {
     /**
      * Name of the ballot
-     * @var \Variable\CanopyString 
+     * @var \Variable\StringVar 
      */
     protected $title;
 
     /**
-     * @var \Variable\Integer
+     * @var \Variable\IntegerVar
      */
     protected $electionId;
 
     public function __construct()
     {
         parent::__construct();
-        $this->title = new \phpws2\Variable\CanopyString(null, 'title');
+        $this->title = new \phpws2\Variable\StringVar(null, 'title');
         $this->title->setLimit(100);
         $this->title->allowEmpty(false);
-        $this->electionId = new \phpws2\Variable\Integer(0, 'electionId');
+        $this->electionId = new \phpws2\Variable\IntegerVar(0, 'electionId');
         $this->electionId->setRange(1);
     }
 

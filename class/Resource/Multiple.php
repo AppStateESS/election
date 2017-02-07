@@ -10,13 +10,13 @@ class Multiple extends Ballot
 {
     /**
      * Number of seats a student may vote on
-     * @var \Variable\Integer  
+     * @var \Variable\IntegerVar  
      */
     protected $seatNumber;
 
     /**
      *
-     * @var \Variable\CanopyString
+     * @var \Variable\StringVar
      */
     protected $category;
 
@@ -28,8 +28,8 @@ class Multiple extends Ballot
     public function __construct()
     {
         parent::__construct();
-        $this->seatNumber = new \phpws2\Variable\Integer(2, 'seatNumber');
-        $this->category = new \phpws2\Variable\CanopyString(null, 'category');
+        $this->seatNumber = new \phpws2\Variable\IntegerVar(2, 'seatNumber');
+        $this->category = new \phpws2\Variable\StringVar(null, 'category');
         $this->category->setLimit(255);
     }
 

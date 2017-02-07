@@ -14,15 +14,15 @@ class Single extends \election\Controller\Base
     /**
      * @deprecated
      * @param type $data
-     * @param \Request $request
+     * @param \Canopy\Request $request
      * @return string
      */
-    public function getHtmlView($data, \Request $request)
+    public function getHtmlView($data, \Canopy\Request $request)
     {
         return '';
     }
     
-    public function post(\Request $request)
+    public function post(\Canopy\Request $request)
     {
         if (!$request->isVar('command')) {
             throw new \Exception('Unknown Single ballot command');
@@ -47,7 +47,7 @@ class Single extends \election\Controller\Base
         return $response;
     }
 
-    protected function getJsonView($data, \Request $request)
+    protected function getJsonView($data, \Canopy\Request $request)
     {
         if (!$request->isVar('command')) {
             throw new \Exception('Unknown Single ballot command');

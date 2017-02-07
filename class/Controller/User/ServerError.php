@@ -25,7 +25,7 @@ class ServerError extends \election\Controller\User\Base
         return $this->message;
     }
 
-    public function getHtmlView($data, \Request $request)
+    public function getHtmlView($data, \Canopy\Request $request)
     {
         \Layout::addStyle('election', 'User/style.css');
         $reason = $this->getMessage();

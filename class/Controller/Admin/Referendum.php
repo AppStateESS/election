@@ -11,7 +11,7 @@ use election\Factory\Referendum as Factory;
 class Referendum extends \election\Controller\Base
 {
 
-    public function post(\Request $request)
+    public function post(\Canopy\Request $request)
     {
         if (!$request->isVar('command')) {
             throw new \Exception('Unknown referendum command');
@@ -36,7 +36,7 @@ class Referendum extends \election\Controller\Base
         return $response;
     }
 
-    protected function getJsonView($data, \Request $request)
+    protected function getJsonView($data, \Canopy\Request $request)
     {
         if (!$request->isVar('command')) {
             throw new \Exception('Unknown Single ballot command');

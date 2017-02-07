@@ -10,7 +10,7 @@ use election\Factory\Report as Factory;
  */
 class Report extends \election\Controller\Base
 {
-    public function getHtmlView($data, \Request $request)
+    public function getHtmlView($data, \Canopy\Request $request)
     {
         \Layout::addStyle('election', 'style.css');
         if (!$request->isVar('command')) {

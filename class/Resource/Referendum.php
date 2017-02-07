@@ -9,7 +9,7 @@ namespace election\Resource;
 class Referendum extends Ballot
 {
     /**
-     * @var \Variable\CanopyString
+     * @var \Variable\StringVar
      */
     protected $description;
 
@@ -18,7 +18,7 @@ class Referendum extends Ballot
     public function __construct()
     {
         parent::__construct();
-        $this->description = new \phpws2\Variable\CanopyString(null, 'description');
+        $this->description = new \phpws2\Variable\StringVar(null, 'description');
     }
     
     public function setDescription($var)

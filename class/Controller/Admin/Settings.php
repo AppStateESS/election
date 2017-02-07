@@ -9,7 +9,7 @@ namespace election\Controller\Admin;
 class Settings extends \election\Controller\Base
 {
 
-    public function getHtmlView($data, \Request $request)
+    public function getHtmlView($data, \Canopy\Request $request)
     {
         javascript('jquery');
         $tplvars['studentDataApiUrl'] = \PHPWS_Settings::get('election', 'studentDataApiUrl');
@@ -25,7 +25,7 @@ class Settings extends \election\Controller\Base
         return $view;
     }
 
-    public function post(\Request $request)
+    public function post(\Canopy\Request $request)
     {
         if (!$request->isVar('command')) {
             throw new \Exception('Unknown Election command');

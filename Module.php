@@ -16,7 +16,7 @@ class Module extends \Module implements \SettingDefaults
         $this->setProperName('Election');
     }
 
-    public function getController(\Request $request)
+    public function getController(\Canopy\Request $request)
     {
         \Current_User::requireLogin();
         $cmd = $request->shiftCommand();
@@ -43,7 +43,7 @@ class Module extends \Module implements \SettingDefaults
         require_once $define_file;
     }
     
-    public function runTime(\Request $request)
+    public function runTime(\Canopy\Request $request)
     {
         if (\Current_User::isLogged()) {
             \election\Controller\User::loadNavBar();
