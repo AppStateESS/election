@@ -32,7 +32,7 @@ class Candidate extends \election\Controller\Base
         }
 
         $view = new \View\JsonView(array('success' => true));
-        $response = new \Response($view);
+        $response = new \Canopy\Response($view);
         return $response;
     }
 

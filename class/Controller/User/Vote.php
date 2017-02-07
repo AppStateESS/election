@@ -27,7 +27,7 @@ class Vote extends \election\Controller\User\Base
         }
 
         $view = new \View\JsonView($json);
-        $response = new \Response($view);
+        $response = new \Canopy\Response($view);
         return $response;
     }
 }
