@@ -11,7 +11,7 @@ class Vote extends Base
 
     public static function post(\election\Resource\Student $student)
     {
-        $request = \Server::getCurrentRequest();
+        $request = \Canopy\Server::getCurrentRequest();
 
         // Vote is for the current logged student only. We do not depend on the post.
         $election = Election::getCurrent();
