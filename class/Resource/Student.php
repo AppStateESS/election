@@ -71,7 +71,7 @@ class Student
             throw new \InvalidArgumentException('Missing banner ID.');
         }
 
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $vote = $db->addTable('elect_vote_complete');
         $vote->addFieldConditional('electionId', $electionId);
         $vote->addFieldConditional('bannerId', $this->bannerId);

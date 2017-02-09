@@ -13,7 +13,7 @@ class Ticket extends Base
 
     public static function getList($singleId, $random = false)
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('elect_ticket');
         $tbl->addFieldConditional('singleId', $singleId);
         $tbl->addFieldConditional('active', 1);
@@ -119,13 +119,13 @@ class Ticket extends Base
      */
     public static function getElectionId($ticketId)
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $ticketTable = $db->addTable('elect_ticket', null, false);
         $ticketTable->addFieldConditional('id', $ticketId);
         $singleTable = $db->addTable('elect_single', null, false);
         $singleTable->addField('electionId');
 
-        $db->joinResources($singleTable, $ticketTable, new \Database\Conditional($db, $singleTable->getField('id'), $ticketTable->getField('singleId'), '='));
+        $db->joinResources($singleTable, $ticketTable, new \phpws2\Database\Conditional($db, $singleTable->getField('id'), $ticketTable->getField('singleId'), '='));
 
         $db->loadSelectStatement();
         $result = $db->fetchColumn();

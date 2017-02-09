@@ -37,7 +37,7 @@ class Election extends \election\Controller\Base
 
     private function getElection($electionId)
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('elect_election');
         $tbl->addFieldConditional('id', $electionId);
         $result = $db->selectOneRow();

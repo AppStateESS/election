@@ -143,7 +143,7 @@ class Multiple extends Ballot
 
     public static function getElectionId($multiple_id)
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('elect_multiple');
         $tbl->addField('electionId');
         $tbl->addFieldConditional('id', $multiple_id);

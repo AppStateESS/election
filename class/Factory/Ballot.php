@@ -17,7 +17,7 @@ abstract class Ballot extends Base
         if (empty($electionId)) {
             throw new \Exception('Empty election id');
         }
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable($table);
         $tbl->addOrderBy('title');
         $tbl->addFieldConditional('electionId', $electionId);

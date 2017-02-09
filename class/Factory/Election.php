@@ -38,7 +38,7 @@ class Election extends Base
      */
     public static function getList()
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('elect_election');
         $tbl2 = $db->addTable('elect_vote_complete', null, false);
         $exp = $db->getExpression('count(' . $tbl2->getField('electionId') . ')',
@@ -84,7 +84,7 @@ class Election extends Base
      */
     public static function getCurrent()
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('elect_election');
         $now = time();
         $tbl->addFieldConditional('startDate', $now, '<=');
@@ -103,7 +103,7 @@ class Election extends Base
      */
     public static function checkForConflict($startDate, $endDate, $electionId)
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('elect_election');
         $tbl->addFieldConditional('id', $electionId, '!=');
         $tbl->addFieldConditional('active', 1);
@@ -140,10 +140,10 @@ class Election extends Base
 
     public static function getTotalVotes($electionId)
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('elect_vote_complete', null, false);
         $tbl->addFieldConditional('electionId', $electionId);
-        $expression = new \Database\Expression('count(' . $tbl->getField('bannerId') . ')');
+        $expression = new \phpws2\Database\Expression('count(' . $tbl->getField('bannerId') . ')');
         $db->addExpression($expression, 'count');
         $count = $db->selectColumn();
         return $count;

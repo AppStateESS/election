@@ -70,7 +70,7 @@ class Candidate extends Base
             throw new \Exception('Missing ticket id');
         }
 
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('elect_candidate');
         $tbl->addFieldConditional('ticketId', $ticketId);
         if ($active_only) {
@@ -94,7 +94,7 @@ class Candidate extends Base
             throw new \Exception('Missing multiple id');
         }
 
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('elect_candidate');
         $tbl->addFieldConditional('multipleId', $multipleId);
         if ($active_only) {
@@ -200,22 +200,22 @@ class Candidate extends Base
         if (empty($candidate) || empty($candidateId)) {
             throw new \Exception('Missing candidate');
         }
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $t1 = $db->addTable('elect_candidate', null, false);
         $t1->addFieldConditional('id', $candidateId);
         $ticketId = $candidate->getTicketId();
         $multipleId = $candidate->getMultipleId();
         if ($ticketId) {
             $t2 = $db->addTable('elect_ticket', null, false);
-            $cond = new \Database\Conditional($db, $t1->getField('ticketId'), $t2->getField('id'), '=');
+            $cond = new \phpws2\Database\Conditional($db, $t1->getField('ticketId'), $t2->getField('id'), '=');
             $join = $db->joinResources($t1, $t2, $cond, 'left');
             $t3 = $db->addTable('elect_single', null, false);
-            $cond2 = new \Database\Conditional($db, $t2->getField('singleId'), $t3->getField('id'), '=');
+            $cond2 = new \phpws2\Database\Conditional($db, $t2->getField('singleId'), $t3->getField('id'), '=');
             $db->joinResources($t2, $t3, $cond2, 'left');
             $t3->addField('electionId');
         } elseif ($multipleId) {
             $t2 = $db->addTable('elect_multiple', null, false);
-            $cond = new \Database\Conditional($db, $t1->getField('multipleId'), $t2->getField('id'), '=');
+            $cond = new \phpws2\Database\Conditional($db, $t1->getField('multipleId'), $t2->getField('id'), '=');
             $db->joinResources($t1, $t2, $cond, 'left');
             $t2->addField('electionId');
         } else {
