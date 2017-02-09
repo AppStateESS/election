@@ -88,7 +88,7 @@ class User extends \Http\Controller
         $vars['is_admin'] = \Current_User::allow('election');
         $vars['logout_uri'] = $auth->logout_link;
         $vars['username'] = \Current_User::getDisplayName();
-        $template = new \Template($vars);
+        $template = new \phpws2\Template($vars);
         $template->setModuleTemplate('election', 'navbar.html');
         $content = $template->get();
         \Layout::plug($content, 'NAV_LINKS');
@@ -97,7 +97,7 @@ class User extends \Http\Controller
     public static function welcomeScreen()
     {
         \Layout::addStyle('election', 'User/style.css');
-        $template = new \Template;
+        $template = new \phpws2\Template;
         $template->setModuleTemplate('election', 'User/welcome.html');
         if (!\Current_User::isLogged()) {
             $template->add('color', 'primary');

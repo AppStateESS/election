@@ -39,7 +39,7 @@ class Report extends \election\Controller\Base
         $multipleResults = Factory::getMultipleResults($electionId);
         $referendumResults = Factory::getReferendumResults($electionId);
         
-        $template = new \Template;
+        $template = new \phpws2\Template;
         $template->add('single', $singleResults);
         $template->add('multiple', $multipleResults);
         $template->add('referendum', $referendumResults);

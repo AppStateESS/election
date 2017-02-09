@@ -42,7 +42,7 @@ class Report extends Base
             $ballot_row['tickets'] = implode("\n", $ticket_rows);
             $tpl['ballots'][] = $ballot_row;
         }
-        $template = new \Template;
+        $template = new \phpws2\Template;
         $template->addVariables($tpl);
         $template->setModuleTemplate('election', 'Admin/Report/Single.html');
         return $template->get();
@@ -54,7 +54,7 @@ class Report extends Base
             $candidates[] = '<img class="pull-left pad-right" src="' . $c['picture'] . '" style="max-width : 75px;max-height: 75px" />';
         }
         $ticket['candidates'] = implode("\n", $candidates);
-        $template = new \Template;
+        $template = new \phpws2\Template;
         $template->addVariables($ticket);
         $template->setModuleTemplate('election', 'Admin/Report/Ticket.html');
         return $template->get();
@@ -90,7 +90,7 @@ class Report extends Base
             foreach ($ballot['candidates'] as $c) {
                 if (isset($sorted_votes[$ballot['id']][$c['id']])) {
                     $vote = $sorted_votes[$ballot['id']][$c['id']];
-                    $template = new \Template;
+                    $template = new \phpws2\Template;
                     $template->setModuleTemplate('election', 'Admin/Report/Candidate.html');
                     $template->add('name', $c['firstName'] . ' ' . $c['lastName']);
                     $percentage = round(($vote / $total_cast_votes[$ballot['id']]) * 100, 1);
@@ -108,7 +108,7 @@ class Report extends Base
             $tpl['ballots'][] = $ballot_row;
         }
 
-        $template = new \Template;
+        $template = new \phpws2\Template;
         $template->addVariables($tpl);
         $template->setModuleTemplate('election', 'Admin/Report/Multiple.html');
         return $template->get();
@@ -119,7 +119,7 @@ class Report extends Base
         static $noVotes;
 
         if (empty($noVotes)) {
-            $tpl = new \Template;
+            $tpl = new \phpws2\Template;
             $tpl->setModuleTemplate('election', 'Admin/Report/NoCandidateVotesMultiple.html');
             $noVotes = $tpl->get();
         }
@@ -131,7 +131,7 @@ class Report extends Base
         static $noVotes;
 
         if (empty($noVotes)) {
-            $tpl = new \Template;
+            $tpl = new \phpws2\Template;
             $tpl->setModuleTemplate('election', 'Admin/Report/NoTicketVotesSingle.html');
             $noVotes = $tpl->get();
         }
@@ -161,7 +161,7 @@ class Report extends Base
             $tpl['referendums'][] = $ref_row;
         }
 
-        $template = new \Template;
+        $template = new \phpws2\Template;
         $template->setModuleTemplate('election', 'Admin/Report/Referendum.html');
         $template->addVariables($tpl);
         return $template->get();

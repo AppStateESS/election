@@ -80,7 +80,7 @@ class Vote extends Base
         }
         $transport = \Swift_MailTransport::newInstance();
 
-        $template = new \Template;
+        $template = new \phpws2\Template;
         $template->setModuleTemplate('election', 'Admin/VoteSuccess.html');
         $template->add('title', $election['title']);
         $content = $template->get();

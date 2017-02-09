@@ -17,7 +17,7 @@ class Settings extends \election\Controller\Base
         $tplvars['fromAddress'] = \PHPWS_Settings::get('election', 'fromAddress');
         $tplvars['surveyLink'] = \PHPWS_Settings::get('election', 'surveyLink');
         $tplvars['supportLink'] = \PHPWS_Settings::get('election', 'supportLink');
-        $template = new \Template($tplvars);
+        $template = new \phpws2\Template($tplvars);
         $template->setModuleTemplate('election', 'Admin/Settings.html');
         $content = $template->get();
 

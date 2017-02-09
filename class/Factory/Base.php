@@ -6,7 +6,7 @@ namespace election\Factory;
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Matthew McNaney <mcnaney at gmail dot com>
  */
-class Base extends \ResourceFactory
+class Base extends \phpws2\ResourceFactory
 {
 
     public static function pullPostString($varname)
