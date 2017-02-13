@@ -26,7 +26,7 @@ class Vote extends \election\Controller\User\Base
                 throw new \Exception('Unknown Vote command');
         }
 
-        $view = new \View\JsonView($json);
+        $view = new \phpws2\View\JsonView($json);
         $response = new \Canopy\Response($view);
         return $response;
     }

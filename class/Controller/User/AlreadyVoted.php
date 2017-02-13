@@ -16,7 +16,7 @@ class AlreadyVoted extends \election\Controller\User\Base
         // TODO.. Fill this in with an actual template
         $content = "<div class='well'><p><strong>You've already voted in this election.</strong></p>";
 
-        $view = new \View\HtmlView($content);
+        $view = new \phpws2\View\HtmlView($content);
         return $view;
     }
 }

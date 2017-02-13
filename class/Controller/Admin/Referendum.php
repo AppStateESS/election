@@ -31,7 +31,7 @@ class Referendum extends \election\Controller\Base
                 throw new \Exception('Unknown Single ballot command');
         }
 
-        $view = new \View\JsonView(array('success' => true));
+        $view = new \phpws2\View\JsonView(array('success' => true));
         $response = new \Canopy\Response($view);
         return $response;
     }
@@ -49,7 +49,7 @@ class Referendum extends \election\Controller\Base
                 $json = Factory::getList(Factory::pullGetInteger('electionId'));
                 break;
         }
-        $view = new \View\JsonView($json);
+        $view = new \phpws2\View\JsonView($json);
         return $view;
     }
 

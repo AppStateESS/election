@@ -35,7 +35,7 @@ class ServerError extends \election\Controller\User\Base
 <p>$reason</p>
 EOF;
 
-        $view = new \View\HtmlView($content);
+        $view = new \phpws2\View\HtmlView($content);
         return $view;
     }
 }

@@ -16,7 +16,7 @@ class NoOpenElections extends \election\Controller\User\Base
         // TODO.. Fill this in with an actual template
         $content = 'No elections open right now.';
 
-        $view = new \View\HtmlView($content);
+        $view = new \phpws2\View\HtmlView($content);
         return $view;
     }
 }

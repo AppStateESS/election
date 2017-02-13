@@ -31,7 +31,7 @@ class Election extends \election\Controller\Base
                 break;
         }
 
-        $view = new \View\HtmlView($content);
+        $view = new \phpws2\View\HtmlView($content);
         return $view;
     }
 
@@ -123,7 +123,7 @@ EOF;
                 throw new \Exception('Unknown Election command');
         }
 
-        $view = new \View\JsonView(array('success' => true));
+        $view = new \phpws2\View\JsonView(array('success' => true));
         $response = new \Canopy\Response($view);
         return $response;
     }
@@ -161,7 +161,7 @@ EOF;
                                 Factory::pullGetInteger('searchFor'));
                 break;
         }
-        $view = new \View\JsonView($json);
+        $view = new \phpws2\View\JsonView($json);
         return $view;
     }
 

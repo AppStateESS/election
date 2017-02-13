@@ -21,7 +21,7 @@ class Settings extends \election\Controller\Base
         $template->setModuleTemplate('election', 'Admin/Settings.html');
         $content = $template->get();
 
-        $view = new \View\HtmlView($content);
+        $view = new \phpws2\View\HtmlView($content);
         return $view;
     }
 
@@ -38,7 +38,7 @@ class Settings extends \election\Controller\Base
                 break;
         }
 
-        $view = new \View\JsonView(array('success' => true));
+        $view = new \phpws2\View\JsonView(array('success' => true));
         $response = new \Canopy\Response($view);
         return $response;
     }

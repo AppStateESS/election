@@ -27,7 +27,7 @@ class Ticket extends \election\Controller\Base
                 $json = array('success'=> Factory::checkURL(Factory::pullGetString('checkUrl')));
                 break;
         }
-        $view = new \View\JsonView($json);
+        $view = new \phpws2\View\JsonView($json);
         return $view;
     }
     
@@ -52,7 +52,7 @@ class Ticket extends \election\Controller\Base
                 throw new \Exception('Unknown Ticket command');
         }
 
-        $view = new \View\JsonView(array('success' => true));
+        $view = new \phpws2\View\JsonView(array('success' => true));
         $response = new \Canopy\Response($view);
         return $response;
     }

@@ -29,7 +29,7 @@ class NotAllowed extends \election\Controller\User\Base
 <p><strong>Reason:</strong> $reason</p>
 EOF;
 
-        $view = new \View\HtmlView($content);
+        $view = new \phpws2\View\HtmlView($content);
         return $view;
     }
 

@@ -36,7 +36,7 @@ class Election extends \election\Controller\User\Base
 $react
 EOF;
 
-        $view = new \View\HtmlView($content);
+        $view = new \phpws2\View\HtmlView($content);
         return $view;
     }
 
@@ -57,7 +57,7 @@ EOF;
                                 'postVoteMessage');
                 break;
         }
-        $view = new \View\JsonView($json);
+        $view = new \phpws2\View\JsonView($json);
         return $view;
     }
 
