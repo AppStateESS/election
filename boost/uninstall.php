@@ -7,7 +7,7 @@
 
 function election_uninstall(&$content)
 {
-    $db = Database::newDB();
+    $db = \phpws2\Database::newDB();
 
     $db->buildTable('elect_candidate')->drop(true);
     $db->buildTable('elect_election')->drop(true);
