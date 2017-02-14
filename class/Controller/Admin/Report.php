@@ -24,7 +24,7 @@ class Report extends \election\Controller\Base
                 break;
 
             default:
-                throw new \Http\NotAcceptableException('Unknown Report command');
+                throw new \phpws2\Http\NotAcceptableException('Unknown Report command');
                 break;
         }
 
