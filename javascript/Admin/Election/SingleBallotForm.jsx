@@ -96,7 +96,7 @@ export default class SingleBallotForm extends Component {
 
 SingleBallotForm.propTypes = {
   id: PropTypes.string,
-  singleId: PropTypes.string,
+  singleId: PropTypes.oneOfType([PropTypes.string,PropTypes.number,]),
   electionId: PropTypes.oneOfType([PropTypes.string,PropTypes.number,]),
   title: PropTypes.string,
   hideForm: PropTypes.func,
