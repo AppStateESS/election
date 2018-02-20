@@ -28,6 +28,7 @@ export default class ElectionList extends Component {
     this.closeModal = this.closeModal.bind(this)
     this.searchVotes = this.searchVotes.bind(this)
     this.resetVote = this.resetVote.bind(this)
+    this.hideForm = this.hideForm.bind(this)
   }
 
   componentDidMount() {
