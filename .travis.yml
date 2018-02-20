@@ -1,0 +1,24 @@
+sudo: false
+language: php
+php:
+- 7
+install:
+- nvm install 6
+- npm install
+script:
+- ".travis-build/phplint ."
+after_success:
+- npm run prod
+- rm -rf node_modules
+- tar -czf election.tar.gz *
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: Kx9GqK+I4PqtjYkiJqAiSLnsoetZth7ACgwfshFaJqB4L+49yr4HRLyRsUn721tWYWDPfZDvn8zYamv3QpYTGzv4G1+v5xy8NRRrub0LZLPNETdsvj+M/biWvO2TJNmywXddn5ZmnwtAB4wUQsSojZODlxY8EvkL9qeGRHmfsFoB4BSX5/VBbD+DU1yU66pVutkLc9bUL2ge+B/keLOgrANiqXoGKKrbn3kzvs3llMkMttJCi75qW5aREf6xx9J2IJW6zccB/RK5IJJDMzlKh2zcVnhCT2d/cVoNKQO8oEkxhq0QRMTgmCYc9SY4oc7UxHSdophlhH8+AGP/kPGtKcl95oCHGS0+vjaGICqgETtFZLYAeZkf7O1y7B2+RQ3XO7xQJ1bkHhhU0/rueFErSLky09m/zeisN+QcFOqiG2VKHWThjF9Qk5FIy4JALndjHdis/Zo51ZiodbJe9Kg/Qd61RNtI1x56hcRppwif9OlWvvy+07tiD+dMJzTTmb9pGQ+OqALt2pu/XeUfhIMGkFIA5t7K/V45mPNCrw5f64z2azuYPlRc9WRaGg4NcvzZg7LxLKQUvsIlSkmKxGLdCUDPhXwHQVCwj052NS340CtxSYTJP3cCTeanE94DBEfun2GGvuMo7QwTGKNWmKbWXTdQ0BQb2ceNUo1JEd2tTYs=
+  file: election.tar.gz
+  overwrite: true
+  on:
+    repo: AppStateESS/election
+    branch: master
+    tags: true
