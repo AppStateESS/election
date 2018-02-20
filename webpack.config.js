@@ -1,28 +1,50 @@
+var setup = require('./exports.js')
 var webpack = require('webpack');
-var path = require('path');
 var Promise = require('es6-promise').polyfill();
-
-var APP_DIR = path.resolve(__dirname, 'javascript');
+var BrowserSyncPlugin = require('browser-sync-webpack-plugin')
 
 module.exports = {
-    entry: {
-        election: APP_DIR + '/Admin/Election/src/Election.jsx',
-        list: APP_DIR + '/Admin/List/src/List.jsx',
-        user: APP_DIR + '/User/src/Election.jsx'
-    },
-    output: {
-        path: path.join(APP_DIR, "dist"),
-        filename: "[name].dev.js"
-    },
-    module: {
-        loaders: [{
-            test: /\.jsx?/,
-            include: APP_DIR,
-            loader: 'babel'
-        }, {
-            test: /\.css$/,
-            loader: "style-loader!css-loader"
-        }]
-    },
-    devtool: 'source-map'
+  entry: setup.entry,
+  output: {
+    path: setup.path.join(setup.APP_DIR, "dev"),
+    filename: "[name].js",
+  },
+  resolve: {
+    extensions: [
+      '.js', '.jsx',
+    ],
+  },
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin(
+      {name: 'vendor', filename: 'vendor.js',}
+    ),
+    new BrowserSyncPlugin(
+      {host: 'localhost', port: 3000, files: ['./javascript/dev/*.js'], proxy: 'localhost/phpwebsite',}
+    ),
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.jsx?$/,
+        enforce: 'pre',
+        loader: 'jshint-loader',
+        exclude: '/node_modules/',
+        include: setup.APP_DIR + '/dev',
+      }, {
+        test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+        loader: 'url-loader?limit=100000',
+      }, {
+        test: /\.jsx?/,
+        include: setup.APP_DIR,
+        loader: 'babel-loader',
+        query: {
+          presets: ['es2015', 'react',]
+        },
+      }, {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader',
+      },
+    ]
+  },
+  devtool: 'source-map',
 }
