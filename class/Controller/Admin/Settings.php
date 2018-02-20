@@ -17,6 +17,7 @@ class Settings extends \election\Controller\Base
         $tplvars['fromAddress'] = \PHPWS_Settings::get('election', 'fromAddress');
         $tplvars['surveyLink'] = \PHPWS_Settings::get('election', 'surveyLink');
         $tplvars['supportLink'] = \PHPWS_Settings::get('election', 'supportLink');
+        $tplvars['studentLevelAllowed'] = \PHPWS_Settings::get('election', 'studentLevelAllowed');
         $template = new \phpws2\Template($tplvars);
         $template->setModuleTemplate('election', 'Admin/Settings.html');
         $content = $template->get();
@@ -59,6 +60,9 @@ class Settings extends \election\Controller\Base
 
         $supportLink = $request->getVar('supportLink');
         \PHPWS_Settings::set('election', 'supportLink', $supportLink);
+
+        $studentLevelAllowed = $request->getVar('studentLevelAllowed');
+        \PHPWS_Settings::set('election', 'studentLevelAllowed', $studentLevelAllowed);
 
         \PHPWS_Settings::save('election');
     }
