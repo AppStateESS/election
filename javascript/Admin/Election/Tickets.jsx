@@ -14,6 +14,7 @@ class Tickets extends Component {
       ticketFormId: -1
     }
     this.editFormId = this.editFormId.bind(this)
+    this.delete = this.delete.bind(this)
   }
 
   editFormId(ticketId) {
