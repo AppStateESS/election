@@ -36,8 +36,11 @@ class User extends \phpws2\Http\Controller
         if ($election === false) {
             $command = 'NoOpenElections';
         }
-
-        $provider = \election\Factory\StudentProviderFactory::getProvider();
+        try {
+            $provider = \election\Factory\StudentProviderFactory::getProvider();
+        } catch (\election\Exception\MissingBannerURI $e) {
+            exit('Banner URI has not been set.');
+        }
         $studentId = $provider->pullStudentId();
         try {
             if (preg_match('/^9\d{8}/', $studentId)) {
@@ -57,10 +60,13 @@ class User extends \phpws2\Http\Controller
 
         if (!$student->isEligibleToVote()) {
             $controller = new User\NotAllowed($this->getModule());
-            $controller->setMessage('No credit hours or not an undergraduate student.');
+            if (\PHPWS_Settings::get('election', 'studentLevelAllowed') == 'U') {
+                $controller->setMessage('No credit hours or not an undergraduate student.');
+            } else {
+                $controller->setMessage('No credit hours or not a graduate student.');
+            }
             return $controller;
         }
-
         // If there's an election going on, check to see if this student has already voted in it
         if ($election !== false && $student->hasVoted($election['id'])) {
             $command = 'AlreadyVoted';
