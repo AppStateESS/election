@@ -22,7 +22,7 @@ class Election extends \election\Controller\User\Base
     public function getHtmlView($data, \Canopy\Request $request)
     {
         $script[] = '<script type="text/javascript">var defaultPicture = \'' . PHPWS_SOURCE_HTTP . 'mod/election/img/no-picture.gif\';</script>';
-        $script[] = $this->getScript('user');
+        $script[] = $this->scriptView('user');
         $react = implode("\n", $script);
 
         \Layout::addStyle('election', 'style.css');
@@ -101,6 +101,8 @@ EOF;
             $unqualified = array();
         }
         $referendum = \election\Factory\Referendum::getList($election['id']);
+        $votingCategories = $this->student->getVotingCategories();
+        
         $voting_data = array(
             'hasVoted' => false,
             'election' => $election,
@@ -108,6 +110,7 @@ EOF;
             'multiple' => $multiple,
             'referendum' => $referendum,
             'unqualified' => $unqualified,
+            'qualified' => $votingCategories,
             'supportLink' => \PHPWS_Settings::get('election', 'supportLink')
         );
 
