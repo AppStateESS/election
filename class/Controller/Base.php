@@ -17,16 +17,63 @@ abstract class Base extends \phpws2\Http\Controller
         return $response;
     }
 
-    protected function getScript($filename)
+    public function scriptView($view_name, $add_anchor = true, $vars = null)
     {
-        $root_directory = PHPWS_SOURCE_HTTP . 'mod/election/javascript/dist/';
-        if (ELECTION_REACT_DEV) {
-            $path = $filename . '.dev.js';
-        } else {
-            $path = $filename . '.prod.js';
+        static $vendor_included = false;
+        if (!$vendor_included) {
+            $script[] = $this->getScript('vendor');
+            $vendor_included = true;
         }
-        $script = "<script type='text/javascript' src='{$root_directory}$path'></script>";
+        if (!empty($vars)) {
+            $script[] = $this->addScriptVars($vars);
+        }
+        $script[] = $this->getScript($view_name);
+        $react = implode("\n", $script);
+        if ($add_anchor) {
+            $content = <<<EOF
+<div id="$view_name"></div>
+$react
+EOF;
+            return $content;
+        } else {
+            return $react;
+        }
+    }
+    
+        protected function getElectionRootDirectory()
+    {
+        return PHPWS_SOURCE_DIR . 'mod/election/';
+    }
+
+    protected function getElectionRootUrl()
+    {
+        return PHPWS_SOURCE_HTTP . 'mod/election/';
+    }
+
+    protected function getScript($scriptName)
+    {
+        $jsDirectory = $this->getElectionRootUrl() . 'javascript/';
+        if (ELECTION_REACT_DEV) {
+            $path = "{$jsDirectory}dev/$scriptName.js";
+        } else {
+            $path = $jsDirectory . 'build/' . $this->getAssetPath($scriptName);
+        }
+        $script = "<script type='text/javascript' src='$path'></script>";
         return $script;
+    }
+
+    private function getAssetPath($scriptName)
+    {
+        $rootDirectory = $this->getElectionRootDirectory();
+        if (!is_file($rootDirectory . 'assets.json')) {
+            exit('Missing assets.json file. Run npm run prod in stories directory.');
+        }
+        $jsonRaw = file_get_contents($rootDirectory . 'assets.json');
+        $json = json_decode($jsonRaw, true);
+        if (!isset($json[$scriptName]['js'])) {
+            throw new \Exception('Script file not found among assets.');
+        }
+        return $json[$scriptName]['js'];
     }
 
 }
