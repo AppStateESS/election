@@ -21,6 +21,7 @@ class Student
     const CLASS_SO = 'Sophomore';
     const CLASS_JR = 'Junior';
     const CLASS_SR = 'Senior';
+    const CLASS_GR = 'Graduate';
 
     private $bannerId;
     private $username;
@@ -48,8 +49,14 @@ class Student
      */
     public function isEligibleToVote()
     {
-        if ($this->creditHours >= 1 && $this->level == Student::UNDERGRAD) {
-            return true;
+        $studentLevelAllowed = \PHPWS_Settings::get('election',
+                        'studentLevelAllowed');
+
+        if ($studentLevelAllowed === 'U') {
+            return $this->creditHours >= 1 && $this->level == Student::UNDERGRAD;
+        } else {
+            return $this->creditHours >= 1 && 
+                    ($this->level == Student::GRADUATE || $this->level == Student::GRADUATE2);
         }
 
         return false;
@@ -99,7 +106,7 @@ class Student
 
         // Put the lists together
         return array('Class' => $classCategory, 'College' => $collegeCategory, 'Club Affiliation' => $clubAffiliation,
-            'Greek Life' => $greekLife, 'Student Type' => $this->getStudentType());
+            'Greek Life' => $greekLife, 'Student Type' => $this->getStudentType(), 'Transfer' => $this->getIsTransfer());
     }
 
     private function getClassCategory()
@@ -113,6 +120,8 @@ class Student
                 return self::CLASS_JR;
             case self::CLASS_SR:
                 return self::CLASS_SR;
+            case self::CLASS_GR:
+                return self::CLASS_GR;
             default:
                 return null;
         }
