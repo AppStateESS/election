@@ -51,11 +51,11 @@ class Election extends \election\Controller\Base
 
         $allowChange = Factory::allowChange($electionId) ? 'true' : 'false';
 
-        $script[] = '<script type="text/javascript">var allowChange=' . $allowChange . ';var electionId = ' . $electionId . ';</script>';
-        $script[] = $this->getScript('election');
+        $script[] = '<script type="text/javascript">const allowChange=' . $allowChange . ';const electionId = ' . $electionId . ';</script>';
+        $script[] = $this->scriptView('election');
         $react = implode("\n", $script);
 
-        $date_format = '<script type="text/javascript">var dateFormat = "' . ELECTION_DATETIME_FORMAT . '";var tomorrow="' .
+        $date_format = '<script type="text/javascript">const dateFormat = "' . ELECTION_DATETIME_FORMAT . '";const tomorrow="' .
                 strftime('%Y/%m/%d', time() + 86400) . '";</script>';
 
         \Layout::addStyle('election', 'Admin/style.css');
@@ -73,10 +73,10 @@ EOF;
         javascript('datetimepicker');
         \Layout::addStyle('election', 'Admin/style.css');
         $deity = \Current_User::isDeity() ? 'true' : 'false';
-        $date_format = '<script type="text/javascript">var admin = ' . $deity . ';var dateFormat = "' . ELECTION_DATETIME_FORMAT . '";var tomorrow="' .
+        $date_format = '<script type="text/javascript">const admin = ' . $deity . ';const dateFormat = "' . ELECTION_DATETIME_FORMAT . '";const tomorrow="' .
                 strftime('%Y/%m/%d', time() + 86400) . '";</script>';
 
-        $script[] = $this->getScript('list');
+        $script[] = $this->scriptView('list');
         $react = implode("\n", $script);
         $content = <<<EOF
 $date_format
