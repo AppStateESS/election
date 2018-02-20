@@ -40,7 +40,7 @@ class FakeStudentProvider extends BannerStudentProvider
         $json['studentLevel'] = BannerStudentProvider::UNDERGRAD;
         $json['creditHoursEnrolled'] = 14;
         $json['classification'] = BannerStudentProvider::FRESHMEN;
-        $json['transfer'] = false;
+        $json['admitStuType'] = 'T';
         $json['studentType'] = 'C';
         $json['collegeCode'] = 'AS';
         $json['collegeDesc'] = 'College of Arts & Sciences';
