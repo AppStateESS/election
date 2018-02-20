@@ -6,3 +6,6 @@
 /conf/defines.php
 /vendor/*
 /composer.phar
+/assets.json
+/javascript/build/
+/javascript/dev/
