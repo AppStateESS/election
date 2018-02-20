@@ -124,14 +124,16 @@ class Candidate extends Base
         }
     }
 
-    private static function savePicture(array $file, \election\Resource\Candidate $candidate)
+    private static function savePicture(array $file,
+            \election\Resource\Candidate $candidate)
     {
         $filename = $file['name'];
         $tmpDir = $file['tmp_name'];
         $filetype = $file['type'];
         $size = $file['size'];
 
-        if (!in_array($filetype, array('image/png', 'image/jpg', 'image/jpeg', 'image/gif'))) {
+        if (!in_array($filetype,
+                        array('image/png', 'image/jpg', 'image/jpeg', 'image/gif'))) {
             throw new \Exception('Bad file type. Expecting image.');
         }
 
@@ -162,8 +164,16 @@ class Candidate extends Base
 
         move_uploaded_file($tmpDir, $destination);
         list($width, $height) = getimagesize($destination);
-        if ($width > ELECTION_MAX_CANDIDATE_WIDTH) {
-            \PHPWS_File::scaleImage($destination, $destination, ELECTION_MAX_CANDIDATE_WIDTH, ELECTION_MAX_CANDIDATE_HEIGHT);
+
+        if ($width >= $height) {
+            \PHPWS_File::cropImage($destination, $destination, $height,
+                    $height);
+        } else {
+            \PHPWS_File::cropImage($destination, $destination, $width,
+                    $width);
+        }
+        if ($width > ELECTION_MAX_CANDIDATE_WIDTH || $height > ELECTION_MAX_CANDIDATE_HEIGHT) {
+            \PHPWS_File::scaleImage($destination, $destination, $height, $height);
         }
         return $filename . '.' . $extension;
     }
@@ -207,15 +217,18 @@ class Candidate extends Base
         $multipleId = $candidate->getMultipleId();
         if ($ticketId) {
             $t2 = $db->addTable('elect_ticket', null, false);
-            $cond = new \phpws2\Database\Conditional($db, $t1->getField('ticketId'), $t2->getField('id'), '=');
+            $cond = new \phpws2\Database\Conditional($db,
+                    $t1->getField('ticketId'), $t2->getField('id'), '=');
             $join = $db->joinResources($t1, $t2, $cond, 'left');
             $t3 = $db->addTable('elect_single', null, false);
-            $cond2 = new \phpws2\Database\Conditional($db, $t2->getField('singleId'), $t3->getField('id'), '=');
+            $cond2 = new \phpws2\Database\Conditional($db,
+                    $t2->getField('singleId'), $t3->getField('id'), '=');
             $db->joinResources($t2, $t3, $cond2, 'left');
             $t3->addField('electionId');
         } elseif ($multipleId) {
             $t2 = $db->addTable('elect_multiple', null, false);
-            $cond = new \phpws2\Database\Conditional($db, $t1->getField('multipleId'), $t2->getField('id'), '=');
+            $cond = new \phpws2\Database\Conditional($db,
+                    $t1->getField('multipleId'), $t2->getField('id'), '=');
             $db->joinResources($t1, $t2, $cond, 'left');
             $t2->addField('electionId');
         } else {
