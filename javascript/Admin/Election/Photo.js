@@ -8,12 +8,6 @@ const Photo = (props) => {
     props.update(photo)
   }
 
-  /*
-  const onOpenClick = () => {
-    this.refs.dropzone.open()
-  }
-  */
-
   let photo
   let imageSrc = null
   if (props.photo.length > 0) {
