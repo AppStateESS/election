@@ -38,6 +38,12 @@
                     "type": "senior",
                     "matchName": "Class",
                     "matchValue": "Senior"
+                },
+                {
+                    "name": "Graduate",
+                    "type": "graduate",
+                    "matchName": "Class",
+                    "matchValue": "Graduate"
                 }
             ],
             "unqualified": "Your credit hour class designation is different."
@@ -48,11 +54,11 @@
                 {
                     "name": "Transfer",
                     "type": "transfer",
-                    "matchName": "Student Type",
-                    "matchValue": "T"
+                    "matchName": "Transfer",
+                    "matchValue": true
                 }
             ],
-            "unqualified": "You are not a transfer student this semester."
+            "unqualified": "You did not transfer to this university."
         },
         {
             "category": "College",
