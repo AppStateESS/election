@@ -59,6 +59,13 @@ function election_update(&$content, $version)
             $newdt = new \phpws2\Database\Datatype\Text($tbl, 'category');
             $tbl->alter($tbl->getDataType('category'), $newdt);
             
+        case version_compare($version, '2.1.0', '<'):
+            $content[] = '<pre>';
+            $content[] = '2.1.0';
+            $content[] = '------';
+            $content[] = '+ Added graduate student voting';
+            $content[] = '+ Added new transfer logic';
+            $content[] = '</pre>';
     }
     
     return true;
