@@ -130,6 +130,9 @@ class BannerStudentProvider extends StudentProvider
         // Credit Hours
         $student->setCreditHours(isset($data['creditHoursEnrolled']) ? $data['creditHoursEnrolled'] : 0);
 
+        // Transfer
+        $student->setIsTransfer($data['admitStuType'] == 'T');
+        
         // Type
         $student->setStudentType($data['studentType']);
 
