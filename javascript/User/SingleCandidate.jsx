@@ -39,7 +39,7 @@ SingleCandidate.propTypes = {
   lastName: PropTypes.string,
   picture: PropTypes.string,
   title: PropTypes.string,
-  candidateLength: PropTypes.number
+  candidateLength: PropTypes.number,
 }
 
 SingleCandidate.defaultProps = {
@@ -47,7 +47,7 @@ SingleCandidate.defaultProps = {
   lastName: '',
   picture: '',
   title: '',
-  candidateLength: 1,
+  candidateLength: 1
 }
 
 export default SingleCandidate

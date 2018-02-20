@@ -28,10 +28,10 @@
 
 .dropzone .clickme {
     width : 150px;
-    height : 200px;
+    height : 150px;
     border : 2px dashed #6e6e6e;
     border-radius: 4px;
-    padding : 2em 1em;
+    padding : 1.5em 1em;
 }
 
 .dropzone .clickme p {
