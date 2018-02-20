@@ -1,0 +1,12 @@
+table.qualified th, table.qualified td {
+  width : 33%
+}
+
+table.qualified td ul {
+  padding-left : 0px;
+  margin-left : 18px;
+}
+
+.remaining-seats {
+  width : 95%;
+}
