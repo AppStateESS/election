@@ -94,6 +94,11 @@ class User extends \phpws2\Http\Controller
         $vars['is_admin'] = \Current_User::allow('election');
         $vars['logout_uri'] = $auth->logout_link;
         $vars['username'] = \Current_User::getDisplayName();
+        if (\phpws\PHPWS_Settings::get('election', 'studentLevelAllowed') == 'U') {
+            $vars['election_type'] = 'SGA';
+        } else {
+            $vars['election_type'] = 'Graduate';
+        }
         $template = new \phpws2\Template($vars);
         $template->setModuleTemplate('election', 'navbar.html');
         $content = $template->get();

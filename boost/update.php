@@ -74,6 +74,13 @@ function election_update(&$content, $version)
             $content[] = '+ Added travis';
             $content[] = '+ Updated babel compiler';
             $content[] = '</pre>';
+            
+        case version_compare($version, '2.1.2', '<'):
+            $content[] = '<pre>';
+            $content[] = '2.1.2';
+            $content[] = '------';
+            $content[] = '+ Titles change based on election type';
+            $content[] = '</pre>';
     }
     
     return true;

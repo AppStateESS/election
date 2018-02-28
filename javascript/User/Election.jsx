@@ -410,7 +410,7 @@ const Finished = (props) => {
       <div className="col-sm-6 col-sm-offset-3">
         <div className="well text-center">
           <h2>{props.election.title}</h2>
-          <h3>Thank you for voting! Watch SGA for results.</h3>
+          <h3>Thank you for voting! Check our website for results.</h3>
           <a
             href="./index.php?module=users&action=user&command=logout"
             className="btn btn-lg btn-primary">Sign out</a>
