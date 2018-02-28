@@ -51,10 +51,16 @@ class User extends \phpws2\Http\Controller
         } catch (\Guzzle\Http\Exception\BadResponseException $ex) {
             $controller = new User\NotAllowed($this->getModule());
             $controller->setMessage('We could not pull your student record.');
+            if (extension_loaded('newrelic')) { // Ensure PHP agent is available
+                newrelic_notice_error($ex->getMessage(), $ex);
+            }
             return $controller;
         } catch (\Guzzle\Http\Exception\CurlException $ex) {
             $controller = new User\ServerError($this->getModule());
             $controller->setMessage('Please contact the site administrator and try again later.');
+            if (extension_loaded('newrelic')) { // Ensure PHP agent is available
+                newrelic_notice_error($ex->getMessage(), $ex);
+            }
             return $controller;
         }
 
