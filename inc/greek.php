@@ -3,6 +3,7 @@
  * Listing of "greek" organization and the category they are in.
  */
 $greeks = array(
+    'Alpha Epsilon Pi' => 'IC',
     'Alpha Sigma Phi' => 'IC',
     'Alpha Tau Omega' => 'IC',
     'Delta Chi' => 'IC',
@@ -13,13 +14,13 @@ $greeks = array(
     'Phi Gamma Delta' => 'IC',
     'Phi Kappa Tau' => 'IC',
     'Phi Sigma Kappa' => 'IC',
+    'Pi Kappa Phi' => 'IC',
     'Sigma Nu' => 'IC',
     'Sigma Alpha Epsilon' => 'IC',
-    'Tau Kappa Epsilon' => 'IC',
     'Theta Chi' => 'IC',
     'Alpha Delta Pi' => 'PHC',
     'Alpha Gamma Delta' => 'PHC',
-    'Omicron Pi' => 'PHC',
+    'Alpha Omicron Pi' => 'PHC',
     'Alpha Phi' => 'PHC',
     'Chi Omega' => 'PHC',
     'Delta Zeta' => 'PHC',
@@ -32,8 +33,8 @@ $greeks = array(
     'Delta Sigma Theta Sorority, Inc.' => 'NPHC',
     'Kappa Alpha Psi' => 'NPHC',
     'Phi Beta Sigma' => 'NPHC',
-    'Zeta Phi Beta' => 'NPHC',
+    'Psi Mu Chapter of Omega Psi Phi Fraternity Incorporated' => 'NPHC',
     'Zeta Phi Beta Sorority, Inc.' => 'NPHC',
-    'Chi Upsilon Sigma National Latin Sorority, Inc' => 'MULT'
+    'Chi Upsilon Sigma National Latin Sorority, Inc' => 'NPHC'
 );
 ?>
