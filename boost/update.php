@@ -81,6 +81,12 @@ function election_update(&$content, $version)
             $content[] = '------';
             $content[] = '+ Titles change based on election type';
             $content[] = '</pre>';
+        case version_compare($version, '2.1.3', '<'):
+            $content[] = '<pre>';
+            $content[] = '2.1.3';
+            $content[] = '------';
+            $content[] = '+ Greek status update.';
+            $content[] = '</pre>';
     }
     
     return true;
