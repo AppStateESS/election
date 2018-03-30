@@ -43,7 +43,7 @@ export default class ReferendumListRow extends Component {
             disabled={!allowChange}
             className="btn btn-danger"
             onClick={this.deleteReferendum}>
-            <i className="fa fa-trash-o"></i>&nbsp;
+            <i className="far fa-trash-alt"></i>&nbsp;
             Delete
           </button>
         </div>

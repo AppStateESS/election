@@ -25,7 +25,7 @@ const ElectionRow = (props) => {
   // admin defined in <head> by Admin/Election class.
   if (props.past && admin) {
     buttons = <button className="btn btn-danger btn-sm" onClick={deleteElection}>
-      <i className="fa fa-trash-o"></i>&nbsp; Delete</button>
+      <i className="far fa-trash-alt"></i>&nbsp; Delete</button>
   } else {
     href = 'election/Admin/?command=edit&electionId=' + props.id
     buttons = (

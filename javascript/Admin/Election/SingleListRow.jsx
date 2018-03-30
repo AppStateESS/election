@@ -80,7 +80,7 @@ export default class SingleListRow extends Component {
               disabled={!allowChange}
               className="btn btn-danger"
               onClick={this.handleDelete}>
-              <i className="fa fa-trash-o" title="Remove ballot"></i>&nbsp;
+              <i className="far fa-trash-alt" title="Remove ballot"></i>&nbsp;
               Delete</button>
           </div>
         </div>
