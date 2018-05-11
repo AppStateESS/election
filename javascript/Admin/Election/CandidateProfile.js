@@ -13,7 +13,7 @@ const CandidateProfile = (props) => {
             ? (
               <div>
                 <span className="helper"></span>
-                <img src={props.picture} className="img-responsive candidate-pic"/>
+                <img src={props.picture} className="img-fluid candidate-pic"/>
               </div>
             )
             : (

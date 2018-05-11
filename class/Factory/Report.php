@@ -51,7 +51,7 @@ class Report extends Base
     private static function ticketTemplate($ticket)
     {
         foreach ($ticket['candidates'] as $c) {
-            $candidates[] = '<img class="pull-left pad-right" src="' . $c['picture'] . '" style="max-width : 75px;max-height: 75px" />';
+            $candidates[] = '<img class="float-left pad-right" src="' . $c['picture'] . '" style="max-width : 75px;max-height: 75px" />';
         }
         $ticket['candidates'] = implode("\n", $candidates);
         $template = new \phpws2\Template;

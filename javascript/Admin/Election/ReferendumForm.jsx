@@ -111,7 +111,7 @@ export default class ReferendumForm extends Component {
             placeholder="Description of referendum"/>
         </div>
         <div className="pad-top">
-          <button className="btn btn-primary pull-left pad-right" onClick={this.save}>
+          <button className="btn btn-primary float-left pad-right" onClick={this.save}>
             <i className="fa fa-save"></i>&nbsp;
             Save</button>
           <button className="btn btn-danger" onClick={this.props.hideForm}>

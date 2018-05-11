@@ -3,7 +3,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 const MultipleCandidateRow = (props) => {
-  var icon = <i className="pull-right text-success fa fa-check-circle fa-2x"></i>
+  var icon = <i className="float-right text-success fa fa-check-circle fa-2x"></i>
 
   var picture = <div className="no-photo">
     <span>No photo</span>

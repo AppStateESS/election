@@ -15,9 +15,9 @@ const MultipleResultRow = (props) => {
       <div className="col-xs-2">
         <button
           disabled={props.multiple.candidates === undefined}
-          className="btn btn-default btn-block"
+          className="btn btn-outline-dark btn-block"
           onClick={props.resetStage.bind(null, 'multiple', props.multiple.id)}>
-          <i className="fa fa-pencil"></i>&nbsp;
+          <i className="fas fa-pencil-alt"></i>&nbsp;
           Edit
         </button>
       </div>

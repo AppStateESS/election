@@ -4,11 +4,11 @@ import PropTypes from 'prop-types'
 
 const MultipleCandidate = (props) => {
   let _className = 'list-group-item pointer'
-  let icon = <button className="pull-right btn btn-default btn-lg">Select</button>
+  let icon = <button className="float-right btn btn-outline-dark btn-lg">Select</button>
 
   if (props.selected) {
     _className = 'list-group-item pointer active'
-    icon = <button className="pull-right btn btn-default btn-lg">
+    icon = <button className="float-right btn btn-outline-dark btn-lg">
       <i className="fa fa-check"></i>&nbsp; Selected</button>
   }
 

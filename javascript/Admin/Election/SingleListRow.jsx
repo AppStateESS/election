@@ -69,7 +69,7 @@ export default class SingleListRow extends Component {
           </div>
         </div>
         <div className="col-sm-6">
-          <div className="pull-right">
+          <div className="float-right">
             <button
               className="btn btn-success pad-right"
               onClick={this.edit}

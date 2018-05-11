@@ -19,7 +19,7 @@ const SingleCandidate = (props) => {
             ? (
               <div className="photo-matte">
                 <span className="helper"></span>
-                <img src={props.picture} className="img-responsive candidate"/>
+                <img src={props.picture} className="img-fluid candidate"/>
               </div>
             )
             : (

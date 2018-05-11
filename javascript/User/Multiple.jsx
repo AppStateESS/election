@@ -45,7 +45,7 @@ const EmptyMultiple = (props) => {
     <div>
       <h2>No senate seats to vote on</h2>
       <Unqualified unqualified={props.unqualified} supportLink={props.supportLink}/>
-      <button className="pull-right btn btn-success btn-lg" onClick={props.update}>Continue&nbsp;
+      <button className="float-right btn btn-success btn-lg" onClick={props.update}>Continue&nbsp;
         <i className="fa fa-arrow-right"></i>
       </button>
     </div>

@@ -30,9 +30,9 @@ const ReferendumResultRow = (props) => {
       <div className="col-sm-3">{voted}</div>
       <div className="col-sm-3">
         <button
-          className="btn btn-block btn-default"
+          className="btn btn-block btn-outline-dark"
           onClick={props.resetStage.bind(null, 'referendum', props.referendum.id)}>
-          <i className="fa fa-pencil"></i>&nbsp;
+          <i className="fas fa-pencil-alt"></i>&nbsp;
           Edit
         </button>
       </div>

@@ -12,9 +12,9 @@ const Photo = (props) => {
   let imageSrc = null
   if (props.photo.length > 0) {
     imageSrc = props.photo[0].preview
-    photo = (<img src={imageSrc} className="img-responsive"/>)
+    photo = (<img src={imageSrc} className="img-fluid"/>)
   } else if (props.picture != null && props.picture.length) {
-    photo = (<img src={props.picture} className="img-responsive"/>)
+    photo = (<img src={props.picture} className="img-fluid"/>)
   } else {
     photo = (
       <div className="clickme">

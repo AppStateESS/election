@@ -78,7 +78,7 @@ export default class SingleBallotForm extends Component {
             placeholder="Ballot title (e.g. President/Vice President)"/>
         </div>
         <div className="col-sm-4">
-          <div className="pull-right">
+          <div className="float-right">
             <button className="btn btn-primary pad-right" onClick={this.save}>
               <i className="fa fa-save"></i>&nbsp;
               Save</button>

@@ -11,7 +11,7 @@ const Referendum = (props) => {
     <div className="row">
       <div className="col-sm-4">
         <button
-          className="btn btn-block btn-lg btn-default"
+          className="btn btn-block btn-lg btn-outline-dark"
           onClick={props.updateVote.bind(null, 'yes')}>
           <i className="fa fa-check"></i>&nbsp;
           Yes
@@ -19,7 +19,7 @@ const Referendum = (props) => {
       </div>
       <div className="col-sm-4">
         <button
-          className="btn btn-block btn-lg btn-default"
+          className="btn btn-block btn-lg btn-outline-dark"
           onClick={props.updateVote.bind(null, 'no')}>
           <i className="fa fa-times"></i>&nbsp;
           No
@@ -27,7 +27,7 @@ const Referendum = (props) => {
       </div>
       <div className="col-sm-4">
         <button
-          className="btn btn-block btn-lg btn-default"
+          className="btn btn-block btn-lg btn-outline-dark"
           onClick={props.updateVote.bind(null, 'abstain')}>
           Abstain
         </button>

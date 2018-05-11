@@ -12,9 +12,9 @@ const SingleResultRow = (props) => {
       </div>
       <div className="col-xs-2">
         <button
-          className="btn btn-block btn-default"
+          className="btn btn-block btn-outline-dark"
           onClick={props.resetStage.bind(null, 'single', props.single.id)}>
-          <i className="fa fa-pencil"></i>&nbsp;
+          <i className="fas fa-pencil-alt"></i>&nbsp;
           Edit
         </button>
       </div>
@@ -25,11 +25,11 @@ const SingleResultRow = (props) => {
   let candidates
 
   if (props.ticket) {
-    icon = <i className="fa fa-check-circle text-success fa-5x pull-right"></i>
+    icon = <i className="fa fa-check-circle text-success fa-5x float-right"></i>
     title = <h4>{props.ticket.title}</h4>
     candidates = props.ticket.candidates.map(function (value, key) {
       return (
-        <div className="pull-left pad-right" key={key}>
+        <div className="float-left pad-right" key={key}>
           <SingleCandidate {...value}/>
         </div>
       )

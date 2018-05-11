@@ -45,7 +45,7 @@ const ElectionRow = (props) => {
       <td>{props.totalVotes}</td>
       <td>{buttons}&nbsp;
         <a href={reportHref} className="btn btn-info btn-sm">
-          <i className="fa fa-envelope"></i>&nbsp;Report</a>
+          <i className="far fa-envelope"></i>&nbsp;Report</a>
       </td>
     </tr>
   )
